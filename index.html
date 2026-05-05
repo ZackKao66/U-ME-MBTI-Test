@@ -8,8 +8,7 @@
   <style>
     :root{--bg:#f7f4ee;--surface:#fcfbf8;--surface-2:#f2ede5;--border:rgba(40,37,29,.12);--text:#1f1c16;--muted:#6f6a61;--accent:#c7a56a;--accent-2:#8d9fb5;--bar-bg:rgba(40,37,29,.08);--font-display:'Georgia',serif;--font-body:'Inter',system-ui,sans-serif}
     [data-theme="dark"]{--bg:#151412;--surface:#1d1c19;--surface-2:#23211d;--border:rgba(255,255,255,.10);--text:#f1ece3;--muted:#aaa49a;--accent:#d4b67a;--accent-2:#9fb0c4;--bar-bg:rgba(255,255,255,.08)}
-    *{box-sizing:border-box}
-    html,body{margin:0;min-height:100%}
+    *{box-sizing:border-box} html,body{margin:0;min-height:100%}
     body{font-family:var(--font-body);background:radial-gradient(circle at top, rgba(199,165,106,.16), transparent 38%),var(--bg);color:var(--text);overflow:hidden;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
     button{font:inherit;-webkit-tap-highlight-color:transparent}
     .stage{width:100vw;height:100svh;min-height:100svh;position:relative;overflow:hidden;background:linear-gradient(180deg,color-mix(in oklab,var(--surface) 88%, white),var(--surface));isolation:isolate}
@@ -71,8 +70,8 @@
     .result-cta{margin-top:0}
     .restart-btn{width:100%;min-height:42px}
     .result-note{font-size:11px;color:var(--muted);line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-    .share-shot{position:fixed;left:-99999px;top:0;width:1080px;padding:64px;background:linear-gradient(180deg,#fcfbf8,#f2ede5);color:#1f1c16}
-    .share-shot-card{position:relative;overflow:hidden;border-radius:42px;padding:56px;border:1px solid rgba(40,37,29,.12);background:linear-gradient(180deg,rgba(255,255,255,.92),rgba(247,244,238,.96));box-shadow:0 30px 90px rgba(0,0,0,.08)}
+    .share-shot{position:fixed;left:-99999px;top:0;width:1080px;aspect-ratio:4/5;padding:64px;background:linear-gradient(180deg,#fcfbf8,#f2ede5);color:#1f1c16}
+    .share-shot-card{position:relative;overflow:hidden;border-radius:42px;padding:56px;height:100%;border:1px solid rgba(40,37,29,.12);background:linear-gradient(180deg,rgba(255,255,255,.92),rgba(247,244,238,.96));box-shadow:0 30px 90px rgba(0,0,0,.08);display:flex;flex-direction:column}
     .share-shot-card::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at top left,rgba(199,165,106,.14),transparent 42%),radial-gradient(circle at bottom right,rgba(141,159,181,.10),transparent 44%),repeating-linear-gradient(135deg,transparent 0 22px,rgba(31,28,22,.02) 22px 23px);pointer-events:none}
     .share-brand,.share-code,.share-name,.share-tag,.share-copy,.share-pills{position:relative;z-index:1}
     .share-brand{font-size:22px;letter-spacing:.18em;text-transform:uppercase;color:#6f6a61;margin-bottom:30px}
@@ -82,7 +81,7 @@
     .share-copy{font-size:28px;line-height:1.75;color:#6f6a61;max-width:24ch}
     .share-pills{display:flex;gap:12px;flex-wrap:wrap;margin:28px 0 0}
     .share-pill{padding:12px 18px;border-radius:999px;border:1px solid rgba(40,37,29,.12);background:rgba(255,255,255,.7);font-size:18px}
-    .share-footer{position:relative;z-index:1;margin-top:34px;font-size:18px;letter-spacing:.12em;text-transform:uppercase;color:#6f6a61}
+    .share-footer{position:relative;z-index:1;margin-top:auto;font-size:18px;letter-spacing:.12em;text-transform:uppercase;color:#6f6a61}
     @keyframes floatIn{from{opacity:0;transform:translateY(28px) scale(.96)}to{opacity:1;transform:translateY(0) scale(1)}}
     @keyframes pulse{50%{transform:translate(-50%,-50%) scale(1.08);opacity:.68}}
     @keyframes wave{50%{transform:translateY(-10px);opacity:.8}}
@@ -96,7 +95,7 @@
       .screen{padding:calc(66px + env(safe-area-inset-top)) 12px calc(12px + env(safe-area-inset-bottom))}
       .quiz{gap:10px}
       .result-layout{height:auto}
-      .result-card{height:min(100%, calc(100svh - 88px - env(safe-area-inset-top) - env(safe-area-inset-bottom)));padding:14px}
+      .result-card{height:min(100%, calc(100svh - 88px - env(safe-area-inset-top) - env(safe-area-inset-bottom)));padding:14px;border-radius:24px;gap:8px;transform:scale(.98)}
       .share-row{grid-template-columns:1fr}
       .result-section p,.result-desc{-webkit-line-clamp:2}
       .result-note{-webkit-line-clamp:1}
@@ -206,7 +205,6 @@
           <div class="share-row">
             <button class="share-btn primary" id="shareBtn" type="button">分享圖片</button>
             <button class="share-btn" id="saveBtn" type="button">下載圖片</button>
-            <button class="share-btn" id="replayBtn" type="button">再測一次</button>
           </div>
 
           <div class="result-cta">
@@ -232,7 +230,7 @@
   </main>
 
   <script>
-    const root=document.documentElement,stage=document.getElementById('stage'),themeBtn=document.getElementById('themeBtn'),introScreen=document.getElementById('introScreen'),quizScreen=document.getElementById('quizScreen'),resultScreen=document.getElementById('resultScreen'),startBtn=document.getElementById('startBtn'),backBtn=document.getElementById('backBtn'),nextBtn=document.getElementById('nextBtn'),restartBtn=document.getElementById('restartBtn'),saveBtn=document.getElementById('saveBtn'),questionText=document.getElementById('questionText'),optionsEl=document.getElementById('options'),quizTitle=document.getElementById('quizTitle'),quizProgress=document.getElementById('quizProgress'),progressFill=document.getElementById('progressFill'),resultCode=document.getElementById('resultCode'),resultName=document.getElementById('resultName'),resultTag=document.getElementById('resultTag'),resultDesc=document.getElementById('resultDesc'),resultPills=document.getElementById('resultPills'),resultCategory=document.getElementById('resultCategory'),resultMood=document.getElementById('resultMood'),resultPace=document.getElementById('resultPace'),resultDrive=document.getElementById('resultDrive'),shareBtn=document.getElementById('shareBtn'),replayBtn=document.getElementById('replayBtn'),shareShot=document.getElementById('shareShot'),shareCode=document.getElementById('shareCode'),shareName=document.getElementById('shareName'),shareTag=document.getElementById('shareTag'),shareDesc=document.getElementById('shareDesc'),sharePills=document.getElementById('sharePills');
+    const root=document.documentElement,stage=document.getElementById('stage'),themeBtn=document.getElementById('themeBtn'),introScreen=document.getElementById('introScreen'),quizScreen=document.getElementById('quizScreen'),resultScreen=document.getElementById('resultScreen'),startBtn=document.getElementById('startBtn'),backBtn=document.getElementById('backBtn'),nextBtn=document.getElementById('nextBtn'),restartBtn=document.getElementById('restartBtn'),saveBtn=document.getElementById('saveBtn'),questionText=document.getElementById('questionText'),optionsEl=document.getElementById('options'),quizTitle=document.getElementById('quizTitle'),quizProgress=document.getElementById('quizProgress'),progressFill=document.getElementById('progressFill'),resultCode=document.getElementById('resultCode'),resultName=document.getElementById('resultName'),resultTag=document.getElementById('resultTag'),resultDesc=document.getElementById('resultDesc'),resultPills=document.getElementById('resultPills'),resultCategory=document.getElementById('resultCategory'),resultMood=document.getElementById('resultMood'),resultPace=document.getElementById('resultPace'),resultDrive=document.getElementById('resultDrive'),shareBtn=document.getElementById('shareBtn'),shareShot=document.getElementById('shareShot'),shareCode=document.getElementById('shareCode'),shareName=document.getElementById('shareName'),shareTag=document.getElementById('shareTag'),shareDesc=document.getElementById('shareDesc'),sharePills=document.getElementById('sharePills');
 
     const questions=[
       {q:'第一次靠近時，你更在意什麼？',a:['A. 氛圍有沒有對。','B. 反應來得夠不夠快。','C. 感覺有沒有慢慢升起來。','D. 能不能直接進入狀態。']},
@@ -436,7 +434,6 @@
     nextBtn.addEventListener('click',nextQuestion);
     backBtn.addEventListener('click',prevQuestion);
     restartBtn.addEventListener('click',restartToStart);
-    replayBtn.addEventListener('click',restartToStart);
 
     saveBtn.addEventListener('click',async()=>{
       try{
