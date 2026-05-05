@@ -137,14 +137,11 @@
     .share-btn.loading::after{content:'';display:inline-block;width:14px;height:14px;border:2px solid currentColor;border-top-color:transparent;border-radius:50%;animation:spin .7s linear infinite;margin-left:6px}
     @keyframes spin{to{transform:rotate(360deg)}}
 
-    /* ── 截圖卡片：永遠推到視窗右側外，使用者看不見，html2canvas 仍可截到 ── */
     .share-shot{
-      position:fixed;
-      left:0;top:0;
+      position:fixed;left:0;top:0;
       transform:translateX(9999px);
       width:1080px;aspect-ratio:4/5;padding:64px;
       color:#1f1c16;pointer-events:none;
-      /* 不需要任何 visibility/display 切換 */
     }
     .share-shot-card{position:relative;overflow:hidden;border-radius:42px;padding:56px;height:100%;border:1px solid rgba(40,37,29,.12);box-shadow:0 30px 90px rgba(0,0,0,.08);display:flex;flex-direction:column}
     .share-shot-card::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at top left,rgba(199,165,106,.18),transparent 42%),radial-gradient(circle at bottom right,rgba(141,159,181,.12),transparent 44%),repeating-linear-gradient(135deg,transparent 0 22px,rgba(31,28,22,.025) 22px 23px);pointer-events:none}
@@ -297,7 +294,6 @@
     </div>
   </section>
 
-  <!-- 截圖卡片：translateX(9999px) 推到視窗外，使用者永遠看不到 -->
   <div class="share-shot" id="shareShot" aria-hidden="true">
     <div class="share-shot-card theme-m" id="shareCard">
       <div class="share-brand">U&ME MBTI RESULT</div>
@@ -352,21 +348,43 @@ const root=document.documentElement,
   shareDesc=document.getElementById('shareDesc'),
   sharePills=document.getElementById('sharePills');
 
+// ── 題目（12題，每3題對應一個維度）─────────────────────────────────
+// 題 1-3  → Mood / Energy
+// 題 4-6  → Intimacy / Direct
+// 題 7-9  → Romance / Touch
+// 題 10-12 → Curious / Lust
 const questions=[
-  {q:'第一次靠近時，你更在意什麼？',a:['A. 氛圍有沒有對，感覺要先到位。','B. 反應夠不夠快，張力要立刻出現。','C. 感覺有沒有慢慢升起來。','D. 能不能直接進入狀態。']},
-  {q:'你比較容易被哪種方式打動？',a:['A. 溫柔、慢慢、一步一步。','B. 直接、明確、很到位。','C. 有情感、帶曖昧、會想多看一眼。','D. 觸感明顯、身體立刻有感。']},
-  {q:'哪一種感覺最容易讓你覺得「對了」？',a:['A. 氛圍對了，心就跟著開了。','B. 張力夠了，身體自然有反應。','C. 情感被接住了，才能真的放開。','D. 身體感受夠明確，不需要猜。']},
-  {q:'你偏好的親密節奏比較像哪一種？',a:['A. 先鋪陳，再靠近，情感要先有。','B. 一開始就很明確，不用繞太久。','C. 先有情緒共鳴，再往下走。','D. 先有感覺，再決定要不要繼續。']},
-  {q:'當互動開始時，你比較喜歡哪種方式？',a:['A. 慢慢被帶入，情感層層堆疊。','B. 直接進入主題，效率感讓人安心。','C. 帶點曖昧與鋪陳，讓彼此升溫。','D. 先試看看有沒有感，再決定方向。']},
-  {q:'你在親密關係裡，最想要的是什麼？',a:['A. 情緒的流動與被理解的感受。','B. 即時的回饋與明確的存在感。','C. 被看見內心的那種連結。','D. 有感的真實體驗，不想靠想像。']},
-  {q:'如果是一個讓你心動的畫面，你會先注意什麼？',a:['A. 整體氣氛與情感張力。','B. 身體的直接反應。','C. 被理解、被看見的感覺。','D. 實際觸感與物理刺激。']},
-  {q:'你在選擇用品時，最在意哪件事？',a:['A. 氛圍感與包裝設計。','B. 刺激感與立即反應。','C. 情感連結與象徵意義。','D. 實際使用時的觸感與效果。']},
-  {q:'你比較容易被哪種內容吸引？',a:['A. 有畫面感、有情緒鋪陳的描述。','B. 有力道、有衝擊感的表達。','C. 有情感溫度、讓人想多讀一遍的文字。','D. 有觸感細節、能讓身體有感的描寫。']},
-  {q:'你覺得最迷人的，是哪一種靠近方式？',a:['A. 被氛圍慢慢包住，不急著到達。','B. 被刺激點燃，快速進入高峰。','C. 被情感理解，感覺被接住。','D. 被感官喚醒，身體先有答案。']},
-  {q:'如果要你做一個選擇，你更傾向：',a:['A. 先感受氛圍，再慢慢決定。','B. 直接選最有感、最強烈的。','C. 先看情緒共鳴，再往下走。','D. 先看觸感與實際效果再說。']},
-  {q:'你覺得自己的慾望節奏比較像哪一種？',a:['A. 慢熱型，要等情緒到位才會燃起來。','B. 快感型，很容易被點燃，也很直接。','C. 感性型，情感先到，慾望才跟上。','D. 感官型，身體的感受優先於一切。']}
+  {q:'第一次靠近時，你更在意什麼？',
+   a:['A. 氛圍有沒有對，感覺要先到位。','B. 反應夠不夠快，張力要立刻出現。','C. 感覺有沒有慢慢升起來。','D. 能不能直接進入狀態。']},
+  {q:'你比較容易被哪種方式打動？',
+   a:['A. 溫柔、慢慢、一步一步。','B. 直接、明確、很到位。','C. 有情感、帶曖昧、會想多看一眼。','D. 觸感明顯、身體立刻有感。']},
+  {q:'哪一種感覺最容易讓你覺得「對了」？',
+   a:['A. 氛圍對了，心就跟著開了。','B. 張力夠了，身體自然有反應。','C. 情感被接住了，才能真的放開。','D. 身體感受夠明確，不需要猜。']},
+  {q:'你偏好的親密節奏比較像哪一種？',
+   a:['A. 先鋪陳，再靠近，情感要先有。','B. 一開始就很明確，不用繞太久。','C. 先有情緒共鳴，再往下走。','D. 先有感覺，再決定要不要繼續。']},
+  {q:'當互動開始時，你比較喜歡哪種方式？',
+   a:['A. 慢慢被帶入，情感層層堆疊。','B. 直接進入主題，效率感讓人安心。','C. 帶點曖昧與鋪陳，讓彼此升溫。','D. 先試看看有沒有感，再決定方向。']},
+  {q:'你在親密關係裡，最想要的是什麼？',
+   a:['A. 情緒的流動與被理解的感受。','B. 即時的回饋與明確的存在感。','C. 被看見內心的那種連結。','D. 有感的真實體驗，不想靠想像。']},
+  {q:'如果是一個讓你心動的畫面，你會先注意什麼？',
+   a:['A. 整體氣氛與情感張力。','B. 身體的直接反應。','C. 被理解、被看見的感覺。','D. 實際觸感與物理刺激。']},
+  {q:'你在選擇用品時，最在意哪件事？',
+   a:['A. 氛圍感與包裝設計。','B. 刺激感與立即反應。','C. 情感連結與象徵意義。','D. 實際使用時的觸感與效果。']},
+  {q:'你比較容易被哪種內容吸引？',
+   a:['A. 有畫面感、有情緒鋪陳的描述。','B. 有力道、有衝擊感的表達。','C. 有情感溫度、讓人想多讀一遍的文字。','D. 有觸感細節、能讓身體有感的描寫。']},
+  {q:'你覺得最迷人的，是哪一種靠近方式？',
+   a:['A. 被氛圍慢慢包住，不急著到達。','B. 被刺激點燃，快速進入高峰。','C. 被情感理解，感覺被接住。','D. 被感官喚醒，身體先有答案。']},
+  {q:'如果要你做一個選擇，你更傾向：',
+   a:['A. 先感受氛圍，再慢慢決定。','B. 直接選最有感、最強烈的。','C. 先看情緒共鳴，再往下走。','D. 先看觸感與實際效果再說。']},
+  {q:'你覺得自己的慾望節奏比較像哪一種？',
+   a:['A. 慢熱型，要等情緒到位才會燃起來。','B. 快感型，很容易被點燃，也很直接。','C. 感性型，情感先到，慾望才跟上。','D. 感官型，身體的感受優先於一切。']}
 ];
 
+// A/C → 正向維度；B/D → 負向維度
+// 題1-3：A/C=Mood, B/D=Energy
+// 題4-6：A/C=Intimacy, B/D=Direct
+// 題7-9：A/C=Romance, B/D=Touch
+// 題10-12：A/C=Curious, B/D=Lust  ← 修正
 const scoreMap=[
   {A:['Mood',2],B:['Energy',2],C:['Mood',2],D:['Energy',2]},
   {A:['Mood',2],B:['Energy',2],C:['Mood',2],D:['Energy',2]},
@@ -377,34 +395,67 @@ const scoreMap=[
   {A:['Romance',2],B:['Touch',2],C:['Romance',2],D:['Touch',2]},
   {A:['Romance',2],B:['Touch',2],C:['Romance',2],D:['Touch',2]},
   {A:['Romance',2],B:['Touch',2],C:['Romance',2],D:['Touch',2]},
-  {A:['Slow',2],B:['Lust',2],C:['Slow',2],D:['Lust',2]},
-  {A:['Slow',2],B:['Lust',2],C:['Slow',2],D:['Lust',2]},
-  {A:['Slow',2],B:['Lust',2],C:['Slow',2],D:['Lust',2]}
+  {A:['Curious',2],B:['Lust',2],C:['Curious',2],D:['Lust',2]},
+  {A:['Curious',2],B:['Lust',2],C:['Curious',2],D:['Lust',2]},
+  {A:['Curious',2],B:['Lust',2],C:['Curious',2],D:['Lust',2]}
 ];
 
+// 結果碼格式：[M/E][I/D][R/T][C/L]
 const results={
-  MIRS:{name:'柔光守護者',tag:'慢慢升溫型',desc:'妳喜歡氛圍先到位，再慢慢打開感受。妳不是不主動，而是要先感受到安心與情緒流動，才會真正進入狀態。',pills:['溫柔','緩慢','氛圍感']},
-  MIRL:{name:'微熱守護者',tag:'情感慾流型',desc:'妳要的不是直接刺激，而是情緒與慾望一起被喚醒。妳對關係有感，對氛圍也有感，會在熟悉感中被快速點燃。',pills:['情感','熱度','慾感']},
-  MITS:{name:'觸感守護者',tag:'觸感探索型',desc:'妳重視感受本身，特別在意觸覺與互動的細節。妳喜歡慢慢摸索，不急著定義，但很敏銳。',pills:['觸感','細節','探索']},
-  MITL:{name:'感受守護者',tag:'感官沉浸型',desc:'妳一旦進入狀態，就會很投入，喜歡感官層層堆疊。妳重視觸感、節奏與身體回饋，而且點燃後非常直接。',pills:['沉浸','節奏','回饋']},
-  MDRS:{name:'溫柔引導者',tag:'溫柔直入型',desc:'妳表面柔和，但其實知道自己要什麼。妳不喜歡繞太久，偏好在有情感鋪陳後慢慢直接進入重點。',pills:['溫柔','直接','有感']},
-  MDRL:{name:'曖昧引導者',tag:'曖昧直覺型',desc:'妳喜歡明確，但不喜歡太冷。妳要的是有溫度的直接，帶著曖昧與情緒靠近，一旦確認就快速推進。',pills:['曖昧','溫度','推進']},
-  MDTS:{name:'體感引導者',tag:'體感主導型',desc:'妳偏好清楚、直接，一切都要讓身體先有反應。妳會慢慢確認感受，但方向從來不模糊。',pills:['體感','反應','主導']},
-  MDTL:{name:'直感引導者',tag:'直球慾感型',desc:'妳不想猜，也不喜歡太多模糊，妳想要的是直接而有感。偏好明確、反應直接，點燃後完全不需要等。',pills:['直球','慾感','明確']},
-  EIRS:{name:'霧感感官者',tag:'情緒探索型',desc:'妳偏刺激，但不是粗暴，而是想透過情緒與新鮮感打開感受。妳喜歡探索，會在曖昧中慢慢找到自己的節奏。',pills:['霧感','探索','情緒']},
-  EIRL:{name:'熱感感官者',tag:'高溫曖昧型',desc:'妳對情感與慾望都有反應，而且不太怕熱度。妳喜歡強烈一點的氛圍，點燃後就會快速進入更深的感受。',pills:['高溫','曖昧','慾感']},
-  EITS:{name:'細節感官者',tag:'刺激試探型',desc:'妳喜歡先試試看，感受有沒有對味。妳的反應很快，喜歡新鮮、喜歡摸索，也願意慢慢多嘗試不同方式。',pills:['試探','新鮮','反應快']},
-  EITL:{name:'強感感官者',tag:'強烈感官型',desc:'妳很容易被明確的刺激抓住，喜歡直接、有感、迅速反應的體驗。重點是感受要夠明顯，而且要快。',pills:['強烈','感官','直接']},
-  EDRS:{name:'悄然探索者',tag:'主動曖昧型',desc:'妳不一定要等別人帶，妳自己就很會製造氣氛。妳雖然直接，但不是冰冷，而是有情感、有曖昧、節奏穩健。',pills:['主動','曖昧','穩健']},
-  EDRL:{name:'慾感探索者',tag:'慾感引導型',desc:'妳是那種很會把節奏帶進去的人。妳知道怎麼讓氣氛升溫，也知道怎麼讓對方快速進入狀態。',pills:['節奏','升溫','引導']},
-  EDTS:{name:'直覺探索者',tag:'直接體驗型',desc:'妳重視當下的真實感受，喜歡清楚、直接、有效。妳不喜歡過度包裝，但也不急著衝刺，節奏是妳的。',pills:['直覺','體驗','有效']},
-  EDTL:{name:'烈感探索者',tag:'直球烈感型',desc:'妳是很強烈、很直接、很知道自己要什麼的類型。妳不太繞，也不等，偏好鮮明，點燃後存在感極強。',pills:['烈感','直球','存在感']}
+  MIRC:{name:'柔光守護者',tag:'慢慢升溫型',
+    desc:'妳喜歡氛圍先到位，再慢慢打開感受。妳不是不主動，而是要先感受到安心與情緒流動，才會真正進入狀態。',
+    pills:['溫柔','緩慢','氛圍感']},
+  MIRL:{name:'微熱守護者',tag:'情感慾流型',
+    desc:'妳要的不是直接刺激，而是情緒與慾望一起被喚醒。妳對關係有感，對氛圍也有感，會在熟悉感中被快速點燃。',
+    pills:['情感','熱度','慾感']},
+  MITC:{name:'觸感守護者',tag:'觸感探索型',
+    desc:'妳重視感受本身，特別在意觸覺與互動的細節。妳喜歡慢慢摸索，不急著定義，但很敏銳。',
+    pills:['觸感','細節','探索']},
+  MITL:{name:'感受守護者',tag:'感官沉浸型',
+    desc:'妳一旦進入狀態，就會很投入，喜歡感官層層堆疊。妳重視觸感、節奏與身體回饋，而且點燃後非常直接。',
+    pills:['沉浸','節奏','回饋']},
+  MDRC:{name:'溫柔引導者',tag:'溫柔直入型',
+    desc:'妳表面柔和，但其實知道自己要什麼。妳不喜歡繞太久，偏好在有情感鋪陳後直接進入重點。',
+    pills:['溫柔','直接','有感']},
+  MDRL:{name:'曖昧引導者',tag:'曖昧直覺型',
+    desc:'妳喜歡明確，但不喜歡太冷。妳要的是有溫度的直接，帶著曖昧與情緒靠近，一旦確認就快速推進。',
+    pills:['曖昧','溫度','推進']},
+  MDTC:{name:'體感引導者',tag:'體感主導型',
+    desc:'妳偏好清楚、直接，一切都要讓身體先有反應。妳會慢慢確認感受，但方向從來不模糊。',
+    pills:['體感','反應','主導']},
+  MDTL:{name:'直感引導者',tag:'直球慾感型',
+    desc:'妳不想猜，也不喜歡太多模糊，妳想要的是直接而有感。偏好明確、反應直接，點燃後完全不需要等。',
+    pills:['直球','慾感','明確']},
+  EIRC:{name:'霧感感官者',tag:'情緒探索型',
+    desc:'妳偏刺激，但不是粗暴，而是想透過情緒與新鮮感打開感受。妳喜歡探索，會在曖昧中慢慢找到自己的節奏。',
+    pills:['霧感','探索','情緒']},
+  EIRL:{name:'熱感感官者',tag:'高溫曖昧型',
+    desc:'妳對情感與慾望都有反應，而且不太怕熱度。妳喜歡強烈一點的氛圍，點燃後就會快速進入更深的感受。',
+    pills:['高溫','曖昧','慾感']},
+  EITC:{name:'細節感官者',tag:'刺激試探型',
+    desc:'妳喜歡先試試看，感受有沒有對味。妳的反應很快，喜歡新鮮、喜歡摸索，也願意慢慢多嘗試不同方式。',
+    pills:['試探','新鮮','反應快']},
+  EITL:{name:'強感感官者',tag:'強烈感官型',
+    desc:'妳很容易被明確的刺激抓住，喜歡直接、有感、迅速反應的體驗。重點是感受要夠明顯，而且要快。',
+    pills:['強烈','感官','直接']},
+  EDRC:{name:'悄然探索者',tag:'主動曖昧型',
+    desc:'妳不一定要等別人帶，妳自己就很會製造氣氛。妳雖然直接，但不是冰冷，而是有情感、有曖昧、節奏穩健。',
+    pills:['主動','曖昧','穩健']},
+  EDRL:{name:'慾感探索者',tag:'慾感引導型',
+    desc:'妳是那種很會把節奏帶進去的人。妳知道怎麼讓氣氛升溫，也知道怎麼讓對方快速進入狀態。',
+    pills:['節奏','升溫','引導']},
+  EDTC:{name:'直覺探索者',tag:'直接體驗型',
+    desc:'妳重視當下的真實感受，喜歡清楚、直接、有效。妳不喜歡過度包裝，但也不急著衝刺，節奏是妳的。',
+    pills:['直覺','體驗','有效']},
+  EDTL:{name:'烈感探索者',tag:'直球烈感型',
+    desc:'妳是很強烈、很直接、很知道自己要什麼的類型。妳不太繞，也不等，偏好鮮明，點燃後存在感極強。',
+    pills:['烈感','直球','存在感']}
 };
 
 const state={
   index:0,
   answers:Array(questions.length).fill(null),
-  score:{Mood:0,Energy:0,Intimacy:0,Direct:0,Romance:0,Touch:0,Slow:0,Lust:0},
+  score:{Mood:0,Energy:0,Intimacy:0,Direct:0,Romance:0,Touch:0,Curious:0,Lust:0},
   sliding:false
 };
 
@@ -492,20 +543,20 @@ const startQuiz=()=>{
 };
 
 const computeResult=()=>{
-  state.score={Mood:0,Energy:0,Intimacy:0,Direct:0,Romance:0,Touch:0,Slow:0,Lust:0};
+  state.score={Mood:0,Energy:0,Intimacy:0,Direct:0,Romance:0,Touch:0,Curious:0,Lust:0};
   state.answers.forEach((ans,i)=>{
     if(!ans)return;
     const[k,v]=scoreMap[i][ans];state.score[k]+=v;
   });
   return[
-    state.score.Mood>=state.score.Energy?'M':'E',
+    state.score.Mood>=state.score.Energy    ?'M':'E',
     state.score.Intimacy>=state.score.Direct?'I':'D',
-    state.score.Romance>=state.score.Touch?'R':'T',
-    state.score.Slow>=state.score.Lust?'S':'L'
+    state.score.Romance>=state.score.Touch  ?'R':'T',
+    state.score.Curious>=state.score.Lust   ?'C':'L'
   ].join('');
 };
 
-// Slot Machine
+// ── Slot Machine ──────────────────────────────────────────────────────
 const CHARS='ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 const slotStyle=document.createElement('style');
 slotStyle.textContent=`@keyframes slotLock{0%{transform:translateY(0)}30%{transform:translateY(-4px)}65%{transform:translateY(2px)}100%{transform:translateY(0)}}`;
@@ -552,7 +603,7 @@ function runSlotMachine(targetCode){
 
 const showResult=()=>{
   const code=computeResult();
-  const r=results[code]||results.MIRS;
+  const r=results[code]||results.MIRC;
   const isE=code.startsWith('E');
   root.setAttribute('data-result-theme',isE?'E':'M');
   shareCard.className=`share-shot-card theme-${isE?'e':'m'}`;
@@ -567,7 +618,7 @@ const showResult=()=>{
     :'妳屬於先被帶動、再投入的類型。妳喜歡明確節奏、立即回饋與更直接的互動。';
   resultMood.textContent=code[2]==='R'?'情感導向':'感官導向';
   resultPace.textContent=code.startsWith('M')?'節奏：氛圍':'節奏：直接';
-  resultDrive.textContent=code[3]==='S'?'步調：緩慢':'步調：熱烈';
+  resultDrive.textContent=code[3]==='C'?'步調：探索':'步調：熱烈';
   resultPills.innerHTML='';
   r.pills.forEach(t=>{const s=document.createElement('span');s.className='pill';s.textContent=t;resultPills.appendChild(s);});
   shareCode.textContent=code;
@@ -589,29 +640,26 @@ const restartToStart=()=>{
   setScreen(introScreen);
 };
 
-// ── 截圖函式：不需要任何顯示/隱藏切換 ──────────────────────────────
+// ── 截圖：translateX(9999px) 永遠推到視窗外，不需要任何顯示切換 ──
 async function makeShareBlob(){
   const canvas=await html2canvas(shareShot,{
     backgroundColor:null,
     scale:2,
     useCORS:true,
     allowTaint:true,
-    x:0,
-    y:0,
-    scrollX:-9999,   // 告訴 html2canvas 元素實際位置偏移
+    x:0,y:0,
+    scrollX:-9999,
     scrollY:0,
     width:1080,
     height:shareShot.offsetHeight
   });
   return new Promise(resolve=>canvas.toBlob(blob=>resolve(blob),'image/png',1));
 }
-
 async function downloadBlob(blob,filename){
   const url=URL.createObjectURL(blob);
   const a=document.createElement('a');a.href=url;a.download=filename;
   document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);
 }
-
 async function handleShare(){
   const code=shareCode.textContent;
   shareBtn.classList.add('loading');shareBtn.querySelector('svg').style.display='none';
@@ -628,7 +676,6 @@ async function handleShare(){
   }catch(e){if(e.name!=='AbortError')console.warn(e);}
   finally{shareBtn.classList.remove('loading');shareBtn.querySelector('svg').style.display='';}
 }
-
 async function handleSave(){
   const code=shareCode.textContent;
   const orig=saveBtn.innerHTML;
