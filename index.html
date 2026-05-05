@@ -6,497 +6,97 @@
   <title>U&ME MBTI</title>
   <style>
     :root{
-      --bg:#f7f4ee;
-      --surface:#fcfbf8;
-      --surface-2:#f2ede5;
-      --border:rgba(40,37,29,.12);
-      --text:#1f1c16;
-      --muted:#6f6a61;
-      --accent:#c7a56a;
-      --accent-2:#8d9fb5;
-      --shadow:0 20px 60px rgba(42,33,18,.10);
-      --font-display:'Georgia',serif;
-      --font-body:'Inter',system-ui,sans-serif;
+      --bg:#f7f4ee; --surface:#fcfbf8; --surface-2:#f2ede5; --surface-3:#ece6dc; --border:rgba(40,37,29,.12);
+      --text:#1f1c16; --muted:#6f6a61; --accent:#c7a56a; --accent-2:#8d9fb5; --shadow:0 20px 60px rgba(42,33,18,.10);
+      --font-display:'Georgia',serif; --font-body:'Inter',system-ui,sans-serif; --bar-bg:rgba(40,37,29,.08);
     }
-
     [data-theme="dark"]{
-      --bg:#151412;
-      --surface:#1d1c19;
-      --surface-2:#23211d;
-      --border:rgba(255,255,255,.10);
-      --text:#f1ece3;
-      --muted:#aaa49a;
-      --accent:#d4b67a;
-      --accent-2:#9fb0c4;
-      --shadow:0 24px 70px rgba(0,0,0,.35);
+      --bg:#151412; --surface:#1d1c19; --surface-2:#23211d; --surface-3:#282621; --border:rgba(255,255,255,.10);
+      --text:#f1ece3; --muted:#aaa49a; --accent:#d4b67a; --accent-2:#9fb0c4; --shadow:0 24px 70px rgba(0,0,0,.35); --bar-bg:rgba(255,255,255,.08);
     }
-
     *{box-sizing:border-box}
     html,body{margin:0;min-height:100%}
-    body{
-      font-family:var(--font-body);
-      background:
-        radial-gradient(circle at top, rgba(199,165,106,.16), transparent 38%),
-        var(--bg);
-      color:var(--text);
-      overflow:hidden;
-      -webkit-font-smoothing:antialiased;
-      text-rendering:optimizeLegibility;
-    }
-
+    body{font-family:var(--font-body);background:radial-gradient(circle at top, rgba(199,165,106,.16), transparent 38%), var(--bg);color:var(--text);overflow:hidden;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
     button,input,textarea,select{font:inherit}
     button{-webkit-tap-highlight-color:transparent}
-
-    .wrap{
-      min-height:100vh;
-      min-height:100dvh;
-      display:block;
-      padding:0;
-    }
-
-    .stage{
-      width:100vw;
-      height:100vh;
-      height:100dvh;
-      background:linear-gradient(180deg, color-mix(in oklab, var(--surface) 88%, white), var(--surface));
-      border:0;
-      border-radius:0;
-      box-shadow:none;
-      position:relative;
-      overflow:hidden;
-      isolation:isolate;
-    }
-
-    .topbar{
-      position:absolute;
-      left:0;
-      right:0;
-      top:0;
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      padding:calc(14px + env(safe-area-inset-top)) 16px 14px;
-      z-index:5;
-    }
-
-    .brandmark{
-      display:flex;
-      align-items:center;
-      gap:10px;
-      font-weight:700;
-      letter-spacing:.16em;
-      text-transform:uppercase;
-      font-size:11px;
-      color:var(--muted);
-      min-width:0;
-    }
-
-    .brandmark span:last-child{
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
-    }
-
-    .logo{
-      width:34px;
-      height:34px;
-      border-radius:50%;
-      border:1px solid var(--border);
-      display:grid;
-      place-items:center;
-      color:var(--accent);
-      flex:0 0 auto;
-    }
-
-    .toggle{
-      min-height:44px;
-      padding:10px 14px;
-      border:1px solid var(--border);
-      background:color-mix(in oklab, var(--surface) 76%, white);
-      color:var(--text);
-      border-radius:999px;
-      cursor:pointer;
-      white-space:nowrap;
-    }
-
-    .screen{
-      position:absolute;
-      inset:0;
-      display:grid;
-      place-items:center;
-      padding:
-        calc(90px + env(safe-area-inset-top))
-        20px
-        calc(28px + env(safe-area-inset-bottom));
-      text-align:center;
-      transition:opacity .35s ease, transform .35s ease;
-    }
-
-    .screen[hidden]{
-      opacity:0;
-      pointer-events:none;
-      transform:scale(.99);
-    }
-
-    .brand{
-      display:grid;
-      gap:18px;
-      justify-items:center;
-      width:min(92vw,760px);
-      animation:floatIn 1.2s cubic-bezier(.16,1,.3,1) both;
-    }
-
-    .logo-image{
-      width:min(82vw,480px);
-      aspect-ratio:3/1;
-      display:grid;
-      place-items:center;
-      border-radius:28px;
-      border:1px solid color-mix(in oklab, var(--accent) 30%, var(--border));
-      background:
-        linear-gradient(
-          135deg,
-          color-mix(in oklab, var(--surface) 72%, white),
-          color-mix(in oklab, var(--surface-2) 82%, var(--accent) 6%)
-        );
-      box-shadow:0 18px 48px rgba(0,0,0,.08);
-      backdrop-filter:blur(10px);
-    }
-
-    .logo-image span{
-      font-family:var(--font-display);
-      font-size:clamp(40px,10vw,84px);
-      line-height:1;
-      letter-spacing:.08em;
-      color:var(--text);
-    }
-
-    .sub{
-      max-width:32ch;
-      color:var(--muted);
-      font-size:clamp(15px,3.8vw,18px);
-      line-height:1.75;
-      margin-inline:auto;
-    }
-
-    .actions{
-      display:flex;
-      gap:12px;
-      flex-wrap:wrap;
-      justify-content:center;
-      align-items:center;
-    }
-
-    .start{
-      width:88px;
-      height:88px;
-      min-width:88px;
-      min-height:88px;
-      border-radius:50%;
-      border:1px solid color-mix(in oklab, var(--accent) 45%, var(--border));
-      background:color-mix(in oklab, var(--accent) 84%, white);
-      color:var(--text);
-      display:grid;
-      place-items:center;
-      cursor:pointer;
-      box-shadow:0 12px 30px rgba(184,155,98,.22);
-      font-weight:700;
-      letter-spacing:.08em;
-    }
-
-    .start::before{
-      content:"開始";
-      font-size:14px;
-    }
-
-    .glow{
-      position:absolute;
-      width:min(78vw,700px);
-      height:min(78vw,700px);
-      filter:blur(90px);
-      opacity:.42;
-      background:radial-gradient(circle, color-mix(in oklab, var(--accent) 22%, transparent), transparent 64%);
-      left:50%;
-      top:50%;
-      transform:translate(-50%,-50%);
-      animation:pulse 5s ease-in-out infinite;
-      pointer-events:none;
-      z-index:0;
-    }
-
-    .ripple{
-      position:absolute;
-      border-radius:50%;
-      pointer-events:none;
-      transform:translate(-50%,-50%);
-      background:radial-gradient(circle, rgba(255,255,255,.38) 0%, rgba(255,255,255,.18) 25%, rgba(255,255,255,0) 70%);
-      animation:rip .75s ease-out forwards;
-      mix-blend-mode:screen;
-      z-index:4;
-    }
-
-    .quiz{
-      width:min(100%,760px);
-      display:grid;
-      gap:18px;
-      justify-items:stretch;
-      text-align:left;
-      position:relative;
-      z-index:2;
-    }
-
-    .quiz-head{
-      display:flex;
-      justify-content:space-between;
-      align-items:flex-end;
-      gap:12px;
-    }
-
-    .quiz-kicker{
-      font-size:11px;
-      letter-spacing:.18em;
-      text-transform:uppercase;
-      color:var(--muted);
-      margin-bottom:8px;
-    }
-
-    .quiz-title{
-      margin:0;
-      font-family:var(--font-display);
-      font-size:clamp(26px,6vw,48px);
-      line-height:1.15;
-    }
-
-    .quiz-progress{
-      font-size:13px;
-      color:var(--muted);
-      white-space:nowrap;
-      padding-bottom:4px;
-    }
-
-    .card{
-      border:1px solid var(--border);
-      background:color-mix(in oklab, var(--surface) 84%, white);
-      border-radius:24px;
-      padding:18px;
-      box-shadow:0 18px 46px rgba(0,0,0,.06);
-      backdrop-filter:blur(10px);
-    }
-
-    .question{
-      margin:0 0 16px;
-      font-size:clamp(20px,5.5vw,32px);
-      line-height:1.4;
-      font-weight:700;
-    }
-
-    .options{
-      display:grid;
-      gap:12px;
-    }
-
-    .option{
-      width:100%;
-      min-height:56px;
-      text-align:left;
-      padding:16px 16px;
-      border-radius:18px;
-      border:1px solid var(--border);
-      background:var(--surface-2);
-      color:var(--text);
-      cursor:pointer;
-      transition:transform .18s ease, border-color .18s ease, background .18s ease, box-shadow .18s ease;
-      line-height:1.55;
-      font-size:16px;
-      white-space:pre-line;
-    }
-
-    .option:hover{
-      transform:translateY(-1px);
-      border-color:color-mix(in oklab, var(--accent) 42%, var(--border));
-      background:color-mix(in oklab, var(--surface-2) 84%, var(--accent) 6%);
-      box-shadow:0 10px 20px rgba(0,0,0,.04);
-    }
-
-    .option:active{
-      transform:translateY(0);
-    }
-
-    .nav{
-      display:flex;
-      justify-content:space-between;
-      gap:12px;
-      align-items:center;
-    }
-
-    .ghost,.next{
-      min-height:48px;
-      padding:12px 18px;
-      border-radius:999px;
-      cursor:pointer;
-      font:inherit;
-    }
-
-    .ghost{
-      border:1px solid var(--border);
-      background:transparent;
-      color:var(--text);
-    }
-
-    .next{
-      border:1px solid transparent;
-      background:var(--accent);
-      color:#fff;
-      min-width:120px;
-    }
-
-    .next:disabled,.ghost:disabled{
-      opacity:.45;
-      cursor:not-allowed;
-    }
-
-    .footer-note{
-      font-size:12px;
-      color:var(--muted);
-      text-align:center;
-      margin-top:-2px;
-    }
-
-    .result-card{
-      text-align:center;
-    }
-
-    .result-code{
-      font-family:var(--font-display);
-      font-size:clamp(46px,12vw,88px);
-      line-height:1;
-      margin-bottom:14px;
-    }
-
-    .result-name{
-      font-size:clamp(26px,6vw,42px);
-      font-weight:700;
-      margin-bottom:10px;
-    }
-
-    .result-tag{
-      font-size:13px;
-      letter-spacing:.14em;
-      text-transform:uppercase;
-      color:var(--accent);
-      margin-bottom:18px;
-    }
-
-    .result-desc{
-      margin:0 auto;
-      max-width:36ch;
-      line-height:1.85;
-      color:var(--muted);
-      font-size:16px;
-    }
-
-    @keyframes floatIn{
-      from{opacity:0;transform:translateY(28px) scale(.96)}
-      to{opacity:1;transform:translateY(0) scale(1)}
-    }
-
-    @keyframes rip{
-      from{width:0;height:0;opacity:.85}
-      to{width:360px;height:360px;opacity:0}
-    }
-
-    @keyframes pulse{
-      50%{transform:translate(-50%,-50%) scale(1.08);opacity:.68}
-    }
-
-    @media (max-width:767px){
-      .nav{
-        flex-direction:column;
-      }
-      .ghost,.next{
-        width:100%;
-      }
-    }
-
-    @media (min-width:768px){
-      .topbar{
-        padding:calc(18px + env(safe-area-inset-top)) 24px 18px;
-      }
-      .screen{
-        padding:
-          calc(96px + env(safe-area-inset-top))
-          28px
-          calc(36px + env(safe-area-inset-bottom));
-      }
-      .logo-image{
-        width:min(56vw,520px);
-      }
-      .quiz{
-        width:min(90vw,860px);
-        gap:22px;
-      }
-      .card{
-        padding:24px;
-        border-radius:28px;
-      }
-      .option{
-        min-height:60px;
-        padding:18px 18px;
-      }
-    }
-
-    @media (min-width:1024px){
-      .screen{
-        padding:
-          calc(104px + env(safe-area-inset-top))
-          32px
-          calc(42px + env(safe-area-inset-bottom));
-      }
-      .quiz{
-        width:min(82vw,920px);
-      }
-      .logo-image{
-        width:min(48vw,540px);
-      }
-      .sub{
-        max-width:40ch;
-      }
-    }
-
-    @media (hover:none){
-      .option:hover{
-        transform:none;
-        box-shadow:none;
-      }
-    }
-
-    @media (prefers-reduced-motion:reduce){
-      *,*::before,*::after{
-        animation:none !important;
-        transition:none !important;
-        scroll-behavior:auto !important;
-      }
-    }
+    .wrap{min-height:100vh;min-height:100dvh;display:block;padding:0}
+    .stage{width:100vw;height:100vh;height:100dvh;background:linear-gradient(180deg, color-mix(in oklab, var(--surface) 88%, white), var(--surface));position:relative;overflow:hidden;isolation:isolate}
+    .topbar{position:absolute;left:0;right:0;top:0;display:flex;justify-content:space-between;align-items:center;padding:calc(14px + env(safe-area-inset-top)) 16px 14px;z-index:8}
+    .brandmark{display:flex;align-items:center;gap:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;font-size:11px;color:var(--muted);min-width:0}
+    .brandmark span:last-child{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .logo{width:34px;height:34px;border-radius:50%;border:1px solid var(--border);display:grid;place-items:center;color:var(--accent);flex:0 0 auto}
+    .toggle{min-height:44px;padding:10px 14px;border:1px solid var(--border);background:color-mix(in oklab, var(--surface) 76%, white);color:var(--text);border-radius:999px;cursor:pointer;white-space:nowrap}
+    .screen{position:absolute;inset:0;display:grid;place-items:center;padding:calc(90px + env(safe-area-inset-top)) 20px calc(28px + env(safe-area-inset-bottom));text-align:center;transition:opacity .5s cubic-bezier(.16,1,.3,1), transform .5s cubic-bezier(.16,1,.3,1), filter .5s cubic-bezier(.16,1,.3,1)}
+    .screen[hidden]{opacity:0;pointer-events:none;transform:translateY(8px) scale(.985);filter:blur(6px)}
+    .screen.entering{opacity:0;transform:translateY(12px) scale(.985);filter:blur(8px)}
+    .screen.active{opacity:1;transform:translateY(0) scale(1);filter:blur(0)}
+    .brand{display:grid;gap:18px;justify-items:center;width:min(92vw,760px);animation:floatIn 1.2s cubic-bezier(.16,1,.3,1) both}
+    .logo-image{width:min(82vw,480px);aspect-ratio:3/1;display:grid;place-items:center;border-radius:28px;border:1px solid color-mix(in oklab, var(--accent) 30%, var(--border));background:linear-gradient(135deg, color-mix(in oklab, var(--surface) 72%, white), color-mix(in oklab, var(--surface-2) 82%, var(--accent) 6%));box-shadow:0 18px 48px rgba(0,0,0,.08);backdrop-filter:blur(10px)}
+    .logo-image span{font-family:var(--font-display);font-size:clamp(40px,10vw,84px);line-height:1;letter-spacing:.08em;color:var(--text)}
+    .sub{max-width:32ch;color:var(--muted);font-size:clamp(15px,3.8vw,18px);line-height:1.75;margin-inline:auto}
+    .actions{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;align-items:center}
+    .start{width:88px;height:88px;min-width:88px;min-height:88px;border-radius:50%;border:1px solid color-mix(in oklab, var(--accent) 45%, var(--border));background:color-mix(in oklab, var(--accent) 84%, white);color:var(--text);display:grid;place-items:center;cursor:pointer;box-shadow:0 12px 30px rgba(184,155,98,.22);font-weight:700;letter-spacing:.08em}
+    .start::before{content:"開始";font-size:14px}
+    .glow{position:absolute;width:min(78vw,700px);height:min(78vw,700px);filter:blur(90px);opacity:.42;background:radial-gradient(circle, color-mix(in oklab, var(--accent) 22%, transparent), transparent 64%);left:50%;top:50%;transform:translate(-50%,-50%);animation:pulse 5s ease-in-out infinite;pointer-events:none;z-index:0}
+    .ripple{position:absolute;border-radius:50%;pointer-events:none;transform:translate(-50%,-50%);background:radial-gradient(circle, rgba(255,255,255,.38) 0%, rgba(255,255,255,.18) 25%, rgba(255,255,255,0) 70%);animation:rip .75s ease-out forwards;mix-blend-mode:screen;z-index:4}
+    .quiz{width:min(100%,760px);display:grid;gap:16px;justify-items:stretch;text-align:left;position:relative;z-index:2}
+    .quiz-head{display:flex;justify-content:space-between;align-items:flex-end;gap:12px}
+    .quiz-kicker{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+    .quiz-title{margin:0;font-family:var(--font-display);font-size:clamp(26px,6vw,48px);line-height:1.15}
+    .quiz-progress{font-size:13px;color:var(--muted);white-space:nowrap;padding-bottom:4px}
+    .progress-wrap{display:grid;gap:8px}
+    .progress-bar{height:8px;border-radius:999px;background:var(--bar-bg);overflow:hidden;border:1px solid var(--border)}
+    .progress-bar > span{display:block;height:100%;width:0;background:linear-gradient(90deg, color-mix(in oklab, var(--accent) 88%, white), color-mix(in oklab, var(--accent-2) 78%, white));border-radius:inherit;transition:width .45s cubic-bezier(.16,1,.3,1)}
+    .card{border:1px solid var(--border);background:color-mix(in oklab, var(--surface) 84%, white);border-radius:24px;padding:18px;box-shadow:0 18px 46px rgba(0,0,0,.06);backdrop-filter:blur(10px)}
+    .question{margin:0 0 16px;font-size:clamp(20px,5.5vw,32px);line-height:1.4;font-weight:700;transition:opacity .25s ease, transform .25s ease}
+    .question.swap-out{opacity:0;transform:translateY(8px)}
+    .options{display:grid;gap:12px;transition:opacity .25s ease, transform .25s ease}
+    .options.swap-out{opacity:0;transform:translateY(8px)}
+    .option{width:100%;min-height:56px;text-align:left;padding:16px 16px;border-radius:18px;border:1px solid var(--border);background:var(--surface-2);color:var(--text);cursor:pointer;transition:transform .18s ease, border-color .18s ease, background .18s ease, box-shadow .18s ease;line-height:1.55;font-size:16px;white-space:pre-line}
+    .option:hover{transform:translateY(-1px);border-color:color-mix(in oklab, var(--accent) 42%, var(--border));background:color-mix(in oklab, var(--surface-2) 84%, var(--accent) 6%);box-shadow:0 10px 20px rgba(0,0,0,.04)}
+    .option:active{transform:translateY(0)}
+    .option.selected{border-color:color-mix(in oklab, var(--accent) 64%, var(--border));background:color-mix(in oklab, var(--surface-2) 74%, var(--accent) 12%)}
+    .nav{display:flex;justify-content:space-between;gap:12px;align-items:center}
+    .ghost,.next{min-height:48px;padding:12px 18px;border-radius:999px;cursor:pointer;font:inherit;transition:transform .18s ease, opacity .18s ease, background .18s ease}
+    .ghost{border:1px solid var(--border);background:transparent;color:var(--text)}
+    .next{border:1px solid transparent;background:var(--accent);color:#fff;min-width:120px}
+    .ghost:hover,.next:hover{transform:translateY(-1px)}
+    .next:disabled,.ghost:disabled{opacity:.45;cursor:not-allowed;transform:none}
+    .footer-note{font-size:12px;color:var(--muted);text-align:center;margin-top:-2px}
+    .result-card{text-align:center;border-radius:28px;padding:22px 18px 18px;background:linear-gradient(180deg, color-mix(in oklab, var(--surface) 72%, white), color-mix(in oklab, var(--surface-2) 90%, var(--accent) 5%));position:relative;overflow:hidden}
+    .result-card::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at top, color-mix(in oklab, var(--accent) 12%, transparent), transparent 55%);pointer-events:none}
+    .result-code{font-family:var(--font-display);font-size:clamp(46px,12vw,88px);line-height:1;margin-bottom:14px;position:relative;z-index:1}
+    .result-name{font-size:clamp(26px,6vw,42px);font-weight:700;margin-bottom:10px;position:relative;z-index:1}
+    .result-tag{font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:18px;position:relative;z-index:1}
+    .result-desc{margin:0 auto;max-width:36ch;line-height:1.85;color:var(--muted);font-size:16px;position:relative;z-index:1}
+    .result-pill-row{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin:18px 0 8px;position:relative;z-index:1}
+    .pill{padding:10px 14px;border-radius:999px;border:1px solid var(--border);background:color-mix(in oklab, var(--surface-2) 88%, white);color:var(--text);font-size:12px;letter-spacing:.08em}
+    .result-cta{margin-top:18px;display:flex;justify-content:center;position:relative;z-index:1}
+    .restart-btn{min-height:48px;padding:12px 18px;border-radius:999px;border:1px solid transparent;background:var(--accent);color:#fff;cursor:pointer;font:inherit;min-width:140px}
+    .restart-btn:hover{transform:translateY(-1px)}
+    .result-note{font-size:12px;color:var(--muted);margin-top:14px;position:relative;z-index:1}
+    @keyframes floatIn{from{opacity:0;transform:translateY(28px) scale(.96)}to{opacity:1;transform:translateY(0) scale(1)}}
+    @keyframes rip{from{width:0;height:0;opacity:.85}to{width:360px;height:360px;opacity:0}}
+    @keyframes pulse{50%{transform:translate(-50%,-50%) scale(1.08);opacity:.68}}
+    @media (max-width:767px){.nav{flex-direction:column}.ghost,.next{width:100%}}
+    @media (min-width:768px){.topbar{padding:calc(18px + env(safe-area-inset-top)) 24px 18px}.screen{padding:calc(96px + env(safe-area-inset-top)) 28px calc(36px + env(safe-area-inset-bottom))}.logo-image{width:min(56vw,520px)}.quiz{width:min(90vw,860px);gap:20px}.card{padding:24px;border-radius:28px}.option{min-height:60px;padding:18px 18px}}
+    @media (min-width:1024px){.screen{padding:calc(104px + env(safe-area-inset-top)) 32px calc(42px + env(safe-area-inset-bottom))}.quiz{width:min(82vw,920px)}.logo-image{width:min(48vw,540px)}.sub{max-width:40ch}.result-card{padding:28px 24px 22px}.result-pill-row{margin-top:22px}}
+    @media (hover:none){.option:hover,.ghost:hover,.next:hover,.restart-btn:hover{transform:none;box-shadow:none}}
+    @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none !important;transition:none !important;scroll-behavior:auto !important}}
   </style>
 </head>
 <body>
   <main class="wrap">
     <section class="stage" id="stage" aria-label="U&ME 心理測驗">
       <div class="topbar">
-        <div class="brandmark">
-          <span class="logo">U</span>
-          <span>U&ME MBTI</span>
-        </div>
+        <div class="brandmark"><span class="logo">U</span><span>U&ME MBTI</span></div>
         <button class="toggle" id="themeBtn" type="button">切換模式</button>
       </div>
-
       <div class="glow" aria-hidden="true"></div>
 
-      <div class="screen" id="introScreen">
+      <div class="screen active" id="introScreen">
         <div class="brand">
-          <div class="logo-image" aria-label="U&ME LOGO">
-            <span>U&ME</span>
-          </div>
+          <div class="logo-image" aria-label="U&ME LOGO"><span>U&ME</span></div>
           <div class="sub">你的內心世界旅程即將開始。</div>
           <div class="actions">
             <button class="start" id="startBtn" type="button" aria-label="開始測驗"></button>
@@ -514,6 +114,10 @@
             <div class="quiz-progress" id="quizProgress">1 / 12</div>
           </div>
 
+          <div class="progress-wrap" aria-label="進度條">
+            <div class="progress-bar"><span id="progressFill"></span></div>
+          </div>
+
           <div class="card">
             <p class="question" id="questionText"></p>
             <div class="options" id="options"></div>
@@ -524,7 +128,7 @@
             <button class="next" id="nextBtn" type="button" disabled>下一題</button>
           </div>
 
-          <div class="footer-note">完成所有題目後，系統會自動顯示你的結果。</div>
+          <div class="footer-note">先完成題目流程，結果頁會自動顯示。</div>
         </div>
       </div>
 
@@ -538,15 +142,16 @@
           </div>
 
           <div class="card result-card">
-            <div style="font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;">你的組合</div>
+            <div style="font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;position:relative;z-index:1;">你的組合</div>
             <div class="result-code" id="resultCode">MIRC</div>
             <div class="result-name" id="resultName">柔光守護者</div>
             <div class="result-tag" id="resultTag">慢慢升溫型</div>
+            <div class="result-pill-row" id="resultPills"></div>
             <p class="result-desc" id="resultDesc">妳喜歡氛圍先到位，再慢慢打開感受。妳不是不主動，而是要先感受到安心與情緒流動，才會真正進入狀態。</p>
-          </div>
-
-          <div class="nav">
-            <button class="ghost" id="restartBtn" type="button">重新測驗</button>
+            <div class="result-cta">
+              <button class="restart-btn" id="restartBtn" type="button">重新測驗</button>
+            </div>
+            <div class="result-note">你可以重新開始一次，或回到首頁重新體驗開場。</div>
           </div>
         </div>
       </div>
@@ -568,10 +173,12 @@
     const optionsEl = document.getElementById('options');
     const quizTitle = document.getElementById('quizTitle');
     const quizProgress = document.getElementById('quizProgress');
+    const progressFill = document.getElementById('progressFill');
     const resultCode = document.getElementById('resultCode');
     const resultName = document.getElementById('resultName');
     const resultTag = document.getElementById('resultTag');
     const resultDesc = document.getElementById('resultDesc');
+    const resultPills = document.getElementById('resultPills');
 
     const questions = [
       { q:'第一次靠近時，你更在意什麼？', a:['A. 氛圍有沒有對。','B. 反應來得夠不夠快。','C. 感覺有沒有慢慢升起來。','D. 能不能直接進入狀態。'] },
@@ -604,28 +211,43 @@
     ];
 
     const results = {
-      MIRC:{name:'柔光守護者', tag:'慢慢升溫型', desc:'妳喜歡氛圍先到位，再慢慢打開感受。妳不是不主動，而是要先感受到安心與情緒流動，才會真正進入狀態。'},
-      MIRL:{name:'微熱守護者', tag:'情感慾流型', desc:'妳要的不是直接刺激，而是情緒與慾望一起被喚醒。妳對關係有感，對氛圍也有感，會在熟悉感中慢慢被點燃。'},
-      MITC:{name:'觸感守護者', tag:'觸感探索型', desc:'妳重視感受本身，特別在意觸覺與互動的細節。妳喜歡慢慢摸索，不急著定義，但很敏銳。'},
-      MITL:{name:'感受守護者', tag:'感官沉浸型', desc:'妳一旦進入狀態，就會很投入，喜歡感官層層堆疊。妳重視細節、觸感、節奏與身體回饋。'},
-      MDRC:{name:'溫柔引導者', tag:'溫柔直入型', desc:'妳表面柔和，但其實知道自己要什麼。妳不喜歡繞太久，偏好在有情感鋪陳後直接進入重點。'},
-      MDRL:{name:'曖昧引導者', tag:'曖昧直覺型', desc:'妳喜歡明確，但不喜歡太冷。妳要的是有溫度的直接，是帶著曖昧與情緒的靠近。'},
-      MDTC:{name:'體感引導者', tag:'體感主導型', desc:'妳偏好清楚、直接，而且一切都要讓身體先有反應。妳對產品的有效感、刺激感、反應速度會很在意。'},
-      MDTL:{name:'直感引導者', tag:'直球慾感型', desc:'妳不想猜，也不喜歡太多前戲式模糊，妳想要的是直接而有感。妳的偏好明確，反應也直接，屬於很好懂、也很有存在感的類型。'},
-      EIRC:{name:'霧感感官者', tag:'情緒探索型', desc:'妳偏刺激，但不是粗暴，而是想透過情緒與新鮮感打開感受。妳喜歡探索，也會被關係中的曖昧感吸引。'},
-      EIRL:{name:'熱感感官者', tag:'高溫曖昧型', desc:'妳對情感與慾望都有反應，而且不太怕熱度。妳喜歡強烈一點的氛圍，也喜歡被帶進更深的感受。'},
-      EITC:{name:'細節感官者', tag:'刺激試探型', desc:'妳喜歡先試試看，感受有沒有對味。妳的反應很快，喜歡新鮮、喜歡摸索，也願意多嘗試。'},
-      EITL:{name:'強感感官者', tag:'強烈感官型', desc:'妳很容易被明確的刺激抓住，喜歡直接、有感、迅速反應的體驗。妳不太需要太多鋪陳，重點是感受要夠明顯。'},
-      EDRC:{name:'悄然探索者', tag:'主動曖昧型', desc:'妳不一定要等別人帶，妳自己就很會製造氣氛。妳雖然直接，但不是冰冷，而是有情感、有曖昧、有推進感。'},
-      EDRL:{name:'慾感探索者', tag:'慾感引導型', desc:'妳是那種很會把節奏帶進去的人。妳知道怎麼讓氣氛升溫，也知道怎麼讓對方進入狀態。'},
-      EDTC:{name:'直覺探索者', tag:'直接體驗型', desc:'妳重視的是當下的真實感受，喜歡清楚、直接、有效。妳不喜歡過度包裝，妳要的是立刻能感受到的東西。'},
-      EDTL:{name:'烈感探索者', tag:'直球烈感型', desc:'妳是很強烈、很直接、很知道自己要什麼的類型。妳不太繞，也不太等，妳的偏好很鮮明，吸引力也很強。'}
+      MIRC:{name:'柔光守護者', tag:'慢慢升溫型', desc:'妳喜歡氛圍先到位，再慢慢打開感受。妳不是不主動，而是要先感受到安心與情緒流動，才會真正進入狀態。', pills:['溫柔', '緩慢', '氛圍感']},
+      MIRL:{name:'微熱守護者', tag:'情感慾流型', desc:'妳要的不是直接刺激，而是情緒與慾望一起被喚醒。妳對關係有感，對氛圍也有感，會在熟悉感中慢慢被點燃。', pills:['情感', '曖昧', '升溫']},
+      MITC:{name:'觸感守護者', tag:'觸感探索型', desc:'妳重視感受本身，特別在意觸覺與互動的細節。妳喜歡慢慢摸索，不急著定義，但很敏銳。', pills:['觸感', '細節', '探索']},
+      MITL:{name:'感受守護者', tag:'感官沉浸型', desc:'妳一旦進入狀態，就會很投入，喜歡感官層層堆疊。妳重視細節、觸感、節奏與身體回饋。', pills:['沉浸', '節奏', '回饋']},
+      MDRC:{name:'溫柔引導者', tag:'溫柔直入型', desc:'妳表面柔和，但其實知道自己要什麼。妳不喜歡繞太久，偏好在有情感鋪陳後直接進入重點。', pills:['溫柔', '直接', '有感']},
+      MDRL:{name:'曖昧引導者', tag:'曖昧直覺型', desc:'妳喜歡明確，但不喜歡太冷。妳要的是有溫度的直接，是帶著曖昧與情緒的靠近。', pills:['曖昧', '溫度', '直接']},
+      MDTC:{name:'體感引導者', tag:'體感主導型', desc:'妳偏好清楚、直接，而且一切都要讓身體先有反應。妳對產品的有效感、刺激感、反應速度會很在意。', pills:['體感', '反應', '主導']},
+      MDTL:{name:'直感引導者', tag:'直球慾感型', desc:'妳不想猜，也不喜歡太多前戲式模糊，妳想要的是直接而有感。妳的偏好明確，反應也直接，屬於很好懂、也很有存在感的類型。', pills:['直球', '慾感', '明確']},
+      EIRC:{name:'霧感感官者', tag:'情緒探索型', desc:'妳偏刺激，但不是粗暴，而是想透過情緒與新鮮感打開感受。妳喜歡探索，也會被關係中的曖昧感吸引。', pills:['霧感', '探索', '情緒']},
+      EIRL:{name:'熱感感官者', tag:'高溫曖昧型', desc:'妳對情感與慾望都有反應，而且不太怕熱度。妳喜歡強烈一點的氛圍，也喜歡被帶進更深的感受。', pills:['高溫', '曖昧', '慾感']},
+      EITC:{name:'細節感官者', tag:'刺激試探型', desc:'妳喜歡先試試看，感受有沒有對味。妳的反應很快，喜歡新鮮、喜歡摸索，也願意多嘗試。', pills:['試探', '新鮮', '反應快']},
+      EITL:{name:'強感感官者', tag:'強烈感官型', desc:'妳很容易被明確的刺激抓住，喜歡直接、有感、迅速反應的體驗。妳不太需要太多鋪陳，重點是感受要夠明顯。', pills:['強烈', '感官', '直接']},
+      EDRC:{name:'悄然探索者', tag:'主動曖昧型', desc:'妳不一定要等別人帶，妳自己就很會製造氣氛。妳雖然直接，但不是冰冷，而是有情感、有曖昧、有推進感。', pills:['主動', '曖昧', '推進']},
+      EDRL:{name:'慾感探索者', tag:'慾感引導型', desc:'妳是那種很會把節奏帶進去的人。妳知道怎麼讓氣氛升溫，也知道怎麼讓對方進入狀態。', pills:['節奏', '升溫', '引導']},
+      EDTC:{name:'直覺探索者', tag:'直接體驗型', desc:'妳重視的是當下的真實感受，喜歡清楚、直接、有效。妳不喜歡過度包裝，妳要的是立刻能感受到的東西。', pills:['直覺', '體驗', '有效']},
+      EDTL:{name:'烈感探索者', tag:'直球烈感型', desc:'妳是很強烈、很直接、很知道自己要什麼的類型。妳不太繞，也不太等，妳的偏好很鮮明，吸引力也很強。', pills:['烈感', '直球', '存在感']}
     };
 
-    const state = {
-      index: 0,
-      answers: Array(questions.length).fill(null),
-      score: {Mood:0,Energy:0,Intimacy:0,Direct:0,Romance:0,Touch:0,Curious:0,Lust:0}
+    const state = { index:0, answers:Array(questions.length).fill(null), score:{Mood:0,Energy:0,Intimacy:0,Direct:0,Romance:0,Touch:0,Curious:0,Lust:0} };
+
+    const updateProgress = () => {
+      const pct = ((state.index) / (questions.length - 1)) * 100;
+      progressFill.style.width = `${Math.max(0, Math.min(100, pct))}%`;
+    };
+
+    const animateQuestionSwap = (done) => {
+      const q = document.getElementById('questionText');
+      const o = document.getElementById('options');
+      q.classList.add('swap-out');
+      o.classList.add('swap-out');
+      setTimeout(() => {
+        done();
+        requestAnimationFrame(() => {
+          q.classList.remove('swap-out');
+          o.classList.remove('swap-out');
+        });
+      }, 180);
     };
 
     const renderQuestion = () => {
@@ -634,26 +256,20 @@
       quizProgress.textContent = `${i + 1} / ${questions.length}`;
       questionText.textContent = questions[i].q;
       optionsEl.innerHTML = '';
+      updateProgress();
 
       questions[i].a.forEach((txt, idx) => {
         const key = ['A','B','C','D'][idx];
-        const button = document.createElement('button');
-        button.className = 'option';
-        button.type = 'button';
-        button.textContent = txt;
-
-        if (state.answers[i] === key) {
-          button.style.borderColor = 'color-mix(in oklab, var(--accent) 60%, var(--border))';
-          button.style.background = 'color-mix(in oklab, var(--surface-2) 78%, var(--accent) 10%)';
-        }
-
-        button.addEventListener('click', () => {
+        const b = document.createElement('button');
+        b.className = 'option';
+        b.type = 'button';
+        b.textContent = txt;
+        if (state.answers[i] === key) b.classList.add('selected');
+        b.addEventListener('click', () => {
           state.answers[i] = key;
-          renderQuestion();
-          nextBtn.disabled = false;
+          animateQuestionSwap(renderQuestion);
         });
-
-        optionsEl.appendChild(button);
+        optionsEl.appendChild(b);
       });
 
       backBtn.disabled = i === 0;
@@ -661,22 +277,30 @@
       nextBtn.disabled = state.answers[i] == null;
     };
 
+    const showScreen = (screen) => {
+      [introScreen, quizScreen, resultScreen].forEach(s => {
+        s.hidden = s !== screen;
+        s.classList.remove('active');
+      });
+      screen.hidden = false;
+      requestAnimationFrame(() => screen.classList.add('active'));
+    };
+
     const startQuiz = () => {
-      introScreen.hidden = true;
-      quizScreen.hidden = false;
-      resultScreen.hidden = true;
       state.index = 0;
+      state.answers = Array(questions.length).fill(null);
+      resultPills.innerHTML = '';
+      progressFill.style.width = '0%';
+      showScreen(quizScreen);
       renderQuestion();
     };
 
     const computeResult = () => {
       state.score = {Mood:0,Energy:0,Intimacy:0,Direct:0,Romance:0,Touch:0,Curious:0,Lust:0};
-
       state.answers.forEach((ans, i) => {
         const [k, v] = scoreMap[i][ans];
         state.score[k] += v;
       });
-
       return [
         state.score.Mood >= state.score.Energy ? 'M' : 'E',
         state.score.Intimacy >= state.score.Direct ? 'I' : 'D',
@@ -688,21 +312,25 @@
     const showResult = () => {
       const code = computeResult();
       const r = results[code] || results.MIRC;
-      introScreen.hidden = true;
-      quizScreen.hidden = true;
-      resultScreen.hidden = false;
       resultCode.textContent = code;
       resultName.textContent = r.name;
       resultTag.textContent = r.tag;
       resultDesc.textContent = r.desc;
+      resultPills.innerHTML = '';
+      r.pills.forEach(t => {
+        const pill = document.createElement('span');
+        pill.className = 'pill';
+        pill.textContent = t;
+        resultPills.appendChild(pill);
+      });
+      showScreen(resultScreen);
     };
 
     const nextQuestion = () => {
       if (state.answers[state.index] == null) return;
-
       if (state.index < questions.length - 1) {
         state.index += 1;
-        renderQuestion();
+        animateQuestionSwap(renderQuestion);
       } else {
         showResult();
       }
@@ -711,17 +339,16 @@
     const prevQuestion = () => {
       if (state.index > 0) {
         state.index -= 1;
-        renderQuestion();
+        animateQuestionSwap(renderQuestion);
       }
     };
 
     const restartToStart = () => {
-      introScreen.hidden = false;
-      quizScreen.hidden = true;
-      resultScreen.hidden = true;
       state.index = 0;
       state.answers = Array(questions.length).fill(null);
+      progressFill.style.width = '0%';
       nextBtn.disabled = true;
+      showScreen(introScreen);
     };
 
     const theme = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
