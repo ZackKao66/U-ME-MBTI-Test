@@ -6,44 +6,334 @@
   <title>U&ME MBTI</title>
   <style>
     :root{
-      --bg:#f7f4ee; --surface:#fcfbf8; --surface-2:#f2ede5; --border:rgba(40,37,29,.12);
-      --text:#1f1c16; --muted:#6f6a61; --accent:#c7a56a; --accent-2:#8d9fb5; --shadow:0 20px 60px rgba(42,33,18,.10);
-      --radius:24px; --r2:18px; --r3:14px; --max:1080px;
-      --font-display:'Georgia',serif; --font-body:'Inter',system-ui,sans-serif;
+      --bg:#f7f4ee;
+      --surface:#fcfbf8;
+      --surface-2:#f2ede5;
+      --border:rgba(40,37,29,.12);
+      --text:#1f1c16;
+      --muted:#6f6a61;
+      --accent:#c7a56a;
+      --accent-2:#8d9fb5;
+      --shadow:0 20px 60px rgba(42,33,18,.10);
+      --font-display:'Georgia',serif;
+      --font-body:'Inter',system-ui,sans-serif;
+      --radius:24px;
+      --radius-lg:32px;
+      --radius-md:18px;
+      --radius-sm:14px;
     }
-    [data-theme="dark"]{--bg:#151412;--surface:#1d1c19;--surface-2:#23211d;--border:rgba(255,255,255,.10);--text:#f1ece3;--muted:#aaa49a;--accent:#d4b67a;--accent-2:#9fb0c4;--shadow:0 24px 70px rgba(0,0,0,.35)}
-    *{box-sizing:border-box} html,body{margin:0;min-height:100%} body{font-family:var(--font-body);background:radial-gradient(circle at top, rgba(199,165,106,.16), transparent 38%), var(--bg); color:var(--text); overflow:hidden}
-    .wrap{min-height:100vh;display:block;padding:0}
-    .stage{width:100vw;height:100dvh;background:linear-gradient(180deg, color-mix(in oklab, var(--surface) 88%, white), var(--surface));border:0;border-radius:0;box-shadow:none;position:relative;overflow:hidden}
-    .topbar{position:absolute;left:0;right:0;top:0;display:flex;justify-content:space-between;align-items:center;padding:18px 20px;z-index:3}
-    .brandmark{display:flex;align-items:center;gap:12px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;font-size:12px;color:var(--muted)}
-    .logo{width:34px;height:34px;border-radius:50%;border:1px solid var(--border);display:grid;place-items:center;color:var(--accent)}
-    .toggle,.start{border:1px solid var(--border);background:color-mix(in oklab, var(--surface) 76%, white);color:var(--text);border-radius:999px;padding:12px 16px;font:inherit}
-    .hero{position:absolute;inset:0;display:grid;place-items:center;padding:32px;text-align:center}
-    .brand{display:grid;gap:18px;justify-items:center;transform:translateY(10px);animation:floatIn 1.8s cubic-bezier(.16,1,.3,1) .2s both;width:min(92vw,760px)}
-    .logo-image{width:min(62vw,480px);aspect-ratio:3/1;display:grid;place-items:center;border-radius:28px;border:1px solid color-mix(in oklab, var(--accent) 30%, var(--border));background:linear-gradient(135deg, color-mix(in oklab, var(--surface) 72%, white), color-mix(in oklab, var(--surface-2) 82%, var(--accent) 6%));box-shadow:0 18px 48px rgba(0,0,0,.08);transform:translateY(10px) scale(.96);animation:floatIn 1.8s cubic-bezier(.16,1,.3,1) .2s both}
-    .logo-image span{font-family:var(--font-display);font-size:clamp(44px,7vw,84px);line-height:1;letter-spacing:.08em;color:var(--text)}
-    .sub{max-width:40ch;color:var(--muted);font-size:clamp(16px,1.8vw,18px);line-height:1.7;margin-top:2px}
-    .actions{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
-    .start{width:64px;height:64px;padding:0;background:transparent;border:0;color:transparent;box-shadow:none}
-    .hint{display:none}
-    .ripple{position:absolute;border-radius:50%;pointer-events:none;transform:translate(-50%,-50%);background:radial-gradient(circle, rgba(255,255,255,.38) 0%, rgba(255,255,255,.18) 25%, rgba(255,255,255,0) 70%);animation:rip .75s ease-out forwards;mix-blend-mode:screen}
-    .glow{position:absolute;inset:auto; width:420px;height:420px;filter:blur(70px);opacity:.55;background:radial-gradient(circle, color-mix(in oklab, var(--accent) 28%, transparent), transparent 62%);left:50%;top:42%;transform:translate(-50%,-50%);animation:pulse 5s ease-in-out infinite}
-    @keyframes floatIn{from{opacity:0;transform:translateY(28px) scale(.96)}to{opacity:1;transform:translateY(0) scale(1)}}
-    @keyframes rip{from{width:0;height:0;opacity:.85}to{width:360px;height:360px;opacity:0}}
-    @keyframes pulse{50%{transform:translate(-50%,-50%) scale(1.08);opacity:.7}}
-    @media (max-width:720px){body{overflow:hidden}.stage{width:100vw;height:100dvh}.hero{padding:20px}.topbar{padding:16px}.sub{font-size:16px}.logo-image{width:min(86vw,420px)}}
+    [data-theme="dark"]{
+      --bg:#151412;
+      --surface:#1d1c19;
+      --surface-2:#23211d;
+      --border:rgba(255,255,255,.10);
+      --text:#f1ece3;
+      --muted:#aaa49a;
+      --accent:#d4b67a;
+      --accent-2:#9fb0c4;
+      --shadow:0 24px 70px rgba(0,0,0,.35);
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;min-height:100%}
+    body{
+      font-family:var(--font-body);
+      background:radial-gradient(circle at top, rgba(199,165,106,.16), transparent 38%), var(--bg);
+      color:var(--text);
+      overflow:hidden;
+    }
+    .wrap{
+      min-height:100vh;
+      display:block;
+      padding:0;
+    }
+    .stage{
+      width:100vw;
+      height:100dvh;
+      background:linear-gradient(180deg, color-mix(in oklab, var(--surface) 88%, white), var(--surface));
+      border:0;
+      border-radius:0;
+      box-shadow:none;
+      position:relative;
+      overflow:hidden;
+    }
+    .topbar{
+      position:absolute;
+      left:0;
+      right:0;
+      top:0;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      padding:18px 20px;
+      z-index:5;
+    }
+    .brandmark{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      font-weight:700;
+      letter-spacing:.18em;
+      text-transform:uppercase;
+      font-size:12px;
+      color:var(--muted);
+    }
+    .logo{
+      width:34px;
+      height:34px;
+      border-radius:50%;
+      border:1px solid var(--border);
+      display:grid;
+      place-items:center;
+      color:var(--accent);
+      flex:0 0 auto;
+    }
+    .toggle{
+      border:1px solid var(--border);
+      background:color-mix(in oklab, var(--surface) 76%, white);
+      color:var(--text);
+      border-radius:999px;
+      padding:12px 16px;
+      font:inherit;
+      cursor:pointer;
+    }
+    .screen{
+      position:absolute;
+      inset:0;
+      display:grid;
+      place-items:center;
+      padding:32px;
+      text-align:center;
+      transition:opacity .4s ease, transform .4s ease;
+    }
+    .screen[hidden]{
+      opacity:0;
+      pointer-events:none;
+      transform:scale(.99);
+    }
+    .brand{
+      display:grid;
+      gap:18px;
+      justify-items:center;
+      transform:translateY(10px);
+      animation:floatIn 1.8s cubic-bezier(.16,1,.3,1) .2s both;
+      width:min(92vw,760px);
+    }
+    .logo-image{
+      width:min(62vw,480px);
+      aspect-ratio:3/1;
+      display:grid;
+      place-items:center;
+      border-radius:28px;
+      border:1px solid color-mix(in oklab, var(--accent) 30%, var(--border));
+      background:linear-gradient(135deg, color-mix(in oklab, var(--surface) 72%, white), color-mix(in oklab, var(--surface-2) 82%, var(--accent) 6%));
+      box-shadow:0 18px 48px rgba(0,0,0,.08);
+      transform:translateY(10px) scale(.96);
+      animation:floatIn 1.8s cubic-bezier(.16,1,.3,1) .2s both;
+    }
+    .logo-image span{
+      font-family:var(--font-display);
+      font-size:clamp(44px,7vw,84px);
+      line-height:1;
+      letter-spacing:.08em;
+      color:var(--text);
+    }
+    .sub{
+      max-width:40ch;
+      color:var(--muted);
+      font-size:clamp(16px,1.8vw,18px);
+      line-height:1.7;
+      margin-top:2px;
+    }
+    .actions{
+      display:flex;
+      gap:12px;
+      flex-wrap:wrap;
+      justify-content:center;
+    }
+    .start{
+      width:88px;
+      height:88px;
+      border-radius:50%;
+      border:1px solid color-mix(in oklab, var(--accent) 45%, var(--border));
+      background:color-mix(in oklab, var(--accent) 84%, white);
+      color:var(--text);
+      display:grid;
+      place-items:center;
+      cursor:pointer;
+      box-shadow:0 12px 30px rgba(184,155,98,.22);
+      font-weight:700;
+      letter-spacing:.08em;
+    }
+    .start::before{
+      content:"開始";
+      font-size:14px;
+    }
+    .ripple{
+      position:absolute;
+      border-radius:50%;
+      pointer-events:none;
+      transform:translate(-50%,-50%);
+      background:radial-gradient(circle, rgba(255,255,255,.38) 0%, rgba(255,255,255,.18) 25%, rgba(255,255,255,0) 70%);
+      animation:rip .75s ease-out forwards;
+      mix-blend-mode:screen;
+      z-index:4;
+    }
+    .glow{
+      position:absolute;
+      width:min(72vw,680px);
+      height:min(72vw,680px);
+      filter:blur(90px);
+      opacity:.45;
+      background:radial-gradient(circle, color-mix(in oklab, var(--accent) 22%, transparent), transparent 64%);
+      left:50%;
+      top:50%;
+      transform:translate(-50%,-50%);
+      animation:pulse 5s ease-in-out infinite;
+      pointer-events:none;
+    }
+    .quiz{
+      width:min(92vw,760px);
+      display:grid;
+      gap:20px;
+      justify-items:stretch;
+      text-align:left;
+    }
+    .quiz-head{
+      display:flex;
+      justify-content:space-between;
+      align-items:end;
+      gap:16px;
+    }
+    .quiz-kicker{
+      font-size:12px;
+      letter-spacing:.18em;
+      text-transform:uppercase;
+      color:var(--muted);
+      margin-bottom:8px;
+    }
+    .quiz-title{
+      margin:0;
+      font-family:var(--font-display);
+      font-size:clamp(28px,4vw,48px);
+      line-height:1.15;
+    }
+    .quiz-progress{
+      font-size:14px;
+      color:var(--muted);
+      white-space:nowrap;
+    }
+    .card{
+      border:1px solid var(--border);
+      background:color-mix(in oklab, var(--surface) 84%, white);
+      border-radius:28px;
+      padding:24px;
+      box-shadow:0 18px 46px rgba(0,0,0,.06);
+    }
+    .question{
+      margin:0 0 18px;
+      font-size:clamp(22px,3vw,32px);
+      line-height:1.35;
+      font-weight:700;
+    }
+    .options{
+      display:grid;
+      gap:12px;
+    }
+    .option{
+      width:100%;
+      text-align:left;
+      padding:18px 18px;
+      border-radius:18px;
+      border:1px solid var(--border);
+      background:var(--surface-2);
+      color:var(--text);
+      cursor:pointer;
+      transition:transform .18s ease, border-color .18s ease, background .18s ease;
+      line-height:1.55;
+      font-size:16px;
+      white-space:pre-line;
+    }
+    .option:hover{
+      transform:translateY(-1px);
+      border-color:color-mix(in oklab, var(--accent) 42%, var(--border));
+      background:color-mix(in oklab, var(--surface-2) 84%, var(--accent) 6%);
+    }
+    .option:active{
+      transform:translateY(0);
+    }
+    .nav{
+      display:flex;
+      justify-content:space-between;
+      gap:12px;
+      align-items:center;
+    }
+    .ghost{
+      padding:12px 16px;
+      border-radius:999px;
+      border:1px solid var(--border);
+      background:transparent;
+      color:var(--text);
+      cursor:pointer;
+      font:inherit;
+    }
+    .next{
+      padding:12px 18px;
+      border-radius:999px;
+      border:1px solid transparent;
+      background:var(--accent);
+      color:#fff;
+      cursor:pointer;
+      font:inherit;
+      min-width:110px;
+    }
+    .next:disabled{
+      opacity:.45;
+      cursor:not-allowed;
+    }
+    .footer-note{
+      font-size:12px;
+      color:var(--muted);
+      text-align:center;
+      margin-top:-4px;
+    }
+    @keyframes floatIn{
+      from{opacity:0;transform:translateY(28px) scale(.96)}
+      to{opacity:1;transform:translateY(0) scale(1)}
+    }
+    @keyframes rip{
+      from{width:0;height:0;opacity:.85}
+      to{width:360px;height:360px;opacity:0}
+    }
+    @keyframes pulse{
+      50%{transform:translate(-50%,-50%) scale(1.08);opacity:.7}
+    }
+    @media (max-width:720px){
+      body{overflow:hidden}
+      .stage{width:100vw;height:100dvh}
+      .hero{padding:20px}
+      .topbar{padding:16px}
+      .sub{font-size:16px}
+      .logo-image{width:min(86vw,420px)}
+      .quiz{width:min(92vw,640px)}
+      .card{padding:18px}
+      .question{font-size:24px}
+      .option{padding:16px}
+      .nav{flex-wrap:wrap}
+      .ghost,.next{width:100%}
+    }
   </style>
 </head>
 <body>
   <main class="wrap">
-    <section class="stage" id="stage" aria-label="U&ME 心理測驗開場">
+    <section class="stage" id="stage" aria-label="U&ME 心理測驗">
       <div class="topbar">
         <div class="brandmark"><span class="logo">U</span><span>U&ME MBTI</span></div>
         <button class="toggle" id="themeBtn" type="button">切換模式</button>
       </div>
+
       <div class="glow" aria-hidden="true"></div>
-      <div class="hero">
+
+      <div class="screen" id="introScreen">
         <div class="brand">
           <div class="logo-image" aria-label="U&ME LOGO">
             <span>U&ME</span>
@@ -54,31 +344,163 @@
           </div>
         </div>
       </div>
+
+      <div class="screen" id="quizScreen" hidden>
+        <div class="quiz">
+          <div class="quiz-head">
+            <div>
+              <div class="quiz-kicker">U&ME MBTI TEST</div>
+              <h1 class="quiz-title" id="quizTitle">第 1 題</h1>
+            </div>
+            <div class="quiz-progress" id="quizProgress">1 / 12</div>
+          </div>
+
+          <div class="card">
+            <p class="question" id="questionText"></p>
+            <div class="options" id="options"></div>
+          </div>
+
+          <div class="nav">
+            <button class="ghost" id="backBtn" type="button">上一題</button>
+            <button class="next" id="nextBtn" type="button" disabled>下一題</button>
+          </div>
+
+          <div class="footer-note">先完成題目流程，結果頁我們下一步再接。</div>
+        </div>
+      </div>
     </section>
   </main>
+
   <script>
     const root = document.documentElement;
-    const themeBtn = document.getElementById('themeBtn');
     const stage = document.getElementById('stage');
-    const prefersDark = matchMedia('(prefers-color-scheme: dark)').matches;
-    let theme = prefersDark ? 'dark' : 'light';
-    root.setAttribute('data-theme', theme);
+    const themeBtn = document.getElementById('themeBtn');
+    const introScreen = document.getElementById('introScreen');
+    const quizScreen = document.getElementById('quizScreen');
+    const startBtn = document.getElementById('startBtn');
+    const backBtn = document.getElementById('backBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const questionText = document.getElementById('questionText');
+    const optionsEl = document.getElementById('options');
+    const quizTitle = document.getElementById('quizTitle');
+    const quizProgress = document.getElementById('quizProgress');
+
+    const questions = [
+      { q:'第一次靠近時，你更在意什麼？', a:['A. 氛圍有沒有對。','B. 反應來得夠不夠快。','C. 感覺有沒有慢慢升起來。','D. 能不能直接進入狀態。'] },
+      { q:'你比較容易被哪種方式打動？', a:['A. 溫柔、慢慢、一步一步。','B. 直接、明確、很到位。','C. 有情感、帶曖昧、會想多看一眼。','D. 觸感明顯、身體立刻有感。'] },
+      { q:'如果是一個讓你心動的畫面，你會先注意什麼？', a:['A. 整體氣氛。','B. 身體反應。','C. 被理解的感覺。','D. 實際觸感。'] },
+      { q:'你偏好的親密節奏比較像哪一種？', a:['A. 先鋪陳，再靠近。','B. 一開始就很明確。','C. 先有情緒，再有慾望。','D. 先有感覺，再看要不要繼續。'] },
+      { q:'你在選擇用品時，最在意哪件事？', a:['A. 氛圍感與包裝。','B. 刺激感與反應。','C. 情感與連結。','D. 實際使用時的感受。'] },
+      { q:'當互動開始時，你比較喜歡哪種方式？', a:['A. 慢慢被帶入。','B. 直接進入主題。','C. 帶點曖昧與鋪陳。','D. 先試看看有沒有感。'] },
+      { q:'哪一種感覺最容易讓你覺得「對了」？', a:['A. 氛圍對了。','B. 張力夠了。','C. 情感被接住了。','D. 身體感受夠明確。'] },
+      { q:'如果今天要你選一種關係狀態，你比較像哪一種？', a:['A. 靜靜靠近型。','B. 明確進攻型。','C. 曖昧升溫型。','D. 直接感受型。'] },
+      { q:'你在親密關係裡，最想要的是什麼？', a:['A. 情緒流動。','B. 即時反應。','C. 被理解。','D. 有感體驗。'] },
+      { q:'你比較容易被哪種內容吸引？', a:['A. 有畫面感的描述。','B. 有力道的表達。','C. 有情緒的文字。','D. 有觸感的描寫。'] },
+      { q:'如果要你做一個選擇，你會更傾向：', a:['A. 先感受再決定。','B. 直接選最有感的。','C. 先看有沒有情緒共鳴。','D. 先看觸感和實際效果。'] },
+      { q:'你覺得最迷人的，是哪一種靠近方式？', a:['A. 被氛圍包住。','B. 被刺激點燃。','C. 被情感理解。','D. 被感官喚醒。'] }
+    ];
+
+    const scoreMap = [
+      {A:['Mood',2], B:['Energy',2], C:['Intimacy',2], D:['Direct',2]},
+      {A:['Intimacy',2], B:['Direct',2], C:['Mood',2], D:['Energy',2]},
+      {A:['Mood',2], B:['Energy',2], C:['Romance',2], D:['Touch',2]},
+      {A:['Mood',2], B:['Direct',2], C:['Romance',2], D:['Touch',2]},
+      {A:['Mood',2], B:['Energy',2], C:['Intimacy',2], D:['Direct',2]},
+      {A:['Intimacy',2], B:['Direct',2], C:['Mood',2], D:['Energy',2]},
+      {A:['Mood',2], B:['Energy',2], C:['Romance',2], D:['Touch',2]},
+      {A:['Mood',2], B:['Energy',2], C:['Intimacy',2], D:['Direct',2]},
+      {A:['Mood',2], B:['Energy',2], C:['Intimacy',2], D:['Touch',2]},
+      {A:['Mood',2], B:['Energy',2], C:['Romance',2], D:['Touch',2]},
+      {A:['Mood',2], B:['Energy',2], C:['Romance',2], D:['Direct',2]},
+      {A:['Mood',2], B:['Energy',2], C:['Intimacy',2], D:['Direct',2]}
+    ];
+
+    const state = { index: 0, answers: Array(questions.length).fill(null), score: {Mood:0,Energy:0,Intimacy:0,Direct:0,Romance:0,Touch:0,Curious:0,Lust:0} };
+
+    const rerender = () => {
+      const i = state.index;
+      const total = questions.length;
+      quizTitle.textContent = `第 ${i + 1} 題`;
+      quizProgress.textContent = `${i + 1} / ${total}`;
+      questionText.textContent = questions[i].q;
+      optionsEl.innerHTML = '';
+      questions[i].a.forEach((txt, idx) => {
+        const b = document.createElement('button');
+        b.className = 'option';
+        b.type = 'button';
+        b.textContent = txt;
+        const key = ['A','B','C','D'][idx];
+        if (state.answers[i] === key) b.style.borderColor = 'color-mix(in oklab, var(--accent) 60%, var(--border))';
+        b.addEventListener('click', () => {
+          state.answers[i] = key;
+          nextBtn.disabled = false;
+          rerender();
+        });
+        optionsEl.appendChild(b);
+      });
+      backBtn.disabled = i === 0;
+      nextBtn.textContent = i === total - 1 ? '完成' : '下一題';
+      nextBtn.disabled = state.answers[i] === null;
+    };
+
+    const startQuiz = () => {
+      introScreen.hidden = true;
+      quizScreen.hidden = false;
+      state.index = 0;
+      rerender();
+    };
+
+    const nextQuestion = () => {
+      if (state.answers[state.index] == null) return;
+      if (state.index < questions.length - 1) {
+        state.index += 1;
+        rerender();
+        return;
+      }
+      alert('題目流程完成，下一步我們接結果頁。');
+    };
+
+    const prevQuestion = () => {
+      if (state.index > 0) {
+        state.index -= 1;
+        rerender();
+      }
+    };
+
+    const applyAnswer = () => {
+      state.score = {Mood:0,Energy:0,Intimacy:0,Direct:0,Romance:0,Touch:0,Curious:0,Lust:0};
+      state.answers.forEach((ans, i) => {
+        if (!ans) return;
+        const map = scoreMap[i][ans];
+        const [k, v] = map;
+        state.score[k] += v;
+      });
+    };
+
+    const rootTheme = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    root.setAttribute('data-theme', rootTheme);
+
     themeBtn.addEventListener('click', () => {
-      theme = theme === 'dark' ? 'light' : 'dark';
-      root.setAttribute('data-theme', theme);
+      const cur = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      root.setAttribute('data-theme', cur);
     });
+
     stage.addEventListener('pointerdown', (e) => {
       const r = document.createElement('span');
       r.className = 'ripple';
       const rect = stage.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
-      r.style.left = x + 'px';
-      r.style.top = y + 'px';
+      r.style.left = (e.clientX - rect.left) + 'px';
+      r.style.top = (e.clientY - rect.top) + 'px';
       stage.appendChild(r);
       r.addEventListener('animationend', () => r.remove());
     });
-    document.getElementById('startBtn').addEventListener('click', () => alert('下一步我們再接題目頁。'));
+
+    startBtn.addEventListener('click', startQuiz);
+    nextBtn.addEventListener('click', () => {
+      applyAnswer();
+      nextQuestion();
+    });
+    backBtn.addEventListener('click', prevQuestion);
   </script>
 </body>
 </html>
