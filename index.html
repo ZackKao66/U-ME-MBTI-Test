@@ -2,7 +2,7 @@
 <html lang="zh-Hant">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>U&ME MBTI</title>
   <style>
     :root{
@@ -17,11 +17,8 @@
       --shadow:0 20px 60px rgba(42,33,18,.10);
       --font-display:'Georgia',serif;
       --font-body:'Inter',system-ui,sans-serif;
-      --radius:24px;
-      --radius-lg:32px;
-      --radius-md:18px;
-      --radius-sm:14px;
     }
+
     [data-theme="dark"]{
       --bg:#151412;
       --surface:#1d1c19;
@@ -33,17 +30,33 @@
       --accent-2:#9fb0c4;
       --shadow:0 24px 70px rgba(0,0,0,.35);
     }
+
     *{box-sizing:border-box}
     html,body{margin:0;min-height:100%}
     body{
       font-family:var(--font-body);
-      background:radial-gradient(circle at top, rgba(199,165,106,.16), transparent 38%), var(--bg);
+      background:
+        radial-gradient(circle at top, rgba(199,165,106,.16), transparent 38%),
+        var(--bg);
       color:var(--text);
       overflow:hidden;
+      -webkit-font-smoothing:antialiased;
+      text-rendering:optimizeLegibility;
     }
-    .wrap{min-height:100vh;display:block;padding:0}
+
+    button,input,textarea,select{font:inherit}
+    button{-webkit-tap-highlight-color:transparent}
+
+    .wrap{
+      min-height:100vh;
+      min-height:100dvh;
+      display:block;
+      padding:0;
+    }
+
     .stage{
       width:100vw;
+      height:100vh;
       height:100dvh;
       background:linear-gradient(180deg, color-mix(in oklab, var(--surface) 88%, white), var(--surface));
       border:0;
@@ -51,7 +64,9 @@
       box-shadow:none;
       position:relative;
       overflow:hidden;
+      isolation:isolate;
     }
+
     .topbar{
       position:absolute;
       left:0;
@@ -60,19 +75,28 @@
       display:flex;
       justify-content:space-between;
       align-items:center;
-      padding:18px 20px;
+      padding:calc(14px + env(safe-area-inset-top)) 16px 14px;
       z-index:5;
     }
+
     .brandmark{
       display:flex;
       align-items:center;
-      gap:12px;
+      gap:10px;
       font-weight:700;
-      letter-spacing:.18em;
+      letter-spacing:.16em;
       text-transform:uppercase;
-      font-size:12px;
+      font-size:11px;
       color:var(--muted);
+      min-width:0;
     }
+
+    .brandmark span:last-child{
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+
     .logo{
       width:34px;
       height:34px;
@@ -83,72 +107,91 @@
       color:var(--accent);
       flex:0 0 auto;
     }
+
     .toggle{
+      min-height:44px;
+      padding:10px 14px;
       border:1px solid var(--border);
       background:color-mix(in oklab, var(--surface) 76%, white);
       color:var(--text);
       border-radius:999px;
-      padding:12px 16px;
-      font:inherit;
       cursor:pointer;
+      white-space:nowrap;
     }
+
     .screen{
       position:absolute;
       inset:0;
       display:grid;
       place-items:center;
-      padding:32px;
+      padding:
+        calc(90px + env(safe-area-inset-top))
+        20px
+        calc(28px + env(safe-area-inset-bottom));
       text-align:center;
-      transition:opacity .4s ease, transform .4s ease;
+      transition:opacity .35s ease, transform .35s ease;
     }
+
     .screen[hidden]{
       opacity:0;
       pointer-events:none;
       transform:scale(.99);
     }
+
     .brand{
       display:grid;
       gap:18px;
       justify-items:center;
-      transform:translateY(10px);
-      animation:floatIn 1.8s cubic-bezier(.16,1,.3,1) .2s both;
       width:min(92vw,760px);
+      animation:floatIn 1.2s cubic-bezier(.16,1,.3,1) both;
     }
+
     .logo-image{
-      width:min(62vw,480px);
+      width:min(82vw,480px);
       aspect-ratio:3/1;
       display:grid;
       place-items:center;
       border-radius:28px;
       border:1px solid color-mix(in oklab, var(--accent) 30%, var(--border));
-      background:linear-gradient(135deg, color-mix(in oklab, var(--surface) 72%, white), color-mix(in oklab, var(--surface-2) 82%, var(--accent) 6%));
+      background:
+        linear-gradient(
+          135deg,
+          color-mix(in oklab, var(--surface) 72%, white),
+          color-mix(in oklab, var(--surface-2) 82%, var(--accent) 6%)
+        );
       box-shadow:0 18px 48px rgba(0,0,0,.08);
-      transform:translateY(10px) scale(.96);
-      animation:floatIn 1.8s cubic-bezier(.16,1,.3,1) .2s both;
+      backdrop-filter:blur(10px);
     }
+
     .logo-image span{
       font-family:var(--font-display);
-      font-size:clamp(44px,7vw,84px);
+      font-size:clamp(40px,10vw,84px);
       line-height:1;
       letter-spacing:.08em;
       color:var(--text);
     }
+
     .sub{
-      max-width:40ch;
+      max-width:32ch;
       color:var(--muted);
-      font-size:clamp(16px,1.8vw,18px);
-      line-height:1.7;
-      margin-top:2px;
+      font-size:clamp(15px,3.8vw,18px);
+      line-height:1.75;
+      margin-inline:auto;
     }
+
     .actions{
       display:flex;
       gap:12px;
       flex-wrap:wrap;
       justify-content:center;
+      align-items:center;
     }
+
     .start{
       width:88px;
       height:88px;
+      min-width:88px;
+      min-height:88px;
       border-radius:50%;
       border:1px solid color-mix(in oklab, var(--accent) 45%, var(--border));
       background:color-mix(in oklab, var(--accent) 84%, white);
@@ -160,10 +203,27 @@
       font-weight:700;
       letter-spacing:.08em;
     }
+
     .start::before{
       content:"開始";
       font-size:14px;
     }
+
+    .glow{
+      position:absolute;
+      width:min(78vw,700px);
+      height:min(78vw,700px);
+      filter:blur(90px);
+      opacity:.42;
+      background:radial-gradient(circle, color-mix(in oklab, var(--accent) 22%, transparent), transparent 64%);
+      left:50%;
+      top:50%;
+      transform:translate(-50%,-50%);
+      animation:pulse 5s ease-in-out infinite;
+      pointer-events:none;
+      z-index:0;
+    }
+
     .ripple{
       position:absolute;
       border-radius:50%;
@@ -174,173 +234,248 @@
       mix-blend-mode:screen;
       z-index:4;
     }
-    .glow{
-      position:absolute;
-      width:min(72vw,680px);
-      height:min(72vw,680px);
-      filter:blur(90px);
-      opacity:.45;
-      background:radial-gradient(circle, color-mix(in oklab, var(--accent) 22%, transparent), transparent 64%);
-      left:50%;
-      top:50%;
-      transform:translate(-50%,-50%);
-      animation:pulse 5s ease-in-out infinite;
-      pointer-events:none;
-    }
+
     .quiz{
-      width:min(92vw,760px);
+      width:min(100%,760px);
       display:grid;
-      gap:20px;
+      gap:18px;
       justify-items:stretch;
       text-align:left;
+      position:relative;
+      z-index:2;
     }
+
     .quiz-head{
       display:flex;
       justify-content:space-between;
-      align-items:end;
-      gap:16px;
+      align-items:flex-end;
+      gap:12px;
     }
+
     .quiz-kicker{
-      font-size:12px;
+      font-size:11px;
       letter-spacing:.18em;
       text-transform:uppercase;
       color:var(--muted);
       margin-bottom:8px;
     }
+
     .quiz-title{
       margin:0;
       font-family:var(--font-display);
-      font-size:clamp(28px,4vw,48px);
+      font-size:clamp(26px,6vw,48px);
       line-height:1.15;
     }
+
     .quiz-progress{
-      font-size:14px;
+      font-size:13px;
       color:var(--muted);
       white-space:nowrap;
+      padding-bottom:4px;
     }
+
     .card{
       border:1px solid var(--border);
       background:color-mix(in oklab, var(--surface) 84%, white);
-      border-radius:28px;
-      padding:24px;
+      border-radius:24px;
+      padding:18px;
       box-shadow:0 18px 46px rgba(0,0,0,.06);
+      backdrop-filter:blur(10px);
     }
+
     .question{
-      margin:0 0 18px;
-      font-size:clamp(22px,3vw,32px);
-      line-height:1.35;
+      margin:0 0 16px;
+      font-size:clamp(20px,5.5vw,32px);
+      line-height:1.4;
       font-weight:700;
     }
+
     .options{
       display:grid;
       gap:12px;
     }
+
     .option{
       width:100%;
+      min-height:56px;
       text-align:left;
-      padding:18px 18px;
+      padding:16px 16px;
       border-radius:18px;
       border:1px solid var(--border);
       background:var(--surface-2);
       color:var(--text);
       cursor:pointer;
-      transition:transform .18s ease, border-color .18s ease, background .18s ease;
+      transition:transform .18s ease, border-color .18s ease, background .18s ease, box-shadow .18s ease;
       line-height:1.55;
       font-size:16px;
       white-space:pre-line;
     }
+
     .option:hover{
       transform:translateY(-1px);
       border-color:color-mix(in oklab, var(--accent) 42%, var(--border));
       background:color-mix(in oklab, var(--surface-2) 84%, var(--accent) 6%);
+      box-shadow:0 10px 20px rgba(0,0,0,.04);
     }
+
     .option:active{
       transform:translateY(0);
     }
+
     .nav{
       display:flex;
       justify-content:space-between;
       gap:12px;
       align-items:center;
     }
-    .ghost{
-      padding:12px 16px;
+
+    .ghost,.next{
+      min-height:48px;
+      padding:12px 18px;
       border-radius:999px;
+      cursor:pointer;
+      font:inherit;
+    }
+
+    .ghost{
       border:1px solid var(--border);
       background:transparent;
       color:var(--text);
-      cursor:pointer;
-      font:inherit;
     }
+
     .next{
-      padding:12px 18px;
-      border-radius:999px;
       border:1px solid transparent;
       background:var(--accent);
       color:#fff;
-      cursor:pointer;
-      font:inherit;
-      min-width:110px;
+      min-width:120px;
     }
+
     .next:disabled,.ghost:disabled{
       opacity:.45;
       cursor:not-allowed;
     }
+
     .footer-note{
       font-size:12px;
       color:var(--muted);
       text-align:center;
-      margin-top:-4px;
+      margin-top:-2px;
     }
-    .result-card{text-align:center}
+
+    .result-card{
+      text-align:center;
+    }
+
     .result-code{
       font-family:var(--font-display);
-      font-size:clamp(48px,8vw,88px);
+      font-size:clamp(46px,12vw,88px);
       line-height:1;
       margin-bottom:14px;
     }
+
     .result-name{
-      font-size:clamp(28px,4vw,42px);
+      font-size:clamp(26px,6vw,42px);
       font-weight:700;
       margin-bottom:10px;
     }
+
     .result-tag{
-      font-size:14px;
+      font-size:13px;
       letter-spacing:.14em;
       text-transform:uppercase;
       color:var(--accent);
       margin-bottom:18px;
     }
+
     .result-desc{
       margin:0 auto;
-      max-width:42ch;
-      line-height:1.8;
+      max-width:36ch;
+      line-height:1.85;
       color:var(--muted);
       font-size:16px;
     }
+
     @keyframes floatIn{
       from{opacity:0;transform:translateY(28px) scale(.96)}
       to{opacity:1;transform:translateY(0) scale(1)}
     }
+
     @keyframes rip{
       from{width:0;height:0;opacity:.85}
       to{width:360px;height:360px;opacity:0}
     }
+
     @keyframes pulse{
-      50%{transform:translate(-50%,-50%) scale(1.08);opacity:.7}
+      50%{transform:translate(-50%,-50%) scale(1.08);opacity:.68}
     }
-    @media (max-width:720px){
-      body{overflow:hidden}
-      .stage{width:100vw;height:100dvh}
-      .topbar{padding:16px}
-      .sub{font-size:16px}
-      .logo-image{width:min(86vw,420px)}
-      .quiz{width:min(92vw,640px)}
-      .card{padding:18px}
-      .question{font-size:24px}
-      .option{padding:16px}
-      .nav{flex-wrap:wrap}
-      .ghost,.next{width:100%}
+
+    @media (max-width:767px){
+      .nav{
+        flex-direction:column;
+      }
+      .ghost,.next{
+        width:100%;
+      }
+    }
+
+    @media (min-width:768px){
+      .topbar{
+        padding:calc(18px + env(safe-area-inset-top)) 24px 18px;
+      }
+      .screen{
+        padding:
+          calc(96px + env(safe-area-inset-top))
+          28px
+          calc(36px + env(safe-area-inset-bottom));
+      }
+      .logo-image{
+        width:min(56vw,520px);
+      }
+      .quiz{
+        width:min(90vw,860px);
+        gap:22px;
+      }
+      .card{
+        padding:24px;
+        border-radius:28px;
+      }
+      .option{
+        min-height:60px;
+        padding:18px 18px;
+      }
+    }
+
+    @media (min-width:1024px){
+      .screen{
+        padding:
+          calc(104px + env(safe-area-inset-top))
+          32px
+          calc(42px + env(safe-area-inset-bottom));
+      }
+      .quiz{
+        width:min(82vw,920px);
+      }
+      .logo-image{
+        width:min(48vw,540px);
+      }
+      .sub{
+        max-width:40ch;
+      }
+    }
+
+    @media (hover:none){
+      .option:hover{
+        transform:none;
+        box-shadow:none;
+      }
+    }
+
+    @media (prefers-reduced-motion:reduce){
+      *,*::before,*::after{
+        animation:none !important;
+        transition:none !important;
+        scroll-behavior:auto !important;
+      }
     }
   </style>
 </head>
@@ -348,7 +483,10 @@
   <main class="wrap">
     <section class="stage" id="stage" aria-label="U&ME 心理測驗">
       <div class="topbar">
-        <div class="brandmark"><span class="logo">U</span><span>U&ME MBTI</span></div>
+        <div class="brandmark">
+          <span class="logo">U</span>
+          <span>U&ME MBTI</span>
+        </div>
         <button class="toggle" id="themeBtn" type="button">切換模式</button>
       </div>
 
@@ -356,7 +494,9 @@
 
       <div class="screen" id="introScreen">
         <div class="brand">
-          <div class="logo-image" aria-label="U&ME LOGO"><span>U&ME</span></div>
+          <div class="logo-image" aria-label="U&ME LOGO">
+            <span>U&ME</span>
+          </div>
           <div class="sub">你的內心世界旅程即將開始。</div>
           <div class="actions">
             <button class="start" id="startBtn" type="button" aria-label="開始測驗"></button>
@@ -384,7 +524,7 @@
             <button class="next" id="nextBtn" type="button" disabled>下一題</button>
           </div>
 
-          <div class="footer-note">先完成題目流程，結果頁會自動顯示。</div>
+          <div class="footer-note">完成所有題目後，系統會自動顯示你的結果。</div>
         </div>
       </div>
 
@@ -497,22 +637,23 @@
 
       questions[i].a.forEach((txt, idx) => {
         const key = ['A','B','C','D'][idx];
-        const b = document.createElement('button');
-        b.className = 'option';
-        b.type = 'button';
-        b.textContent = txt;
+        const button = document.createElement('button');
+        button.className = 'option';
+        button.type = 'button';
+        button.textContent = txt;
 
         if (state.answers[i] === key) {
-          b.style.borderColor = 'color-mix(in oklab, var(--accent) 60%, var(--border))';
+          button.style.borderColor = 'color-mix(in oklab, var(--accent) 60%, var(--border))';
+          button.style.background = 'color-mix(in oklab, var(--surface-2) 78%, var(--accent) 10%)';
         }
 
-        b.addEventListener('click', () => {
+        button.addEventListener('click', () => {
           state.answers[i] = key;
           renderQuestion();
           nextBtn.disabled = false;
         });
 
-        optionsEl.appendChild(b);
+        optionsEl.appendChild(button);
       });
 
       backBtn.disabled = i === 0;
@@ -546,7 +687,7 @@
 
     const showResult = () => {
       const code = computeResult();
-      const r = results[code];
+      const r = results[code] || results.MIRC;
       introScreen.hidden = true;
       quizScreen.hidden = true;
       resultScreen.hidden = false;
@@ -580,7 +721,6 @@
       resultScreen.hidden = true;
       state.index = 0;
       state.answers = Array(questions.length).fill(null);
-      renderQuestion();
       nextBtn.disabled = true;
     };
 
