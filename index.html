@@ -25,10 +25,56 @@
       --theme-grad-a:#8d9fb5;--theme-grad-b:#c7a56a;
     }
     *{box-sizing:border-box} html,body{margin:0;min-height:100%}
-    body{font-family:var(--font-body);background:radial-gradient(circle at top,rgba(199,165,106,.16),transparent 38%),var(--bg);color:var(--text);overflow:hidden;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+    body{
+      font-family:var(--font-body);
+      background:radial-gradient(circle at top,rgba(199,165,106,.16),transparent 38%),var(--bg);
+      color:var(--text);overflow:hidden;
+      -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;
+    }
+
+    /* ── 入場遮罩 ── */
+    .curtain{
+      position:fixed;inset:0;z-index:999;pointer-events:none;
+      display:grid;place-items:center;
+      background:var(--bg);
+      animation:curtainFade 2s cubic-bezier(.16,1,.3,1) forwards;
+    }
+    .curtain-logo{
+      font-family:var(--font-display);
+      font-size:clamp(28px,8vw,56px);
+      letter-spacing:.18em;
+      color:var(--text);
+      opacity:0;
+      animation:curtainLogoIn 1s cubic-bezier(.16,1,.3,1) .15s forwards,
+                curtainLogoOut .5s cubic-bezier(.4,0,1,1) 1.1s forwards;
+    }
+    @keyframes curtainFade{
+      0%  {opacity:1}
+      55% {opacity:1}
+      100%{opacity:0;pointer-events:none}
+    }
+    @keyframes curtainLogoIn{
+      from{opacity:0;transform:translateY(10px) scale(.96)}
+      to  {opacity:1;transform:translateY(0) scale(1)}
+    }
+    @keyframes curtainLogoOut{
+      from{opacity:1;transform:scale(1)}
+      to  {opacity:0;transform:scale(1.06)}
+    }
+
+    /* 首頁品牌區塊配合遮罩時間延遲浮現 */
+    .brand{
+      display:grid;gap:16px;justify-items:center;
+      width:min(92vw,760px);
+      position:relative;z-index:1;
+      animation:floatIn 1.2s cubic-bezier(.16,1,.3,1) 1.6s both;
+    }
+
     button{font:inherit;-webkit-tap-highlight-color:transparent}
     .stage{width:100vw;height:100svh;min-height:100svh;position:relative;overflow:hidden;background:linear-gradient(180deg,color-mix(in oklab,var(--surface) 88%,white),var(--surface));isolation:isolate}
-    .topbar{position:absolute;left:0;right:0;top:0;display:flex;justify-content:space-between;align-items:center;padding:calc(12px + env(safe-area-inset-top)) 14px 12px;z-index:8}
+    .topbar{position:absolute;left:0;right:0;top:0;display:flex;justify-content:space-between;align-items:center;padding:calc(12px + env(safe-area-inset-top)) 14px 12px;z-index:8;
+      opacity:0;animation:fadeIn .8s ease 1.9s forwards;}
+    @keyframes fadeIn{to{opacity:1}}
     .brandmark{display:flex;align-items:center;gap:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;font-size:11px;color:var(--muted)}
     .logo{width:34px;height:34px;border-radius:50%;border:1px solid var(--border);display:grid;place-items:center;color:var(--accent)}
     .toggle{min-height:40px;padding:8px 12px;border:1px solid var(--border);background:color-mix(in oklab,var(--surface) 76%,white);color:var(--text);border-radius:999px;cursor:pointer}
@@ -37,7 +83,6 @@
     .screen.active{opacity:1;transform:translateY(0);filter:none}
     .glow{position:absolute;width:min(78vw,700px);height:min(78vw,700px);filter:blur(90px);opacity:.42;background:radial-gradient(circle,color-mix(in oklab,var(--accent) 22%,transparent),transparent 64%);left:50%;top:50%;transform:translate(-50%,-50%);animation:pulse 5s ease-in-out infinite;pointer-events:none;z-index:0;transition:background .6s ease}
     .brand-wave{position:absolute;inset:auto 0 0 0;height:42vh;background:linear-gradient(180deg,transparent,color-mix(in oklab,var(--accent) 6%,transparent) 30%,transparent 100%);opacity:.6;pointer-events:none;z-index:0;animation:wave 12s ease-in-out infinite}
-    .brand{display:grid;gap:16px;justify-items:center;width:min(92vw,760px);animation:floatIn 1.1s cubic-bezier(.16,1,.3,1) both;position:relative;z-index:1}
     .logo-image{width:min(82vw,460px);aspect-ratio:3/1;display:grid;place-items:center;border-radius:24px;border:1px solid color-mix(in oklab,var(--accent) 30%,var(--border));background:linear-gradient(135deg,color-mix(in oklab,var(--surface) 72%,white),color-mix(in oklab,var(--surface-2) 82%,var(--accent) 6%));box-shadow:0 18px 48px rgba(0,0,0,.08);backdrop-filter:blur(10px);animation:logoFloat 6s ease-in-out infinite}
     .logo-image span{font-family:var(--font-display);font-size:clamp(40px,10vw,84px);line-height:1;letter-spacing:.08em}
     .sub{max-width:28ch;color:var(--muted);font-size:clamp(14px,3.8vw,18px);line-height:1.7}
@@ -205,6 +250,12 @@
   </style>
 </head>
 <body>
+
+  <!-- 入場遮罩：頁面載入時全覆蓋，顯示品牌名後淡出 -->
+  <div class="curtain" id="curtain" aria-hidden="true">
+    <div class="curtain-logo">U&ME</div>
+  </div>
+
 <main class="stage" id="stage">
   <div class="topbar">
     <div class="brandmark"><span class="logo">U</span><span>U&ME MBTI</span></div>
@@ -311,6 +362,11 @@
 </main>
 
 <script>
+// 遮罩動畫結束後移除 DOM，避免擋住互動
+document.getElementById('curtain').addEventListener('animationend',function(){
+  this.remove();
+},{once:true});
+
 const root=document.documentElement,
   stage=document.getElementById('stage'),
   themeBtn=document.getElementById('themeBtn'),
@@ -348,43 +404,21 @@ const root=document.documentElement,
   shareDesc=document.getElementById('shareDesc'),
   sharePills=document.getElementById('sharePills');
 
-// ── 題目（12題，每3題對應一個維度）─────────────────────────────────
-// 題 1-3  → Mood / Energy
-// 題 4-6  → Intimacy / Direct
-// 題 7-9  → Romance / Touch
-// 題 10-12 → Curious / Lust
 const questions=[
-  {q:'第一次靠近時，你更在意什麼？',
-   a:['A. 氛圍有沒有對，感覺要先到位。','B. 反應夠不夠快，張力要立刻出現。','C. 感覺有沒有慢慢升起來。','D. 能不能直接進入狀態。']},
-  {q:'你比較容易被哪種方式打動？',
-   a:['A. 溫柔、慢慢、一步一步。','B. 直接、明確、很到位。','C. 有情感、帶曖昧、會想多看一眼。','D. 觸感明顯、身體立刻有感。']},
-  {q:'哪一種感覺最容易讓你覺得「對了」？',
-   a:['A. 氛圍對了，心就跟著開了。','B. 張力夠了，身體自然有反應。','C. 情感被接住了，才能真的放開。','D. 身體感受夠明確，不需要猜。']},
-  {q:'你偏好的親密節奏比較像哪一種？',
-   a:['A. 先鋪陳，再靠近，情感要先有。','B. 一開始就很明確，不用繞太久。','C. 先有情緒共鳴，再往下走。','D. 先有感覺，再決定要不要繼續。']},
-  {q:'當互動開始時，你比較喜歡哪種方式？',
-   a:['A. 慢慢被帶入，情感層層堆疊。','B. 直接進入主題，效率感讓人安心。','C. 帶點曖昧與鋪陳，讓彼此升溫。','D. 先試看看有沒有感，再決定方向。']},
-  {q:'你在親密關係裡，最想要的是什麼？',
-   a:['A. 情緒的流動與被理解的感受。','B. 即時的回饋與明確的存在感。','C. 被看見內心的那種連結。','D. 有感的真實體驗，不想靠想像。']},
-  {q:'如果是一個讓你心動的畫面，你會先注意什麼？',
-   a:['A. 整體氣氛與情感張力。','B. 身體的直接反應。','C. 被理解、被看見的感覺。','D. 實際觸感與物理刺激。']},
-  {q:'你在選擇用品時，最在意哪件事？',
-   a:['A. 氛圍感與包裝設計。','B. 刺激感與立即反應。','C. 情感連結與象徵意義。','D. 實際使用時的觸感與效果。']},
-  {q:'你比較容易被哪種內容吸引？',
-   a:['A. 有畫面感、有情緒鋪陳的描述。','B. 有力道、有衝擊感的表達。','C. 有情感溫度、讓人想多讀一遍的文字。','D. 有觸感細節、能讓身體有感的描寫。']},
-  {q:'你覺得最迷人的，是哪一種靠近方式？',
-   a:['A. 被氛圍慢慢包住，不急著到達。','B. 被刺激點燃，快速進入高峰。','C. 被情感理解，感覺被接住。','D. 被感官喚醒，身體先有答案。']},
-  {q:'如果要你做一個選擇，你更傾向：',
-   a:['A. 先感受氛圍，再慢慢決定。','B. 直接選最有感、最強烈的。','C. 先看情緒共鳴，再往下走。','D. 先看觸感與實際效果再說。']},
-  {q:'你覺得自己的慾望節奏比較像哪一種？',
-   a:['A. 慢熱型，要等情緒到位才會燃起來。','B. 快感型，很容易被點燃，也很直接。','C. 感性型，情感先到，慾望才跟上。','D. 感官型，身體的感受優先於一切。']}
+  {q:'第一次靠近時，你更在意什麼？',a:['A. 氛圍有沒有對，感覺要先到位。','B. 反應夠不夠快，張力要立刻出現。','C. 感覺有沒有慢慢升起來。','D. 能不能直接進入狀態。']},
+  {q:'你比較容易被哪種方式打動？',a:['A. 溫柔、慢慢、一步一步。','B. 直接、明確、很到位。','C. 有情感、帶曖昧、會想多看一眼。','D. 觸感明顯、身體立刻有感。']},
+  {q:'哪一種感覺最容易讓你覺得「對了」？',a:['A. 氛圍對了，心就跟著開了。','B. 張力夠了，身體自然有反應。','C. 情感被接住了，才能真的放開。','D. 身體感受夠明確，不需要猜。']},
+  {q:'你偏好的親密節奏比較像哪一種？',a:['A. 先鋪陳，再靠近，情感要先有。','B. 一開始就很明確，不用繞太久。','C. 先有情緒共鳴，再往下走。','D. 先有感覺，再決定要不要繼續。']},
+  {q:'當互動開始時，你比較喜歡哪種方式？',a:['A. 慢慢被帶入，情感層層堆疊。','B. 直接進入主題，效率感讓人安心。','C. 帶點曖昧與鋪陳，讓彼此升溫。','D. 先試看看有沒有感，再決定方向。']},
+  {q:'你在親密關係裡，最想要的是什麼？',a:['A. 情緒的流動與被理解的感受。','B. 即時的回饋與明確的存在感。','C. 被看見內心的那種連結。','D. 有感的真實體驗，不想靠想像。']},
+  {q:'如果是一個讓你心動的畫面，你會先注意什麼？',a:['A. 整體氣氛與情感張力。','B. 身體的直接反應。','C. 被理解、被看見的感覺。','D. 實際觸感與物理刺激。']},
+  {q:'你在選擇用品時，最在意哪件事？',a:['A. 氛圍感與包裝設計。','B. 刺激感與立即反應。','C. 情感連結與象徵意義。','D. 實際使用時的觸感與效果。']},
+  {q:'你比較容易被哪種內容吸引？',a:['A. 有畫面感、有情緒鋪陳的描述。','B. 有力道、有衝擊感的表達。','C. 有情感溫度、讓人想多讀一遍的文字。','D. 有觸感細節、能讓身體有感的描寫。']},
+  {q:'你覺得最迷人的，是哪一種靠近方式？',a:['A. 被氛圍慢慢包住，不急著到達。','B. 被刺激點燃，快速進入高峰。','C. 被情感理解，感覺被接住。','D. 被感官喚醒，身體先有答案。']},
+  {q:'如果要你做一個選擇，你更傾向：',a:['A. 先感受氛圍，再慢慢決定。','B. 直接選最有感、最強烈的。','C. 先看情緒共鳴，再往下走。','D. 先看觸感與實際效果再說。']},
+  {q:'你覺得自己的慾望節奏比較像哪一種？',a:['A. 慢熱型，要等情緒到位才會燃起來。','B. 快感型，很容易被點燃，也很直接。','C. 感性型，情感先到，慾望才跟上。','D. 感官型，身體的感受優先於一切。']}
 ];
 
-// A/C → 正向維度；B/D → 負向維度
-// 題1-3：A/C=Mood, B/D=Energy
-// 題4-6：A/C=Intimacy, B/D=Direct
-// 題7-9：A/C=Romance, B/D=Touch
-// 題10-12：A/C=Curious, B/D=Lust  ← 修正
 const scoreMap=[
   {A:['Mood',2],B:['Energy',2],C:['Mood',2],D:['Energy',2]},
   {A:['Mood',2],B:['Energy',2],C:['Mood',2],D:['Energy',2]},
@@ -400,56 +434,23 @@ const scoreMap=[
   {A:['Curious',2],B:['Lust',2],C:['Curious',2],D:['Lust',2]}
 ];
 
-// 結果碼格式：[M/E][I/D][R/T][C/L]
 const results={
-  MIRC:{name:'柔光守護者',tag:'慢慢升溫型',
-    desc:'妳喜歡氛圍先到位，再慢慢打開感受。妳不是不主動，而是要先感受到安心與情緒流動，才會真正進入狀態。',
-    pills:['溫柔','緩慢','氛圍感']},
-  MIRL:{name:'微熱守護者',tag:'情感慾流型',
-    desc:'妳要的不是直接刺激，而是情緒與慾望一起被喚醒。妳對關係有感，對氛圍也有感，會在熟悉感中被快速點燃。',
-    pills:['情感','熱度','慾感']},
-  MITC:{name:'觸感守護者',tag:'觸感探索型',
-    desc:'妳重視感受本身，特別在意觸覺與互動的細節。妳喜歡慢慢摸索，不急著定義，但很敏銳。',
-    pills:['觸感','細節','探索']},
-  MITL:{name:'感受守護者',tag:'感官沉浸型',
-    desc:'妳一旦進入狀態，就會很投入，喜歡感官層層堆疊。妳重視觸感、節奏與身體回饋，而且點燃後非常直接。',
-    pills:['沉浸','節奏','回饋']},
-  MDRC:{name:'溫柔引導者',tag:'溫柔直入型',
-    desc:'妳表面柔和，但其實知道自己要什麼。妳不喜歡繞太久，偏好在有情感鋪陳後直接進入重點。',
-    pills:['溫柔','直接','有感']},
-  MDRL:{name:'曖昧引導者',tag:'曖昧直覺型',
-    desc:'妳喜歡明確，但不喜歡太冷。妳要的是有溫度的直接，帶著曖昧與情緒靠近，一旦確認就快速推進。',
-    pills:['曖昧','溫度','推進']},
-  MDTC:{name:'體感引導者',tag:'體感主導型',
-    desc:'妳偏好清楚、直接，一切都要讓身體先有反應。妳會慢慢確認感受，但方向從來不模糊。',
-    pills:['體感','反應','主導']},
-  MDTL:{name:'直感引導者',tag:'直球慾感型',
-    desc:'妳不想猜，也不喜歡太多模糊，妳想要的是直接而有感。偏好明確、反應直接，點燃後完全不需要等。',
-    pills:['直球','慾感','明確']},
-  EIRC:{name:'霧感感官者',tag:'情緒探索型',
-    desc:'妳偏刺激，但不是粗暴，而是想透過情緒與新鮮感打開感受。妳喜歡探索，會在曖昧中慢慢找到自己的節奏。',
-    pills:['霧感','探索','情緒']},
-  EIRL:{name:'熱感感官者',tag:'高溫曖昧型',
-    desc:'妳對情感與慾望都有反應，而且不太怕熱度。妳喜歡強烈一點的氛圍，點燃後就會快速進入更深的感受。',
-    pills:['高溫','曖昧','慾感']},
-  EITC:{name:'細節感官者',tag:'刺激試探型',
-    desc:'妳喜歡先試試看，感受有沒有對味。妳的反應很快，喜歡新鮮、喜歡摸索，也願意慢慢多嘗試不同方式。',
-    pills:['試探','新鮮','反應快']},
-  EITL:{name:'強感感官者',tag:'強烈感官型',
-    desc:'妳很容易被明確的刺激抓住，喜歡直接、有感、迅速反應的體驗。重點是感受要夠明顯，而且要快。',
-    pills:['強烈','感官','直接']},
-  EDRC:{name:'悄然探索者',tag:'主動曖昧型',
-    desc:'妳不一定要等別人帶，妳自己就很會製造氣氛。妳雖然直接，但不是冰冷，而是有情感、有曖昧、節奏穩健。',
-    pills:['主動','曖昧','穩健']},
-  EDRL:{name:'慾感探索者',tag:'慾感引導型',
-    desc:'妳是那種很會把節奏帶進去的人。妳知道怎麼讓氣氛升溫，也知道怎麼讓對方快速進入狀態。',
-    pills:['節奏','升溫','引導']},
-  EDTC:{name:'直覺探索者',tag:'直接體驗型',
-    desc:'妳重視當下的真實感受，喜歡清楚、直接、有效。妳不喜歡過度包裝，但也不急著衝刺，節奏是妳的。',
-    pills:['直覺','體驗','有效']},
-  EDTL:{name:'烈感探索者',tag:'直球烈感型',
-    desc:'妳是很強烈、很直接、很知道自己要什麼的類型。妳不太繞，也不等，偏好鮮明，點燃後存在感極強。',
-    pills:['烈感','直球','存在感']}
+  MIRC:{name:'柔光守護者',tag:'慢慢升溫型',desc:'妳喜歡氛圍先到位，再慢慢打開感受。妳不是不主動，而是要先感受到安心與情緒流動，才會真正進入狀態。',pills:['溫柔','緩慢','氛圍感']},
+  MIRL:{name:'微熱守護者',tag:'情感慾流型',desc:'妳要的不是直接刺激，而是情緒與慾望一起被喚醒。妳對關係有感，對氛圍也有感，會在熟悉感中被快速點燃。',pills:['情感','熱度','慾感']},
+  MITC:{name:'觸感守護者',tag:'觸感探索型',desc:'妳重視感受本身，特別在意觸覺與互動的細節。妳喜歡慢慢摸索，不急著定義，但很敏銳。',pills:['觸感','細節','探索']},
+  MITL:{name:'感受守護者',tag:'感官沉浸型',desc:'妳一旦進入狀態，就會很投入，喜歡感官層層堆疊。妳重視觸感、節奏與身體回饋，而且點燃後非常直接。',pills:['沉浸','節奏','回饋']},
+  MDRC:{name:'溫柔引導者',tag:'溫柔直入型',desc:'妳表面柔和，但其實知道自己要什麼。妳不喜歡繞太久，偏好在有情感鋪陳後直接進入重點。',pills:['溫柔','直接','有感']},
+  MDRL:{name:'曖昧引導者',tag:'曖昧直覺型',desc:'妳喜歡明確，但不喜歡太冷。妳要的是有溫度的直接，帶著曖昧與情緒靠近，一旦確認就快速推進。',pills:['曖昧','溫度','推進']},
+  MDTC:{name:'體感引導者',tag:'體感主導型',desc:'妳偏好清楚、直接，一切都要讓身體先有反應。妳會慢慢確認感受，但方向從來不模糊。',pills:['體感','反應','主導']},
+  MDTL:{name:'直感引導者',tag:'直球慾感型',desc:'妳不想猜，也不喜歡太多模糊，妳想要的是直接而有感。偏好明確、反應直接，點燃後完全不需要等。',pills:['直球','慾感','明確']},
+  EIRC:{name:'霧感感官者',tag:'情緒探索型',desc:'妳偏刺激，但不是粗暴，而是想透過情緒與新鮮感打開感受。妳喜歡探索，會在曖昧中慢慢找到自己的節奏。',pills:['霧感','探索','情緒']},
+  EIRL:{name:'熱感感官者',tag:'高溫曖昧型',desc:'妳對情感與慾望都有反應，而且不太怕熱度。妳喜歡強烈一點的氛圍，點燃後就會快速進入更深的感受。',pills:['高溫','曖昧','慾感']},
+  EITC:{name:'細節感官者',tag:'刺激試探型',desc:'妳喜歡先試試看，感受有沒有對味。妳的反應很快，喜歡新鮮、喜歡摸索，也願意慢慢多嘗試不同方式。',pills:['試探','新鮮','反應快']},
+  EITL:{name:'強感感官者',tag:'強烈感官型',desc:'妳很容易被明確的刺激抓住，喜歡直接、有感、迅速反應的體驗。重點是感受要夠明顯，而且要快。',pills:['強烈','感官','直接']},
+  EDRC:{name:'悄然探索者',tag:'主動曖昧型',desc:'妳不一定要等別人帶，妳自己就很會製造氣氛。妳雖然直接，但不是冰冷，而是有情感、有曖昧、節奏穩健。',pills:['主動','曖昧','穩健']},
+  EDRL:{name:'慾感探索者',tag:'慾感引導型',desc:'妳是那種很會把節奏帶進去的人。妳知道怎麼讓氣氛升溫，也知道怎麼讓對方快速進入狀態。',pills:['節奏','升溫','引導']},
+  EDTC:{name:'直覺探索者',tag:'直接體驗型',desc:'妳重視當下的真實感受，喜歡清楚、直接、有效。妳不喜歡過度包裝，但也不急著衝刺，節奏是妳的。',pills:['直覺','體驗','有效']},
+  EDTL:{name:'烈感探索者',tag:'直球烈感型',desc:'妳是很強烈、很直接、很知道自己要什麼的類型。妳不太繞，也不等，偏好鮮明，點燃後存在感極強。',pills:['烈感','直球','存在感']}
 };
 
 const state={
@@ -556,7 +557,6 @@ const computeResult=()=>{
   ].join('');
 };
 
-// ── Slot Machine ──────────────────────────────────────────────────────
 const CHARS='ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 const slotStyle=document.createElement('style');
 slotStyle.textContent=`@keyframes slotLock{0%{transform:translateY(0)}30%{transform:translateY(-4px)}65%{transform:translateY(2px)}100%{transform:translateY(0)}}`;
@@ -640,18 +640,11 @@ const restartToStart=()=>{
   setScreen(introScreen);
 };
 
-// ── 截圖：translateX(9999px) 永遠推到視窗外，不需要任何顯示切換 ──
 async function makeShareBlob(){
   const canvas=await html2canvas(shareShot,{
-    backgroundColor:null,
-    scale:2,
-    useCORS:true,
-    allowTaint:true,
-    x:0,y:0,
-    scrollX:-9999,
-    scrollY:0,
-    width:1080,
-    height:shareShot.offsetHeight
+    backgroundColor:null,scale:2,useCORS:true,allowTaint:true,
+    x:0,y:0,scrollX:-9999,scrollY:0,
+    width:1080,height:shareShot.offsetHeight
   });
   return new Promise(resolve=>canvas.toBlob(blob=>resolve(blob),'image/png',1));
 }
@@ -666,11 +659,7 @@ async function handleShare(){
   try{
     const blob=await makeShareBlob();
     const file=new File([blob],`ume-mbti-${code}.png`,{type:'image/png',lastModified:Date.now()});
-    const data={
-      files:[file],
-      title:'U&ME MBTI 結果',
-      text:`我在 U&ME MBTI 測到 ${code}｜${shareName.textContent}｜${shareTag.textContent}\n\n測測你是哪種類型 👇`
-    };
+    const data={files:[file],title:'U&ME MBTI 結果',text:`我在 U&ME MBTI 測到 ${code}｜${shareName.textContent}｜${shareTag.textContent}\n\n測測你是哪種類型 👇`};
     if(navigator.canShare&&navigator.canShare(data))await navigator.share(data);
     else{await downloadBlob(blob,`ume-mbti-${code}.png`);alert('已下載圖片，請手動上傳到你想分享的平台 🙌');}
   }catch(e){if(e.name!=='AbortError')console.warn(e);}
