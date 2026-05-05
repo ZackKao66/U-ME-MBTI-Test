@@ -43,25 +43,57 @@
     .screen.active{opacity:1;transform:translateY(0);filter:none}
     .glow{position:absolute;width:min(78vw,700px);height:min(78vw,700px);filter:blur(90px);opacity:.42;background:radial-gradient(circle,hsl(var(--glow-hue) 52% 68% / .38),transparent 64%);left:50%;top:50%;transform:translate(-50%,-50%);animation:pulse 5s ease-in-out infinite;pointer-events:none;z-index:0;transition:background .8s ease}
     .brand-wave{position:absolute;inset:auto 0 0 0;height:42vh;background:linear-gradient(180deg,transparent,color-mix(in oklab,var(--accent) 6%,transparent) 30%,transparent 100%);opacity:.6;pointer-events:none;z-index:0;animation:wave 12s ease-in-out infinite}
-    .brand{display:grid;gap:16px;justify-items:center;width:min(92vw,760px);position:relative;z-index:1;animation:floatIn 1.2s cubic-bezier(.16,1,.3,1) 1.6s both}
 
-    /* ✅ 移除外框，只保留 logo 本身 */
+    /* ✅ 品牌區塊：緊湊排版 */
+    .brand{
+      display:grid;
+      gap:14px;
+      justify-items:center;
+      width:min(92vw,480px);
+      position:relative;
+      z-index:1;
+      animation:floatIn 1.2s cubic-bezier(.16,1,.3,1) 1.6s both;
+    }
+
+    /* ✅ Logo：精緻小尺寸，帶金色光暈 */
     .logo-image{
-      width:min(72vw,400px);
-      display:grid;place-items:center;
+      width:min(52vw,220px);
       animation:logoFloat 6s ease-in-out infinite;
     }
     .logo-image img{
-      width:100%;height:auto;display:block;
-      filter:brightness(0) saturate(100%) invert(68%) sepia(38%) saturate(520%) hue-rotate(5deg) brightness(98%);
-      filter:drop-shadow(0 4px 18px rgba(199,165,106,.35)) brightness(0) saturate(100%) invert(68%) sepia(38%) saturate(520%) hue-rotate(5deg) brightness(98%);
+      width:100%;
+      height:auto;
+      display:block;
+      filter:
+        brightness(0) saturate(100%)
+        invert(68%) sepia(38%) saturate(520%)
+        hue-rotate(5deg) brightness(98%)
+        drop-shadow(0 2px 14px rgba(199,165,106,.45));
     }
 
-    .sub{max-width:28ch;color:var(--muted);font-size:clamp(14px,3.8vw,18px);line-height:1.7}
-    .count-badge{font-size:12px;color:var(--muted);border:1px solid var(--border);padding:6px 14px;border-radius:999px;background:color-mix(in oklab,var(--surface-2) 80%,white);letter-spacing:.06em}
-    .start{width:84px;height:84px;border-radius:50%;border:1px solid color-mix(in oklab,var(--accent) 45%,var(--border));background:color-mix(in oklab,var(--accent) 84%,white);color:var(--text);display:grid;place-items:center;cursor:pointer;box-shadow:0 12px 30px rgba(184,155,98,.22);font-weight:700;letter-spacing:.08em;transition:transform .2s ease,box-shadow .2s ease}
-    .start:hover{transform:scale(1.06);box-shadow:0 18px 40px rgba(184,155,98,.32)}
-    .start::before{content:"開始";font-size:14px}
+    /* ✅ 分隔線裝飾 */
+    .brand-divider{
+      width:32px;
+      height:1px;
+      background:linear-gradient(90deg,transparent,var(--accent),transparent);
+      opacity:.6;
+    }
+
+    .sub{max-width:24ch;color:var(--muted);font-size:clamp(13px,3.2vw,15px);line-height:1.7;letter-spacing:.02em}
+    .count-badge{font-size:11px;color:var(--muted);border:1px solid var(--border);padding:5px 12px;border-radius:999px;background:color-mix(in oklab,var(--surface-2) 80%,white);letter-spacing:.06em}
+
+    /* ✅ 開始按鈕：略小更精緻 */
+    .start{
+      width:72px;height:72px;border-radius:50%;
+      border:1px solid color-mix(in oklab,var(--accent) 45%,var(--border));
+      background:linear-gradient(135deg,color-mix(in oklab,var(--accent) 88%,white),var(--accent));
+      color:#fff;display:grid;place-items:center;cursor:pointer;
+      box-shadow:0 8px 24px rgba(184,155,98,.28),0 2px 8px rgba(184,155,98,.18);
+      font-weight:700;letter-spacing:.08em;
+      transition:transform .2s ease,box-shadow .2s ease;
+    }
+    .start:hover{transform:scale(1.06);box-shadow:0 14px 32px rgba(184,155,98,.36)}
+    .start::before{content:"開始";font-size:13px}
 
     .quiz{width:min(100%,760px);display:grid;gap:12px;justify-items:stretch;text-align:left;position:relative;z-index:2}
     .quiz-head{display:flex;justify-content:space-between;align-items:flex-end;gap:12px}
@@ -197,18 +229,15 @@
       left:50%;transform:translateX(-50%);
       font-size:10px;
       color:color-mix(in oklab,var(--accent) 55%,var(--muted));
-      letter-spacing:.1em;
-      white-space:nowrap;
-      pointer-events:none;
-      z-index:999;
-      font-family:var(--font-body);
-      opacity:.7;
+      letter-spacing:.1em;white-space:nowrap;
+      pointer-events:none;z-index:999;
+      font-family:var(--font-body);opacity:.7;
     }
 
     @keyframes floatIn{from{opacity:0;transform:translateY(28px) scale(.96)}to{opacity:1;transform:translateY(0) scale(1)}}
     @keyframes pulse{50%{transform:translate(-50%,-50%) scale(1.08);opacity:.68}}
     @keyframes wave{50%{transform:translateY(-10px);opacity:.8}}
-    @keyframes logoFloat{50%{transform:translateY(-6px)}}
+    @keyframes logoFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
     @keyframes drift{50%{transform:translateY(-6px) scale(1.01)}}
     @keyframes resultRise{from{opacity:0;transform:translateY(18px) scale(.985)}to{opacity:1;transform:translateY(0) scale(1)}}
     @keyframes rip{from{width:0;height:0;opacity:.85}to{width:360px;height:360px;opacity:0}}
@@ -221,12 +250,13 @@
       .result-card{height:min(100%,calc(100svh - 88px - env(safe-area-inset-top) - env(safe-area-inset-bottom)));padding:14px;border-radius:24px;gap:6px}
       .share-row{grid-template-columns:1fr 1fr}
       .result-section p,.result-desc{-webkit-line-clamp:2}
-      .logo-image{width:min(68vw,320px)}
+      .logo-image{width:min(44vw,180px)}
+      .brand{gap:11px}
     }
     @media(min-width:768px){
       .topbar{padding:calc(16px + env(safe-area-inset-top)) 24px 16px}
       .screen{padding:calc(82px + env(safe-area-inset-top)) 24px calc(20px + env(safe-area-inset-bottom))}
-      .logo-image{width:min(50vw,440px)}
+      .logo-image{width:min(36vw,240px)}
       .quiz{width:min(90vw,860px);gap:16px}
       .card{padding:22px;border-radius:28px}
       .option{min-height:58px;padding:16px}
@@ -238,8 +268,8 @@
     @media(min-width:1024px){
       .screen{padding:calc(96px + env(safe-area-inset-top)) 28px calc(24px + env(safe-area-inset-bottom))}
       .quiz{width:min(82vw,920px)}
-      .logo-image{width:min(42vw,480px)}
-      .sub{max-width:40ch}
+      .logo-image{width:min(28vw,260px)}
+      .sub{max-width:32ch}
       .result-card{
         max-width:920px;
         height:min(100%,calc(100svh - 122px - env(safe-area-inset-top) - env(safe-area-inset-bottom)));
@@ -260,7 +290,7 @@
   <div class="curtain" id="curtain" aria-hidden="true">
     <div class="curtain-logo">
       <img src="assets/U&ME logo 3_去背版本.png" alt="U&ME"
-           style="height:64px;width:auto;display:block;margin:auto">
+           style="height:52px;width:auto;display:block;margin:auto">
     </div>
   </div>
 
@@ -276,10 +306,10 @@
 
   <section class="screen active" id="introScreen">
     <div class="brand">
-      <!-- ✅ 無外框，純 logo 浮動 -->
       <div class="logo-image" aria-label="U&ME LOGO">
         <img src="assets/U&ME logo 1_去背版本.png" alt="U&ME">
       </div>
+      <div class="brand-divider" aria-hidden="true"></div>
       <div class="sub">你的內心世界旅程即將開始。</div>
       <div class="count-badge">✦ 已有 2,847 人完成測驗</div>
       <button class="start" id="startBtn" type="button" aria-label="開始測驗"></button>
