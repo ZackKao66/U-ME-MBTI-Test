@@ -4,6 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>U&ME MBTI</title>
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
   <style>
     :root{--bg:#f7f4ee;--surface:#fcfbf8;--surface-2:#f2ede5;--border:rgba(40,37,29,.12);--text:#1f1c16;--muted:#6f6a61;--accent:#c7a56a;--accent-2:#8d9fb5;--bar-bg:rgba(40,37,29,.08);--font-display:'Georgia',serif;--font-body:'Inter',system-ui,sans-serif}
     [data-theme="dark"]{--bg:#151412;--surface:#1d1c19;--surface-2:#23211d;--border:rgba(255,255,255,.10);--text:#f1ece3;--muted:#aaa49a;--accent:#d4b67a;--accent-2:#9fb0c4;--bar-bg:rgba(255,255,255,.08)}
@@ -11,99 +12,119 @@
     html,body{margin:0;min-height:100%}
     body{font-family:var(--font-body);background:radial-gradient(circle at top, rgba(199,165,106,.16), transparent 38%),var(--bg);color:var(--text);overflow:hidden;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
     button{font:inherit;-webkit-tap-highlight-color:transparent}
-    .stage{width:100vw;height:100vh;height:100dvh;position:relative;overflow:hidden;background:linear-gradient(180deg,color-mix(in oklab,var(--surface) 88%, white),var(--surface));isolation:isolate}
-    .topbar{position:absolute;left:0;right:0;top:0;display:flex;justify-content:space-between;align-items:center;padding:calc(14px + env(safe-area-inset-top)) 16px 14px;z-index:8}
+    .stage{width:100vw;height:100svh;min-height:100svh;position:relative;overflow:hidden;background:linear-gradient(180deg,color-mix(in oklab,var(--surface) 88%, white),var(--surface));isolation:isolate}
+    .topbar{position:absolute;left:0;right:0;top:0;display:flex;justify-content:space-between;align-items:center;padding:calc(12px + env(safe-area-inset-top)) 14px 12px;z-index:8}
     .brandmark{display:flex;align-items:center;gap:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;font-size:11px;color:var(--muted)}
     .logo{width:34px;height:34px;border-radius:50%;border:1px solid var(--border);display:grid;place-items:center;color:var(--accent)}
-    .toggle{min-height:44px;padding:10px 14px;border:1px solid var(--border);background:color-mix(in oklab,var(--surface) 76%, white);color:var(--text);border-radius:999px;cursor:pointer}
-    .screen{position:absolute;inset:0;display:grid;place-items:center;padding:calc(90px + env(safe-area-inset-top)) 20px calc(28px + env(safe-area-inset-bottom));text-align:center;transition:opacity .45s cubic-bezier(.16,1,.3,1),transform .45s cubic-bezier(.16,1,.3,1),filter .45s cubic-bezier(.16,1,.3,1);overflow:hidden}
+    .toggle{min-height:40px;padding:8px 12px;border:1px solid var(--border);background:color-mix(in oklab,var(--surface) 76%, white);color:var(--text);border-radius:999px;cursor:pointer}
+    .screen{position:absolute;inset:0;display:grid;place-items:center;padding:calc(70px + env(safe-area-inset-top)) 14px calc(16px + env(safe-area-inset-bottom));text-align:center;transition:opacity .4s cubic-bezier(.16,1,.3,1),transform .4s cubic-bezier(.16,1,.3,1),filter .4s cubic-bezier(.16,1,.3,1);overflow:hidden}
     .screen[hidden]{opacity:0;pointer-events:none;transform:translateY(8px) scale(.985);filter:blur(6px)}
     .screen.active{opacity:1;transform:translateY(0);filter:none}
     .glow{position:absolute;width:min(78vw,700px);height:min(78vw,700px);filter:blur(90px);opacity:.42;background:radial-gradient(circle,color-mix(in oklab,var(--accent) 22%, transparent),transparent 64%);left:50%;top:50%;transform:translate(-50%,-50%);animation:pulse 5s ease-in-out infinite;pointer-events:none;z-index:0}
     .brand-wave{position:absolute;inset:auto 0 0 0;height:42vh;background:linear-gradient(180deg,transparent,color-mix(in oklab,var(--accent) 6%, transparent) 30%, transparent 100%);opacity:.6;pointer-events:none;z-index:0;animation:wave 12s ease-in-out infinite}
-    .brand{display:grid;gap:18px;justify-items:center;width:min(92vw,760px);animation:floatIn 1.1s cubic-bezier(.16,1,.3,1) both;position:relative;z-index:1}
-    .logo-image{width:min(82vw,480px);aspect-ratio:3/1;display:grid;place-items:center;border-radius:28px;border:1px solid color-mix(in oklab,var(--accent) 30%, var(--border));background:linear-gradient(135deg,color-mix(in oklab,var(--surface) 72%, white),color-mix(in oklab,var(--surface-2) 82%, var(--accent) 6%));box-shadow:0 18px 48px rgba(0,0,0,.08);backdrop-filter:blur(10px);animation:logoFloat 6s ease-in-out infinite}
+    .brand{display:grid;gap:16px;justify-items:center;width:min(92vw,760px);animation:floatIn 1.1s cubic-bezier(.16,1,.3,1) both;position:relative;z-index:1}
+    .logo-image{width:min(82vw,460px);aspect-ratio:3/1;display:grid;place-items:center;border-radius:24px;border:1px solid color-mix(in oklab,var(--accent) 30%, var(--border));background:linear-gradient(135deg,color-mix(in oklab,var(--surface) 72%, white),color-mix(in oklab,var(--surface-2) 82%, var(--accent) 6%));box-shadow:0 18px 48px rgba(0,0,0,.08);backdrop-filter:blur(10px);animation:logoFloat 6s ease-in-out infinite}
     .logo-image span{font-family:var(--font-display);font-size:clamp(40px,10vw,84px);line-height:1;letter-spacing:.08em}
-    .sub{max-width:32ch;color:var(--muted);font-size:clamp(15px,3.8vw,18px);line-height:1.75}
-    .start{width:88px;height:88px;border-radius:50%;border:1px solid color-mix(in oklab,var(--accent) 45%, var(--border));background:color-mix(in oklab,var(--accent) 84%, white);color:var(--text);display:grid;place-items:center;cursor:pointer;box-shadow:0 12px 30px rgba(184,155,98,.22);font-weight:700;letter-spacing:.08em}
+    .sub{max-width:28ch;color:var(--muted);font-size:clamp(14px,3.8vw,18px);line-height:1.7}
+    .start{width:84px;height:84px;border-radius:50%;border:1px solid color-mix(in oklab,var(--accent) 45%, var(--border));background:color-mix(in oklab,var(--accent) 84%, white);color:var(--text);display:grid;place-items:center;cursor:pointer;box-shadow:0 12px 30px rgba(184,155,98,.22);font-weight:700;letter-spacing:.08em}
     .start::before{content:"開始";font-size:14px}
-    .quiz{width:min(100%,760px);display:grid;gap:16px;justify-items:stretch;text-align:left;position:relative;z-index:2}
+    .quiz{width:min(100%,760px);display:grid;gap:12px;justify-items:stretch;text-align:left;position:relative;z-index:2}
     .quiz-head{display:flex;justify-content:space-between;align-items:flex-end;gap:12px}
-    .quiz-kicker{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
-    .quiz-title{margin:0;font-family:var(--font-display);font-size:clamp(26px,6vw,48px);line-height:1.15}
-    .quiz-progress{font-size:13px;color:var(--muted);white-space:nowrap;padding-bottom:4px}
+    .quiz-kicker{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+    .quiz-title{margin:0;font-family:var(--font-display);font-size:clamp(24px,6vw,44px);line-height:1.1}
+    .quiz-progress{font-size:12px;color:var(--muted);white-space:nowrap;padding-bottom:2px}
     .progress-bar{height:8px;border-radius:999px;background:var(--bar-bg);overflow:hidden;border:1px solid var(--border)}
-    .progress-bar>span{display:block;height:100%;width:0;border-radius:inherit;background:linear-gradient(90deg,color-mix(in oklab,var(--accent) 88%, white),color-mix(in oklab,var(--accent-2) 78%, white));transition:width .4s cubic-bezier(.16,1,.3,1)}
-    .card{border:1px solid var(--border);background:color-mix(in oklab,var(--surface) 84%, white);border-radius:24px;padding:18px;box-shadow:0 18px 46px rgba(0,0,0,.06);backdrop-filter:blur(10px)}
-    .question{margin:0 0 16px;font-size:clamp(20px,5.5vw,32px);line-height:1.4;font-weight:700;transition:opacity .2s ease}
-    .question.swap-out,.options.swap-out{opacity:0}
-    .options{display:grid;gap:12px;transition:opacity .2s ease}
-    .option{width:100%;min-height:56px;text-align:left;padding:16px;border-radius:18px;border:1px solid var(--border);background:var(--surface-2);color:var(--text);cursor:pointer;transition:background .18s ease,border-color .18s ease,box-shadow .18s ease,opacity .18s ease;line-height:1.55;font-size:16px;white-space:pre-line}
+    .progress-bar>span{display:block;height:100%;width:0;border-radius:inherit;background:linear-gradient(90deg,color-mix(in oklab,var(--accent) 88%, white),color-mix(in oklab,var(--accent-2) 78%, white));transition:width .35s cubic-bezier(.16,1,.3,1)}
+    .card{border:1px solid var(--border);background:color-mix(in oklab,var(--surface) 84%, white);border-radius:22px;padding:16px;box-shadow:0 18px 46px rgba(0,0,0,.06);backdrop-filter:blur(10px)}
+    .question{margin:0 0 14px;font-size:clamp(18px,5vw,28px);line-height:1.35;font-weight:700}
+    .options{display:grid;gap:10px}
+    .option{width:100%;min-height:52px;text-align:left;padding:14px;border-radius:16px;border:1px solid var(--border);background:var(--surface-2);color:var(--text);cursor:pointer;transition:background .18s ease,border-color .18s ease,box-shadow .18s ease,opacity .18s ease;line-height:1.45;font-size:15px;white-space:pre-line}
     .option:hover{border-color:color-mix(in oklab,var(--accent) 42%, var(--border));background:color-mix(in oklab,var(--surface-2) 84%, var(--accent) 6%);box-shadow:0 10px 20px rgba(0,0,0,.04)}
     .option:active{opacity:.92}
     .option.selected{border-color:color-mix(in oklab,var(--accent) 64%, var(--border));background:color-mix(in oklab,var(--surface-2) 74%, var(--accent) 12%);box-shadow:inset 0 0 0 1px color-mix(in oklab,var(--accent) 18%, transparent)}
-    .nav{display:flex;justify-content:space-between;gap:12px;align-items:center}
-    .ghost,.next,.share-btn,.restart-btn{min-height:48px;padding:12px 18px;border-radius:999px;cursor:pointer;transition:transform .18s ease,opacity .18s ease,background .18s ease,border-color .18s ease;font:inherit}
+    .nav{display:flex;justify-content:space-between;gap:10px;align-items:center}
+    .ghost,.next,.share-btn,.restart-btn{min-height:46px;padding:11px 16px;border-radius:999px;cursor:pointer;transition:transform .18s ease,opacity .18s ease,background .18s ease,border-color .18s ease;font:inherit}
     .ghost{border:1px solid var(--border);background:transparent;color:var(--text)}
-    .next,.restart-btn{border:1px solid transparent;background:var(--accent);color:#fff;min-width:120px}
+    .next,.restart-btn{border:1px solid transparent;background:var(--accent);color:#fff;min-width:110px}
     .ghost:hover,.next:hover,.restart-btn:hover,.share-btn:hover{transform:translateY(-1px)}
     .next:disabled,.ghost:disabled{opacity:.45;cursor:not-allowed;transform:none}
-    .footer-note{font-size:12px;color:var(--muted);text-align:center;margin-top:-2px}
+    .footer-note{font-size:11px;color:var(--muted);text-align:center}
     .result-screen-bg{position:absolute;inset:0;background:radial-gradient(circle at 50% 30%,color-mix(in oklab,var(--accent) 10%, transparent),transparent 40%),radial-gradient(circle at 20% 80%,color-mix(in oklab,var(--accent-2) 8%, transparent),transparent 38%);opacity:.95;pointer-events:none;animation:drift 18s ease-in-out infinite}
     .cinema-wash{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.03),transparent 18%,transparent 82%,rgba(0,0,0,.04));pointer-events:none;z-index:0}
-    .result-card{max-width:100%;text-align:left;border-radius:32px;padding:24px 20px 20px;background:linear-gradient(180deg,color-mix(in oklab,var(--surface) 68%, white),color-mix(in oklab,var(--surface-2) 92%, var(--accent) 5%));position:relative;overflow:hidden;border:1px solid color-mix(in oklab,var(--accent) 18%, var(--border));box-shadow:0 24px 60px rgba(0,0,0,.08);transform-origin:center bottom;animation:resultRise 900ms cubic-bezier(.16,1,.3,1) both}
+    .result-layout{width:min(100%,920px);height:100%;display:grid;align-items:center}
+    .result-card{max-width:100%;height:min(100%, calc(100svh - 110px - env(safe-area-inset-top) - env(safe-area-inset-bottom)));display:grid;grid-template-rows:auto auto auto auto auto;gap:10px;text-align:left;border-radius:28px;padding:16px;background:linear-gradient(180deg,color-mix(in oklab,var(--surface) 68%, white),color-mix(in oklab,var(--surface-2) 92%, var(--accent) 5%));position:relative;overflow:hidden;border:1px solid color-mix(in oklab,var(--accent) 18%, var(--border));box-shadow:0 24px 60px rgba(0,0,0,.08);transform-origin:center bottom;animation:resultRise 900ms cubic-bezier(.16,1,.3,1) both}
     .result-card::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at top left,color-mix(in oklab,var(--accent) 14%, transparent),transparent 42%),radial-gradient(circle at bottom right,color-mix(in oklab,var(--accent-2) 10%, transparent),transparent 44%),repeating-linear-gradient(135deg,transparent 0 22px,color-mix(in oklab,var(--text) 2%, transparent) 22px 23px);opacity:.9;pointer-events:none}
     .result-hero,.result-section,.share-row,.result-cta,.result-note{position:relative;z-index:1}
-    .result-hero{display:grid;gap:14px}
-    .result-meta{display:flex;gap:10px;flex-wrap:wrap}
-    .result-badge,.pill{padding:8px 12px;border-radius:999px;border:1px solid var(--border);background:color-mix(in oklab,var(--surface-2) 88%, white);font-size:12px;letter-spacing:.08em}
-    .result-section{display:grid;gap:10px;margin-top:12px;padding-top:14px;border-top:1px solid color-mix(in oklab,var(--border) 80%, transparent)}
-    .result-section h2{margin:0;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);font-weight:700}
-    .result-section p,.result-desc{margin:0;color:var(--muted);line-height:1.8;font-size:15px;max-width:48ch}
-    .result-code{font-family:var(--font-display);font-size:clamp(46px,12vw,88px);line-height:1;margin-bottom:10px;letter-spacing:.08em}
-    .result-name{font-size:clamp(26px,6vw,42px);font-weight:700;margin-bottom:8px;font-family:var(--font-display)}
-    .result-tag{font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:10px}
-    .result-pill-row{display:flex;gap:10px;flex-wrap:wrap;margin:10px 0 4px}
-    .share-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
-    .share-btn{border:1px solid var(--border);background:color-mix(in oklab,var(--surface) 78%, white);color:var(--text)}
+    .result-hero{display:grid;gap:8px}
+    .result-meta{display:flex;gap:8px;flex-wrap:wrap}
+    .result-badge,.pill{padding:7px 10px;border-radius:999px;border:1px solid var(--border);background:color-mix(in oklab,var(--surface-2) 88%, white);font-size:11px;letter-spacing:.06em}
+    .result-section{display:grid;gap:6px;padding-top:10px;border-top:1px solid color-mix(in oklab,var(--border) 80%, transparent)}
+    .result-section h2{margin:0;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);font-weight:700}
+    .result-section p,.result-desc{margin:0;color:var(--muted);line-height:1.55;font-size:13px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+    .result-code{font-family:var(--font-display);font-size:clamp(34px,11vw,72px);line-height:1;margin-bottom:2px;letter-spacing:.08em}
+    .result-name{font-size:clamp(22px,6vw,34px);font-weight:700;margin-bottom:2px;font-family:var(--font-display);line-height:1.05}
+    .result-tag{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent)}
+    .result-pill-row{display:flex;gap:8px;flex-wrap:wrap;margin:4px 0 2px}
+    .share-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:4px}
+    .share-btn{border:1px solid var(--border);background:color-mix(in oklab,var(--surface) 78%, white);color:var(--text);min-height:42px;padding:10px 12px}
     .share-btn.primary{background:var(--accent);border-color:transparent;color:#fff}
-    .result-cta{margin-top:18px}
-    .result-note{font-size:12px;color:var(--muted);margin-top:12px}
+    .result-cta{margin-top:0}
+    .restart-btn{width:100%;min-height:42px}
+    .result-note{font-size:11px;color:var(--muted);line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+    .share-shot{position:fixed;left:-99999px;top:0;width:1080px;padding:64px;background:linear-gradient(180deg,#fcfbf8,#f2ede5);color:#1f1c16}
+    .share-shot-card{position:relative;overflow:hidden;border-radius:42px;padding:56px;border:1px solid rgba(40,37,29,.12);background:linear-gradient(180deg,rgba(255,255,255,.92),rgba(247,244,238,.96));box-shadow:0 30px 90px rgba(0,0,0,.08)}
+    .share-shot-card::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at top left,rgba(199,165,106,.14),transparent 42%),radial-gradient(circle at bottom right,rgba(141,159,181,.10),transparent 44%),repeating-linear-gradient(135deg,transparent 0 22px,rgba(31,28,22,.02) 22px 23px);pointer-events:none}
+    .share-brand,.share-code,.share-name,.share-tag,.share-copy,.share-pills{position:relative;z-index:1}
+    .share-brand{font-size:22px;letter-spacing:.18em;text-transform:uppercase;color:#6f6a61;margin-bottom:30px}
+    .share-code{font-family:Georgia,serif;font-size:112px;line-height:1;margin-bottom:18px}
+    .share-name{font-family:Georgia,serif;font-size:58px;line-height:1.05;margin-bottom:12px}
+    .share-tag{font-size:22px;letter-spacing:.16em;text-transform:uppercase;color:#c7a56a;margin-bottom:22px}
+    .share-copy{font-size:28px;line-height:1.75;color:#6f6a61;max-width:24ch}
+    .share-pills{display:flex;gap:12px;flex-wrap:wrap;margin:28px 0 0}
+    .share-pill{padding:12px 18px;border-radius:999px;border:1px solid rgba(40,37,29,.12);background:rgba(255,255,255,.7);font-size:18px}
+    .share-footer{position:relative;z-index:1;margin-top:34px;font-size:18px;letter-spacing:.12em;text-transform:uppercase;color:#6f6a61}
     @keyframes floatIn{from{opacity:0;transform:translateY(28px) scale(.96)}to{opacity:1;transform:translateY(0) scale(1)}}
     @keyframes pulse{50%{transform:translate(-50%,-50%) scale(1.08);opacity:.68}}
     @keyframes wave{50%{transform:translateY(-10px);opacity:.8}}
     @keyframes logoFloat{50%{transform:translateY(-4px)}}
     @keyframes drift{50%{transform:translateY(-6px) scale(1.01)}}
     @keyframes resultRise{from{opacity:0;transform:translateY(18px) scale(.985)}to{opacity:1;transform:translateY(0) scale(1)}}
+    @keyframes rip{from{width:0;height:0;opacity:.85}to{width:360px;height:360px;opacity:0}}
     @media (max-width:767px){
       .nav{flex-direction:column}
       .ghost,.next{width:100%}
-      .screen{padding-bottom:calc(92px + env(safe-area-inset-bottom))}
-      .quiz{padding-bottom:10px}
-      .result-card{padding:18px 16px 18px}
-      .result-code{font-size:clamp(42px,16vw,64px)}
-      .result-name{font-size:clamp(24px,8vw,34px)}
-      .result-desc,.result-section p{font-size:14px;line-height:1.7}
-      .share-row{display:grid;grid-template-columns:1fr}
-      .share-btn,.restart-btn{width:100%}
+      .screen{padding:calc(66px + env(safe-area-inset-top)) 12px calc(12px + env(safe-area-inset-bottom))}
+      .quiz{gap:10px}
+      .result-layout{height:auto}
+      .result-card{height:min(100%, calc(100svh - 88px - env(safe-area-inset-top) - env(safe-area-inset-bottom)));padding:14px}
+      .share-row{grid-template-columns:1fr}
+      .result-section p,.result-desc{-webkit-line-clamp:2}
+      .result-note{-webkit-line-clamp:1}
     }
     @media (min-width:768px){
-      .topbar{padding:calc(18px + env(safe-area-inset-top)) 24px 18px}
-      .screen{padding:calc(96px + env(safe-area-inset-top)) 28px calc(36px + env(safe-area-inset-bottom))}
+      .topbar{padding:calc(16px + env(safe-area-inset-top)) 24px 16px}
+      .screen{padding:calc(82px + env(safe-area-inset-top)) 24px calc(20px + env(safe-area-inset-bottom))}
       .logo-image{width:min(56vw,520px)}
-      .quiz{width:min(90vw,860px);gap:20px}
-      .card{padding:24px;border-radius:28px}
-      .option{min-height:60px;padding:18px}
-      .result-card{padding:28px 24px 22px}
-      .result-code{font-size:clamp(52px,11vw,88px)}
-      .result-desc,.result-section p{font-size:15px}
+      .quiz{width:min(90vw,860px);gap:16px}
+      .card{padding:22px;border-radius:28px}
+      .option{min-height:58px;padding:16px}
+      .result-card{padding:22px;height:min(100%, calc(100svh - 108px - env(safe-area-inset-top) - env(safe-area-inset-bottom)))}
+      .result-code{font-size:clamp(48px,10vw,88px)}
+      .result-name{font-size:clamp(28px,5vw,42px)}
+      .result-section p,.result-desc{font-size:14px;-webkit-line-clamp:3}
     }
     @media (min-width:1024px){
-      .screen{padding:calc(104px + env(safe-area-inset-top)) 32px calc(42px + env(safe-area-inset-bottom))}
+      .screen{padding:calc(96px + env(safe-area-inset-top)) 28px calc(24px + env(safe-area-inset-bottom))}
       .quiz{width:min(82vw,920px)}
       .logo-image{width:min(48vw,540px)}
       .sub{max-width:40ch}
-      .result-card{max-width:920px}
+      .result-card{max-width:920px;height:min(100%, calc(100svh - 122px - env(safe-area-inset-top) - env(safe-area-inset-bottom)));grid-template-columns:1.15fr .85fr;grid-template-rows:auto auto auto;column-gap:20px}
+      .result-hero{grid-column:1}
+      .result-section:first-of-type{grid-column:1}
+      .result-section:last-of-type{grid-column:2;grid-row:1 / span 2;border-top:none;padding-top:0;padding-left:8px}
+      .share-row{grid-column:1;grid-template-columns:repeat(3,1fr)}
+      .result-cta{grid-column:2;align-self:end}
+      .result-note{grid-column:1 / -1;-webkit-line-clamp:1}
     }
     @media (hover:none){.option:hover,.ghost:hover,.next:hover,.restart-btn:hover,.share-btn:hover{transform:none;box-shadow:none}}
     @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none !important;transition:none !important;scroll-behavior:auto !important}}
@@ -115,6 +136,7 @@
       <div class="brandmark"><span class="logo">U</span><span>U&ME MBTI</span></div>
       <button class="toggle" id="themeBtn" type="button">切換模式</button>
     </div>
+
     <div class="glow" aria-hidden="true"></div>
     <div class="brand-wave" aria-hidden="true"></div>
 
@@ -122,9 +144,7 @@
       <div class="brand">
         <div class="logo-image" aria-label="U&ME LOGO"><span>U&ME</span></div>
         <div class="sub">你的內心世界旅程即將開始。</div>
-        <div class="actions">
-          <button class="start" id="startBtn" type="button" aria-label="開始測驗"></button>
-        </div>
+        <button class="start" id="startBtn" type="button" aria-label="開始測驗"></button>
       </div>
     </section>
 
@@ -137,15 +157,19 @@
           </div>
           <div class="quiz-progress" id="quizProgress">1 / 12</div>
         </div>
+
         <div class="progress-bar"><span id="progressFill"></span></div>
+
         <div class="card">
           <p class="question" id="questionText"></p>
           <div class="options" id="options"></div>
         </div>
+
         <div class="nav">
           <button class="ghost" id="backBtn" type="button">上一題</button>
           <button class="next" id="nextBtn" type="button" disabled>下一題</button>
         </div>
+
         <div class="footer-note">先完成題目流程，結果頁會自動顯示。</div>
       </div>
     </section>
@@ -153,17 +177,11 @@
     <section class="screen" id="resultScreen" hidden>
       <div class="result-screen-bg" aria-hidden="true"></div>
       <div class="cinema-wash" aria-hidden="true"></div>
-      <div class="quiz">
-        <div class="quiz-head">
-          <div>
-            <div class="quiz-kicker">YOUR RESULT</div>
-            <h1 class="quiz-title">你的角色結果</h1>
-          </div>
-        </div>
 
-        <div class="card result-card">
+      <div class="result-layout">
+        <div class="card result-card" id="resultCardShot">
           <div class="result-hero">
-            <div style="font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)">你的組合</div>
+            <div style="font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)">你的組合</div>
             <div class="result-code" id="resultCode">MIRC</div>
             <div class="result-name" id="resultName">柔光守護者</div>
             <div class="result-tag" id="resultTag">慢慢升溫型</div>
@@ -186,8 +204,8 @@
           </div>
 
           <div class="share-row">
-            <button class="share-btn primary" id="shareBtn" type="button">分享結果</button>
-            <button class="share-btn" id="copyBtn" type="button">複製文案</button>
+            <button class="share-btn primary" id="shareBtn" type="button">分享圖片</button>
+            <button class="share-btn" id="saveBtn" type="button">下載圖片</button>
             <button class="share-btn" id="replayBtn" type="button">再測一次</button>
           </div>
 
@@ -195,34 +213,261 @@
             <button class="restart-btn" id="restartBtn" type="button">重新測驗</button>
           </div>
 
-          <div class="result-note">你可以重新開始一次，或回到首頁重新體驗開場。</div>
+          <div class="result-note">已改成單屏結果頁，手機不需要往下滑。</div>
         </div>
       </div>
     </section>
+
+    <div class="share-shot" id="shareShot">
+      <div class="share-shot-card">
+        <div class="share-brand">U&ME MBTI RESULT</div>
+        <div class="share-code" id="shareCode">MIRC</div>
+        <div class="share-name" id="shareName">柔光守護者</div>
+        <div class="share-tag" id="shareTag">慢慢升溫型</div>
+        <div class="share-copy" id="shareDesc">妳喜歡氛圍先到位，再慢慢打開感受。妳不是不主動，而是要先感受到安心與情緒流動，才會真正進入狀態。</div>
+        <div class="share-pills" id="sharePills"></div>
+        <div class="share-footer">U&ME · YOUR INNER TEMPO</div>
+      </div>
+    </div>
   </main>
 
   <script>
-    const root=document.documentElement,stage=document.getElementById('stage'),themeBtn=document.getElementById('themeBtn'),introScreen=document.getElementById('introScreen'),quizScreen=document.getElementById('quizScreen'),resultScreen=document.getElementById('resultScreen'),startBtn=document.getElementById('startBtn'),backBtn=document.getElementById('backBtn'),nextBtn=document.getElementById('nextBtn'),restartBtn=document.getElementById('restartBtn'),questionText=document.getElementById('questionText'),optionsEl=document.getElementById('options'),quizTitle=document.getElementById('quizTitle'),quizProgress=document.getElementById('quizProgress'),progressFill=document.getElementById('progressFill'),resultCode=document.getElementById('resultCode'),resultName=document.getElementById('resultName'),resultTag=document.getElementById('resultTag'),resultDesc=document.getElementById('resultDesc'),resultPills=document.getElementById('resultPills'),resultCategory=document.getElementById('resultCategory'),resultMood=document.getElementById('resultMood'),resultPace=document.getElementById('resultPace'),resultDrive=document.getElementById('resultDrive'),shareBtn=document.getElementById('shareBtn'),copyBtn=document.getElementById('copyBtn'),replayBtn=document.getElementById('replayBtn');
-    const questions=[{q:'第一次靠近時，你更在意什麼？',a:['A. 氛圍有沒有對。','B. 反應來得夠不夠快。','C. 感覺有沒有慢慢升起來。','D. 能不能直接進入狀態。']},{q:'你比較容易被哪種方式打動？',a:['A. 溫柔、慢慢、一步一步。','B. 直接、明確、很到位。','C. 有情感、帶曖昧、會想多看一眼。','D. 觸感明顯、身體立刻有感。']},{q:'如果是一個讓你心動的畫面，你會先注意什麼？',a:['A. 整體氣氛。','B. 身體反應。','C. 被理解的感覺。','D. 實際觸感。']},{q:'你偏好的親密節奏比較像哪一種？',a:['A. 先鋪陳，再靠近。','B. 一開始就很明確。','C. 先有情緒，再有慾望。','D. 先有感覺，再看要不要繼續。']},{q:'你在選擇用品時，最在意哪件事？',a:['A. 氛圍感與包裝。','B. 刺激感與反應。','C. 情感與連結。','D. 實際使用時的感受。']},{q:'當互動開始時，你比較喜歡哪種方式？',a:['A. 慢慢被帶入。','B. 直接進入主題。','C. 帶點曖昧與鋪陳。','D. 先試看看有沒有感。']},{q:'哪一種感覺最容易讓你覺得「對了」？',a:['A. 氛圍對了。','B. 張力夠了。','C. 情感被接住了。','D. 身體感受夠明確。']},{q:'如果今天要你選一種關係狀態，你比較像哪一種？',a:['A. 靜靜靠近型。','B. 明確進攻型。','C. 曖昧升溫型。','D. 直接感受型。']},{q:'你在親密關係裡，最想要的是什麼？',a:['A. 情緒流動。','B. 即時反應。','C. 被理解。','D. 有感體驗。']},{q:'你比較容易被哪種內容吸引？',a:['A. 有畫面感的描述。','B. 有力道的表達。','C. 有情緒的文字。','D. 有觸感的描寫。']},{q:'如果要你做一個選擇，你會更傾向：',a:['A. 先感受再決定。','B. 直接選最有感的。','C. 先看有沒有情緒共鳴。','D. 先看觸感和實際效果。']},{q:'你覺得最迷人的，是哪一種靠近方式？',a:['A. 被氛圍包住。','B. 被刺激點燃。','C. 被情感理解。','D. 被感官喚醒。']}];
-    const scoreMap=[{A:['Mood',2],B:['Energy',2],C:['Intimacy',2],D:['Direct',2]},{A:['Intimacy',2],B:['Direct',2],C:['Mood',2],D:['Energy',2]},{A:['Mood',2],B:['Energy',2],C:['Romance',2],D:['Touch',2]},{A:['Mood',2],B:['Direct',2],C:['Romance',2],D:['Touch',2]},{A:['Mood',2],B:['Energy',2],C:['Intimacy',2],D:['Direct',2]},{A:['Intimacy',2],B:['Direct',2],C:['Mood',2],D:['Energy',2]},{A:['Mood',2],B:['Energy',2],C:['Romance',2],D:['Touch',2]},{A:['Mood',2],B:['Energy',2],C:['Intimacy',2],D:['Direct',2]},{A:['Mood',2],B:['Energy',2],C:['Intimacy',2],D:['Touch',2]},{A:['Mood',2],B:['Energy',2],C:['Romance',2],D:['Touch',2]},{A:['Mood',2],B:['Energy',2],C:['Romance',2],D:['Direct',2]},{A:['Mood',2],B:['Energy',2],C:['Intimacy',2],D:['Direct',2]}];
-    const results={MIRC:{name:'柔光守護者',tag:'慢慢升溫型',desc:'妳喜歡氛圍先到位，再慢慢打開感受。妳不是不主動，而是要先感受到安心與情緒流動，才會真正進入狀態。',pills:['溫柔','緩慢','氛圍感']},MIRL:{name:'微熱守護者',tag:'情感慾流型',desc:'妳要的不是直接刺激，而是情緒與慾望一起被喚醒。妳對關係有感，對氛圍也有感，會在熟悉感中慢慢被點燃。',pills:['情感','曖昧','升溫']},MITC:{name:'觸感守護者',tag:'觸感探索型',desc:'妳重視感受本身，特別在意觸覺與互動的細節。妳喜歡慢慢摸索，不急著定義，但很敏銳。',pills:['觸感','細節','探索']},MITL:{name:'感受守護者',tag:'感官沉浸型',desc:'妳一旦進入狀態，就會很投入，喜歡感官層層堆疊。妳重視細節、觸感、節奏與身體回饋。',pills:['沉浸','節奏','回饋']},MDRC:{name:'溫柔引導者',tag:'溫柔直入型',desc:'妳表面柔和，但其實知道自己要什麼。妳不喜歡繞太久，偏好在有情感鋪陳後直接進入重點。',pills:['溫柔','直接','有感']},MDRL:{name:'曖昧引導者',tag:'曖昧直覺型',desc:'妳喜歡明確，但不喜歡太冷。妳要的是有溫度的直接，是帶著曖昧與情緒的靠近。',pills:['曖昧','溫度','直接']},MDTC:{name:'體感引導者',tag:'體感主導型',desc:'妳偏好清楚、直接，而且一切都要讓身體先有反應。妳對產品的有效感、刺激感、反應速度會很在意。',pills:['體感','反應','主導']},MDTL:{name:'直感引導者',tag:'直球慾感型',desc:'妳不想猜，也不喜歡太多前戲式模糊，妳想要的是直接而有感。妳的偏好明確，反應也直接，屬於很好懂、也很有存在感的類型。',pills:['直球','慾感','明確']},EIRC:{name:'霧感感官者',tag:'情緒探索型',desc:'妳偏刺激，但不是粗暴，而是想透過情緒與新鮮感打開感受。妳喜歡探索，也會被關係中的曖昧感吸引。',pills:['霧感','探索','情緒']},EIRL:{name:'熱感感官者',tag:'高溫曖昧型',desc:'妳對情感與慾望都有反應，而且不太怕熱度。妳喜歡強烈一點的氛圍，也喜歡被帶進更深的感受。',pills:['高溫','曖昧','慾感']},EITC:{name:'細節感官者',tag:'刺激試探型',desc:'妳喜歡先試試看，感受有沒有對味。妳的反應很快，喜歡新鮮、喜歡摸索，也願意多嘗試。',pills:['試探','新鮮','反應快']},EITL:{name:'強感感官者',tag:'強烈感官型',desc:'妳很容易被明確的刺激抓住，喜歡直接、有感、迅速反應的體驗。妳不太需要太多鋪陳，重點是感受要夠明顯。',pills:['強烈','感官','直接']},EDRC:{name:'悄然探索者',tag:'主動曖昧型',desc:'妳不一定要等別人帶，妳自己就很會製造氣氛。妳雖然直接，但不是冰冷，而是有情感、有曖昧、有推進感。',pills:['主動','曖昧','推進']},EDRL:{name:'慾感探索者',tag:'慾感引導型',desc:'妳是那種很會把節奏帶進去的人。妳知道怎麼讓氣氛升溫，也知道怎麼讓對方進入狀態。',pills:['節奏','升溫','引導']},EDTC:{name:'直覺探索者',tag:'直接體驗型',desc:'妳重視的是當下的真實感受，喜歡清楚、直接、有效。妳不喜歡過度包裝，妳要的是立刻能感受到的東西。',pills:['直覺','體驗','有效']},EDTL:{name:'烈感探索者',tag:'直球烈感型',desc:'妳是很強烈、很直接、很知道自己要什麼的類型。妳不太繞，也不太等，妳的偏好很鮮明，吸引力也很強。',pills:['烈感','直球','存在感']}};
+    const root=document.documentElement,stage=document.getElementById('stage'),themeBtn=document.getElementById('themeBtn'),introScreen=document.getElementById('introScreen'),quizScreen=document.getElementById('quizScreen'),resultScreen=document.getElementById('resultScreen'),startBtn=document.getElementById('startBtn'),backBtn=document.getElementById('backBtn'),nextBtn=document.getElementById('nextBtn'),restartBtn=document.getElementById('restartBtn'),saveBtn=document.getElementById('saveBtn'),questionText=document.getElementById('questionText'),optionsEl=document.getElementById('options'),quizTitle=document.getElementById('quizTitle'),quizProgress=document.getElementById('quizProgress'),progressFill=document.getElementById('progressFill'),resultCode=document.getElementById('resultCode'),resultName=document.getElementById('resultName'),resultTag=document.getElementById('resultTag'),resultDesc=document.getElementById('resultDesc'),resultPills=document.getElementById('resultPills'),resultCategory=document.getElementById('resultCategory'),resultMood=document.getElementById('resultMood'),resultPace=document.getElementById('resultPace'),resultDrive=document.getElementById('resultDrive'),shareBtn=document.getElementById('shareBtn'),replayBtn=document.getElementById('replayBtn'),shareShot=document.getElementById('shareShot'),shareCode=document.getElementById('shareCode'),shareName=document.getElementById('shareName'),shareTag=document.getElementById('shareTag'),shareDesc=document.getElementById('shareDesc'),sharePills=document.getElementById('sharePills');
+
+    const questions=[
+      {q:'第一次靠近時，你更在意什麼？',a:['A. 氛圍有沒有對。','B. 反應來得夠不夠快。','C. 感覺有沒有慢慢升起來。','D. 能不能直接進入狀態。']},
+      {q:'你比較容易被哪種方式打動？',a:['A. 溫柔、慢慢、一步一步。','B. 直接、明確、很到位。','C. 有情感、帶曖昧、會想多看一眼。','D. 觸感明顯、身體立刻有感。']},
+      {q:'如果是一個讓你心動的畫面，你會先注意什麼？',a:['A. 整體氣氛。','B. 身體反應。','C. 被理解的感覺。','D. 實際觸感。']},
+      {q:'你偏好的親密節奏比較像哪一種？',a:['A. 先鋪陳，再靠近。','B. 一開始就很明確。','C. 先有情緒，再有慾望。','D. 先有感覺，再看要不要繼續。']},
+      {q:'你在選擇用品時，最在意哪件事？',a:['A. 氛圍感與包裝。','B. 刺激感與反應。','C. 情感與連結。','D. 實際使用時的感受。']},
+      {q:'當互動開始時，你比較喜歡哪種方式？',a:['A. 慢慢被帶入。','B. 直接進入主題。','C. 帶點曖昧與鋪陳。','D. 先試看看有沒有感。']},
+      {q:'哪一種感覺最容易讓你覺得「對了」？',a:['A. 氛圍對了。','B. 張力夠了。','C. 情感被接住了。','D. 身體感受夠明確。']},
+      {q:'如果今天要你選一種關係狀態，你比較像哪一種？',a:['A. 靜靜靠近型。','B. 明確進攻型。','C. 曖昧升溫型。','D. 直接感受型。']},
+      {q:'你在親密關係裡，最想要的是什麼？',a:['A. 情緒流動。','B. 即時反應。','C. 被理解。','D. 有感體驗。']},
+      {q:'你比較容易被哪種內容吸引？',a:['A. 有畫面感的描述。','B. 有力道的表達。','C. 有情緒的文字。','D. 有觸感的描寫。']},
+      {q:'如果要你做一個選擇，你會更傾向：',a:['A. 先感受再決定。','B. 直接選最有感的。','C. 先看有沒有情緒共鳴。','D. 先看觸感和實際效果。']},
+      {q:'你覺得最迷人的，是哪一種靠近方式？',a:['A. 被氛圍包住。','B. 被刺激點燃。','C. 被情感理解。','D. 被感官喚醒。']}
+    ];
+
+    const scoreMap=[
+      {A:['Mood',2],B:['Energy',2],C:['Intimacy',2],D:['Direct',2]},
+      {A:['Intimacy',2],B:['Direct',2],C:['Mood',2],D:['Energy',2]},
+      {A:['Mood',2],B:['Energy',2],C:['Romance',2],D:['Touch',2]},
+      {A:['Mood',2],B:['Direct',2],C:['Romance',2],D:['Touch',2]},
+      {A:['Mood',2],B:['Energy',2],C:['Intimacy',2],D:['Direct',2]},
+      {A:['Intimacy',2],B:['Direct',2],C:['Mood',2],D:['Energy',2]},
+      {A:['Mood',2],B:['Energy',2],C:['Romance',2],D:['Touch',2]},
+      {A:['Mood',2],B:['Energy',2],C:['Intimacy',2],D:['Direct',2]},
+      {A:['Mood',2],B:['Energy',2],C:['Intimacy',2],D:['Touch',2]},
+      {A:['Mood',2],B:['Energy',2],C:['Romance',2],D:['Touch',2]},
+      {A:['Mood',2],B:['Energy',2],C:['Romance',2],D:['Direct',2]},
+      {A:['Mood',2],B:['Energy',2],C:['Intimacy',2],D:['Direct',2]}
+    ];
+
+    const results={
+      MIRC:{name:'柔光守護者',tag:'慢慢升溫型',desc:'妳喜歡氛圍先到位，再慢慢打開感受。妳不是不主動，而是要先感受到安心與情緒流動，才會真正進入狀態。',pills:['溫柔','緩慢','氛圍感']},
+      MIRL:{name:'微熱守護者',tag:'情感慾流型',desc:'妳要的不是直接刺激，而是情緒與慾望一起被喚醒。妳對關係有感，對氛圍也有感，會在熟悉感中慢慢被點燃。',pills:['情感','曖昧','升溫']},
+      MITC:{name:'觸感守護者',tag:'觸感探索型',desc:'妳重視感受本身，特別在意觸覺與互動的細節。妳喜歡慢慢摸索，不急著定義，但很敏銳。',pills:['觸感','細節','探索']},
+      MITL:{name:'感受守護者',tag:'感官沉浸型',desc:'妳一旦進入狀態，就會很投入，喜歡感官層層堆疊。妳重視細節、觸感、節奏與身體回饋。',pills:['沉浸','節奏','回饋']},
+      MDRC:{name:'溫柔引導者',tag:'溫柔直入型',desc:'妳表面柔和，但其實知道自己要什麼。妳不喜歡繞太久，偏好在有情感鋪陳後直接進入重點。',pills:['溫柔','直接','有感']},
+      MDRL:{name:'曖昧引導者',tag:'曖昧直覺型',desc:'妳喜歡明確，但不喜歡太冷。妳要的是有溫度的直接，是帶著曖昧與情緒的靠近。',pills:['曖昧','溫度','直接']},
+      MDTC:{name:'體感引導者',tag:'體感主導型',desc:'妳偏好清楚、直接，而且一切都要讓身體先有反應。妳對產品的有效感、刺激感、反應速度會很在意。',pills:['體感','反應','主導']},
+      MDTL:{name:'直感引導者',tag:'直球慾感型',desc:'妳不想猜，也不喜歡太多前戲式模糊，妳想要的是直接而有感。妳的偏好明確，反應也直接，屬於很好懂、也很有存在感的類型。',pills:['直球','慾感','明確']},
+      EIRC:{name:'霧感感官者',tag:'情緒探索型',desc:'妳偏刺激，但不是粗暴，而是想透過情緒與新鮮感打開感受。妳喜歡探索，也會被關係中的曖昧感吸引。',pills:['霧感','探索','情緒']},
+      EIRL:{name:'熱感感官者',tag:'高溫曖昧型',desc:'妳對情感與慾望都有反應，而且不太怕熱度。妳喜歡強烈一點的氛圍，也喜歡被帶進更深的感受。',pills:['高溫','曖昧','慾感']},
+      EITC:{name:'細節感官者',tag:'刺激試探型',desc:'妳喜歡先試試看，感受有沒有對味。妳的反應很快，喜歡新鮮、喜歡摸索，也願意多嘗試。',pills:['試探','新鮮','反應快']},
+      EITL:{name:'強感感官者',tag:'強烈感官型',desc:'妳很容易被明確的刺激抓住，喜歡直接、有感、迅速反應的體驗。妳不太需要太多鋪陳，重點是感受要夠明顯。',pills:['強烈','感官','直接']},
+      EDRC:{name:'悄然探索者',tag:'主動曖昧型',desc:'妳不一定要等別人帶，妳自己就很會製造氣氛。妳雖然直接，但不是冰冷，而是有情感、有曖昧、有推進感。',pills:['主動','曖昧','推進']},
+      EDRL:{name:'慾感探索者',tag:'慾感引導型',desc:'妳是那種很會把節奏帶進去的人。妳知道怎麼讓氣氛升溫，也知道怎麼讓對方進入狀態。',pills:['節奏','升溫','引導']},
+      EDTC:{name:'直覺探索者',tag:'直接體驗型',desc:'妳重視的是當下的真實感受，喜歡清楚、直接、有效。妳不喜歡過度包裝，妳要的是立刻能感受到的東西。',pills:['直覺','體驗','有效']},
+      EDTL:{name:'烈感探索者',tag:'直球烈感型',desc:'妳是很強烈、很直接、很知道自己要什麼的類型。妳不太繞，也不太等，妳的偏好很鮮明，吸引力也很強。',pills:['烈感','直球','存在感']}
+    };
+
     const state={index:0,answers:Array(questions.length).fill(null),score:{Mood:0,Energy:0,Intimacy:0,Direct:0,Romance:0,Touch:0,Curious:0,Lust:0}};
-    const setScreen=s=>{[introScreen,quizScreen,resultScreen].forEach(el=>{el.hidden=el!==s;el.classList.remove('active')});s.hidden=false;requestAnimationFrame(()=>s.classList.add('active'))};
-    const updateProgress=()=>{progressFill.style.width=`${Math.max(0,Math.min(100,(state.index/(questions.length-1))*100))}%`};
-    const renderQuestion=()=>{const i=state.index;quizTitle.textContent=`第 ${i+1} 題`;quizProgress.textContent=`${i+1} / ${questions.length}`;questionText.textContent=questions[i].q;optionsEl.innerHTML='';updateProgress();questions[i].a.forEach((txt,idx)=>{const key=['A','B','C','D'][idx];const b=document.createElement('button');b.className='option';b.type='button';b.textContent=txt;if(state.answers[i]===key)b.classList.add('selected');b.addEventListener('click',()=>{state.answers[i]=key;renderQuestion()});optionsEl.appendChild(b)});backBtn.disabled=i===0;nextBtn.textContent=i===questions.length-1?'完成':'下一題';nextBtn.disabled=state.answers[i]==null};
-    const startQuiz=()=>{state.index=0;state.answers=Array(questions.length).fill(null);resultPills.innerHTML='';progressFill.style.width='0%';setScreen(quizScreen);renderQuestion()};
-    const computeResult=()=>{state.score={Mood:0,Energy:0,Intimacy:0,Direct:0,Romance:0,Touch:0,Curious:0,Lust:0};state.answers.forEach((ans,i)=>{const [k,v]=scoreMap[i][ans];state.score[k]+=v});return[(state.score.Mood>=state.score.Energy?'M':'E'),(state.score.Intimacy>=state.score.Direct?'I':'D'),(state.score.Romance>=state.score.Touch?'R':'T'),(state.score.Curious>=state.score.Lust?'C':'L')].join('')};
-    const showResult=()=>{const code=computeResult();const r=results[code]||results.MIRC;resultCode.textContent=code;resultName.textContent=r.name;resultTag.textContent=r.tag;resultDesc.textContent=r.desc;resultCategory.textContent=code.startsWith('M')?'妳屬於先感受、再進入的類型。妳需要氛圍、信任與細節慢慢堆疊，才會真正打開。':'妳屬於先被帶動、再投入的類型。妳喜歡明確節奏、立即回饋與更直接的互動。';resultMood.textContent=code.includes('R')?'情感導向':'感官導向';resultPace.textContent=code.startsWith('M')?'節奏：緩慢':'節奏：直接';resultDrive.textContent=code.endsWith('C')?'互動：柔和':'互動：強烈';resultPills.innerHTML='';r.pills.forEach(t=>{const s=document.createElement('span');s.className='pill';s.textContent=t;resultPills.appendChild(s)});setScreen(resultScreen)};
-    const nextQuestion=()=>{if(state.answers[state.index]==null)return;if(state.index<questions.length-1){state.index+=1;renderQuestion()}else showResult()};
-    const prevQuestion=()=>{if(state.index>0){state.index-=1;renderQuestion()}};
-    const restartToStart=()=>{state.index=0;state.answers=Array(questions.length).fill(null);progressFill.style.width='0%';nextBtn.disabled=true;setScreen(introScreen)};
+
+    const setScreen=s=>{
+      [introScreen,quizScreen,resultScreen].forEach(el=>{el.hidden=el!==s;el.classList.remove('active')});
+      s.hidden=false;
+      requestAnimationFrame(()=>s.classList.add('active'));
+    };
+
+    const updateProgress=()=>{
+      progressFill.style.width=`${Math.max(0,Math.min(100,(state.index/(questions.length-1))*100))}%`;
+    };
+
+    const renderQuestion=()=>{
+      const i=state.index;
+      quizTitle.textContent=`第 ${i+1} 題`;
+      quizProgress.textContent=`${i+1} / ${questions.length}`;
+      questionText.textContent=questions[i].q;
+      optionsEl.innerHTML='';
+      updateProgress();
+      questions[i].a.forEach((txt,idx)=>{
+        const key=['A','B','C','D'][idx];
+        const b=document.createElement('button');
+        b.className='option';
+        b.type='button';
+        b.textContent=txt;
+        if(state.answers[i]===key)b.classList.add('selected');
+        b.addEventListener('click',()=>{
+          state.answers[i]=key;
+          renderQuestion();
+        });
+        optionsEl.appendChild(b);
+      });
+      backBtn.disabled=i===0;
+      nextBtn.textContent=i===questions.length-1?'完成':'下一題';
+      nextBtn.disabled=state.answers[i]==null;
+    };
+
+    const startQuiz=()=>{
+      state.index=0;
+      state.answers=Array(questions.length).fill(null);
+      progressFill.style.width='0%';
+      setScreen(quizScreen);
+      renderQuestion();
+    };
+
+    const computeResult=()=>{
+      state.score={Mood:0,Energy:0,Intimacy:0,Direct:0,Romance:0,Touch:0,Curious:0,Lust:0};
+      state.answers.forEach((ans,i)=>{
+        const [k,v]=scoreMap[i][ans];
+        state.score[k]+=v;
+      });
+      return[
+        (state.score.Mood>=state.score.Energy?'M':'E'),
+        (state.score.Intimacy>=state.score.Direct?'I':'D'),
+        (state.score.Romance>=state.score.Touch?'R':'T'),
+        (state.score.Curious>=state.score.Lust?'C':'L')
+      ].join('');
+    };
+
+    const paintShareCard=(code,r)=>{
+      shareCode.textContent=code;
+      shareName.textContent=r.name;
+      shareTag.textContent=r.tag;
+      shareDesc.textContent=r.desc;
+      sharePills.innerHTML='';
+      r.pills.forEach(t=>{
+        const el=document.createElement('span');
+        el.className='share-pill';
+        el.textContent=t;
+        sharePills.appendChild(el);
+      });
+    };
+
+    const showResult=()=>{
+      const code=computeResult();
+      const r=results[code]||results.MIRC;
+      resultCode.textContent=code;
+      resultName.textContent=r.name;
+      resultTag.textContent=r.tag;
+      resultDesc.textContent=r.desc;
+      resultCategory.textContent=code.startsWith('M')?'妳屬於先感受、再進入的類型。妳需要氛圍、信任與細節慢慢堆疊，才會真正打開。':'妳屬於先被帶動、再投入的類型。妳喜歡明確節奏、立即回饋與更直接的互動。';
+      resultMood.textContent=code.includes('R')?'情感導向':'感官導向';
+      resultPace.textContent=code.startsWith('M')?'節奏：緩慢':'節奏：直接';
+      resultDrive.textContent=code.endsWith('C')?'互動：柔和':'互動：強烈';
+      resultPills.innerHTML='';
+      r.pills.forEach(t=>{
+        const s=document.createElement('span');
+        s.className='pill';
+        s.textContent=t;
+        resultPills.appendChild(s);
+      });
+      paintShareCard(code,r);
+      setScreen(resultScreen);
+    };
+
+    const nextQuestion=()=>{
+      if(state.answers[state.index]==null)return;
+      if(state.index<questions.length-1){
+        state.index+=1;
+        renderQuestion();
+      }else{
+        showResult();
+      }
+    };
+
+    const prevQuestion=()=>{
+      if(state.index>0){
+        state.index-=1;
+        renderQuestion();
+      }
+    };
+
+    const restartToStart=()=>{
+      state.index=0;
+      state.answers=Array(questions.length).fill(null);
+      progressFill.style.width='0%';
+      nextBtn.disabled=true;
+      setScreen(introScreen);
+    };
+
+    async function captureShareBlob(){
+      const canvas=await html2canvas(shareShot,{backgroundColor:'#f7f4ee',scale:2,useCORS:true});
+      return new Promise(resolve=>canvas.toBlob(blob=>resolve(blob),'image/png',1));
+    }
+
+    async function downloadBlob(blob,filename){
+      const url=URL.createObjectURL(blob);
+      const a=document.createElement('a');
+      a.href=url;
+      a.download=filename;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    }
+
     root.setAttribute('data-theme',matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');
     themeBtn.addEventListener('click',()=>root.setAttribute('data-theme',root.getAttribute('data-theme')==='dark'?'light':'dark'));
-    stage.addEventListener('pointerdown',e=>{const r=document.createElement('span');r.style.cssText='position:absolute;border-radius:50%;pointer-events:none;transform:translate(-50%,-50%);background:radial-gradient(circle, rgba(255,255,255,.38) 0%, rgba(255,255,255,.18) 25%, rgba(255,255,255,0) 70%);animation:rip .75s ease-out forwards;mix-blend-mode:screen;z-index:4';const rect=stage.getBoundingClientRect();r.style.left=(e.clientX-rect.left)+'px';r.style.top=(e.clientY-rect.top)+'px';stage.appendChild(r);r.addEventListener('animationend',()=>r.remove())});
-    const style=document.createElement('style');style.textContent='@keyframes rip{from{width:0;height:0;opacity:.85}to{width:360px;height:360px;opacity:0}}';document.head.appendChild(style);
-    startBtn.addEventListener('click',startQuiz);nextBtn.addEventListener('click',nextQuestion);backBtn.addEventListener('click',prevQuestion);restartBtn.addEventListener('click',restartToStart);replayBtn.addEventListener('click',restartToStart);
-    copyBtn.addEventListener('click',async()=>{const text=`我在 U&ME MBTI 測到 ${resultCode.textContent}｜${resultName.textContent}｜${resultTag.textContent}`;try{await navigator.clipboard.writeText(text);copyBtn.textContent='已複製';setTimeout(()=>copyBtn.textContent='複製文案',1400)}catch(e){}});
-    shareBtn.addEventListener('click',async()=>{const text=`我在 U&ME MBTI 測到 ${resultCode.textContent}｜${resultName.textContent}｜${resultTag.textContent}`;if(navigator.share){try{await navigator.share({title:'U&ME MBTI 結果',text})}catch(e){}}else{try{await navigator.clipboard.writeText(text);shareBtn.textContent='已複製';setTimeout(()=>shareBtn.textContent='分享結果',1400)}catch(e){}}});
+
+    stage.addEventListener('pointerdown',e=>{
+      const r=document.createElement('span');
+      r.style.cssText='position:absolute;border-radius:50%;pointer-events:none;transform:translate(-50%,-50%);background:radial-gradient(circle, rgba(255,255,255,.38) 0%, rgba(255,255,255,.18) 25%, rgba(255,255,255,0) 70%);animation:rip .75s ease-out forwards;mix-blend-mode:screen;z-index:4';
+      const rect=stage.getBoundingClientRect();
+      r.style.left=(e.clientX-rect.left)+'px';
+      r.style.top=(e.clientY-rect.top)+'px';
+      stage.appendChild(r);
+      r.addEventListener('animationend',()=>r.remove());
+    });
+
+    startBtn.addEventListener('click',startQuiz);
+    nextBtn.addEventListener('click',nextQuestion);
+    backBtn.addEventListener('click',prevQuestion);
+    restartBtn.addEventListener('click',restartToStart);
+    replayBtn.addEventListener('click',restartToStart);
+
+    saveBtn.addEventListener('click',async()=>{
+      try{
+        saveBtn.textContent='產生中...';
+        const blob=await captureShareBlob();
+        await downloadBlob(blob,`ume-mbti-${resultCode.textContent}.png`);
+        saveBtn.textContent='已下載';
+        setTimeout(()=>saveBtn.textContent='下載圖片',1400);
+      }catch(e){
+        saveBtn.textContent='下載圖片';
+      }
+    });
+
+    shareBtn.addEventListener('click',async()=>{
+      try{
+        shareBtn.textContent='產生中...';
+        const blob=await captureShareBlob();
+        const file=new File([blob],`ume-mbti-${resultCode.textContent}.png`,{type:'image/png',lastModified:Date.now()});
+        const shareData={files:[file],title:'U&ME MBTI 結果',text:`我在 U&ME MBTI 測到 ${resultCode.textContent}｜${resultName.textContent}｜${resultTag.textContent}`};
+        if(navigator.canShare&&navigator.canShare(shareData)){
+          await navigator.share(shareData);
+          shareBtn.textContent='分享圖片';
+        }else{
+          await downloadBlob(blob,`ume-mbti-${resultCode.textContent}.png`);
+          shareBtn.textContent='已下載圖片';
+          setTimeout(()=>shareBtn.textContent='分享圖片',1400);
+        }
+      }catch(e){
+        shareBtn.textContent='分享圖片';
+      }
+    });
   </script>
 </body>
 </html>
