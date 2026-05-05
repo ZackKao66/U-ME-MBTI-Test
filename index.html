@@ -13,7 +13,7 @@
       --font-display:'Georgia',serif;--font-body:'Inter',system-ui,sans-serif;
       --theme-glow:rgba(199,165,106,.22);
       --theme-grad-a:#c7a56a;--theme-grad-b:#8d9fb5;
-      --glow-hue:38deg; /* 動態背景光暈色相 */
+      --glow-hue:38deg;
     }
     [data-theme="dark"]{
       --bg:#151412;--surface:#1d1c19;--surface-2:#23211d;
@@ -26,12 +26,8 @@
       --theme-grad-a:#8d9fb5;--theme-grad-b:#c7a56a;
     }
     *{box-sizing:border-box} html,body{margin:0;min-height:100%}
-    body{
-      font-family:var(--font-body);
-      background:radial-gradient(circle at top,rgba(199,165,106,.16),transparent 38%),var(--bg);
-      color:var(--text);overflow:hidden;
-      -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;
-    }
+    body{font-family:var(--font-body);background:radial-gradient(circle at top,rgba(199,165,106,.16),transparent 38%),var(--bg);color:var(--text);overflow:hidden;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+    button{font:inherit;-webkit-tap-highlight-color:transparent}
 
     /* ── 入場遮罩 ── */
     .curtain{position:fixed;inset:0;z-index:999;pointer-events:none;display:grid;place-items:center;background:var(--bg);animation:curtainFade 2s cubic-bezier(.16,1,.3,1) forwards}
@@ -40,7 +36,6 @@
     @keyframes curtainLogoIn{from{opacity:0;transform:translateY(10px) scale(.96)}to{opacity:1;transform:translateY(0) scale(1)}}
     @keyframes curtainLogoOut{from{opacity:1;transform:scale(1)}to{opacity:0;transform:scale(1.06)}}
 
-    button{font:inherit;-webkit-tap-highlight-color:transparent}
     .stage{width:100vw;height:100svh;min-height:100svh;position:relative;overflow:hidden;background:linear-gradient(180deg,color-mix(in oklab,var(--surface) 88%,white),var(--surface));isolation:isolate}
     .topbar{position:absolute;left:0;right:0;top:0;display:flex;justify-content:space-between;align-items:center;padding:calc(12px + env(safe-area-inset-top)) 14px 12px;z-index:8;opacity:0;animation:fadeIn .8s ease 1.9s forwards}
     @keyframes fadeIn{to{opacity:1}}
@@ -50,8 +45,6 @@
     .screen{position:absolute;inset:0;display:grid;place-items:center;padding:calc(70px + env(safe-area-inset-top)) 14px calc(16px + env(safe-area-inset-bottom));text-align:center;transition:opacity .45s cubic-bezier(.16,1,.3,1),transform .45s cubic-bezier(.16,1,.3,1),filter .45s cubic-bezier(.16,1,.3,1);overflow:hidden}
     .screen[hidden]{opacity:0;pointer-events:none;transform:translateY(10px) scale(.982);filter:blur(8px)}
     .screen.active{opacity:1;transform:translateY(0);filter:none}
-
-    /* ── 動態背景光暈（跟著題號變色）── */
     .glow{position:absolute;width:min(78vw,700px);height:min(78vw,700px);filter:blur(90px);opacity:.42;background:radial-gradient(circle,hsl(var(--glow-hue) 52% 68% / .38),transparent 64%);left:50%;top:50%;transform:translate(-50%,-50%);animation:pulse 5s ease-in-out infinite;pointer-events:none;z-index:0;transition:background .8s ease}
     .brand-wave{position:absolute;inset:auto 0 0 0;height:42vh;background:linear-gradient(180deg,transparent,color-mix(in oklab,var(--accent) 6%,transparent) 30%,transparent 100%);opacity:.6;pointer-events:none;z-index:0;animation:wave 12s ease-in-out infinite}
     .brand{display:grid;gap:16px;justify-items:center;width:min(92vw,760px);position:relative;z-index:1;animation:floatIn 1.2s cubic-bezier(.16,1,.3,1) 1.6s both}
@@ -73,14 +66,7 @@
     .progress-bar.complete>span{animation:barComplete .6s ease forwards}
     @keyframes barComplete{0%{filter:brightness(1)}40%{filter:brightness(1.6) saturate(1.5)}100%{filter:brightness(1)}}
 
-    /* ── 最後一題「即將揭曉」提示 ── */
-    .reveal-hint{
-      text-align:center;font-size:12px;letter-spacing:.12em;
-      color:var(--accent);opacity:0;
-      transform:translateY(4px);
-      transition:opacity .4s ease,transform .4s ease;
-      pointer-events:none;
-    }
+    .reveal-hint{text-align:center;font-size:12px;letter-spacing:.12em;color:var(--accent);opacity:0;transform:translateY(4px);transition:opacity .4s ease,transform .4s ease;pointer-events:none}
     .reveal-hint.show{opacity:1;transform:translateY(0)}
     .reveal-hint::before{content:'✦ ';font-size:10px}
 
@@ -113,37 +99,55 @@
     .next:disabled,.ghost:disabled{opacity:.45;cursor:not-allowed;transform:none}
     .footer-note{font-size:11px;color:var(--muted);text-align:center}
 
-    /* ── 結果頁 ── */
     .result-screen-bg{position:absolute;inset:0;background:radial-gradient(circle at 50% 30%,var(--theme-glow),transparent 40%),radial-gradient(circle at 20% 80%,color-mix(in oklab,var(--accent-2) 8%,transparent),transparent 38%);opacity:.95;pointer-events:none;animation:drift 18s ease-in-out infinite;transition:background .8s ease}
     .cinema-wash{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.03),transparent 18%,transparent 82%,rgba(0,0,0,.04));pointer-events:none;z-index:0}
     .reveal-burst{position:absolute;inset:0;background:radial-gradient(circle at 50% 40%,color-mix(in oklab,var(--accent) 28%,transparent),transparent 55%);opacity:0;pointer-events:none;z-index:1}
     .reveal-burst.fire{animation:burst .9s cubic-bezier(.16,1,.3,1) forwards}
     @keyframes burst{0%{opacity:.9;transform:scale(.7)}60%{opacity:.5}100%{opacity:0;transform:scale(1.4)}}
 
-    /* ── 結果揭曉粒子 ── */
     .particles{position:absolute;inset:0;pointer-events:none;z-index:2;overflow:hidden}
     .particle{position:absolute;border-radius:50%;opacity:0}
-    @keyframes particleFly{
-      0%  {opacity:.9;transform:translate(0,0) scale(1)}
-      100%{opacity:0;transform:translate(var(--dx),var(--dy)) scale(0)}
-    }
+    @keyframes particleFly{0%{opacity:.9;transform:translate(0,0) scale(1)}100%{opacity:0;transform:translate(var(--dx),var(--dy)) scale(0)}}
 
     .result-layout{width:min(100%,920px);height:100%;display:grid;align-items:center}
-    .result-card{max-width:100%;height:min(100%,calc(100svh - 110px - env(safe-area-inset-top) - env(safe-area-inset-bottom)));display:grid;grid-template-rows:auto auto auto auto;gap:10px;text-align:left;border-radius:28px;padding:16px;background:linear-gradient(180deg,color-mix(in oklab,var(--surface) 68%,white),color-mix(in oklab,var(--surface-2) 92%,var(--accent) 5%));position:relative;overflow:hidden;border:1px solid color-mix(in oklab,var(--accent) 18%,var(--border));box-shadow:0 24px 60px rgba(0,0,0,.08);transform-origin:center bottom;animation:resultRise 900ms cubic-bezier(.16,1,.3,1) both}
+
+    /* ── result-card：可捲動，捲軸隱藏 ── */
+    .result-card{
+      max-width:100%;
+      height:min(100%,calc(100svh - 110px - env(safe-area-inset-top) - env(safe-area-inset-bottom)));
+      display:grid;
+      grid-template-rows:auto auto auto auto;
+      gap:8px;
+      text-align:left;
+      border-radius:28px;
+      padding:16px;
+      background:linear-gradient(180deg,color-mix(in oklab,var(--surface) 68%,white),color-mix(in oklab,var(--surface-2) 92%,var(--accent) 5%));
+      position:relative;
+      overflow-y:auto;                    /* ← 捲動 */
+      -webkit-overflow-scrolling:touch;   /* ← iOS 順滑 */
+      border:1px solid color-mix(in oklab,var(--accent) 18%,var(--border));
+      box-shadow:0 24px 60px rgba(0,0,0,.08);
+      transform-origin:center bottom;
+      animation:resultRise 900ms cubic-bezier(.16,1,.3,1) both;
+    }
+    /* 隱藏捲軸，視覺保持乾淨 */
+    .result-card::-webkit-scrollbar{display:none}
+    .result-card{scrollbar-width:none;-ms-overflow-style:none}
+
     .result-card::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at top left,color-mix(in oklab,var(--accent) 14%,transparent),transparent 42%),radial-gradient(circle at bottom right,color-mix(in oklab,var(--accent-2) 10%,transparent),transparent 44%),repeating-linear-gradient(135deg,transparent 0 22px,color-mix(in oklab,var(--text) 2%,transparent) 22px 23px);opacity:.9;pointer-events:none}
     .result-hero,.result-section,.share-row,.result-cta{position:relative;z-index:1}
-    .result-hero{display:grid;gap:8px}
+    .result-hero{display:grid;gap:6px}
     .result-meta{display:flex;gap:8px;flex-wrap:wrap}
-    .result-badge,.pill{padding:7px 10px;border-radius:999px;border:1px solid var(--border);background:color-mix(in oklab,var(--surface-2) 88%,white);font-size:11px;letter-spacing:.06em}
-    .result-section{display:grid;gap:6px;padding-top:10px;border-top:1px solid color-mix(in oklab,var(--border) 80%,transparent)}
+    .result-badge,.pill{padding:6px 10px;border-radius:999px;border:1px solid var(--border);background:color-mix(in oklab,var(--surface-2) 88%,white);font-size:11px;letter-spacing:.06em}
+    .result-section{display:grid;gap:5px;padding-top:8px;border-top:1px solid color-mix(in oklab,var(--border) 80%,transparent)}
     .result-section h2{margin:0;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);font-weight:700}
     .result-section p,.result-desc{margin:0;color:var(--muted);line-height:1.55;font-size:13px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
-    .result-pill-row{display:flex;gap:8px;flex-wrap:wrap;margin:4px 0 2px}
+    .result-pill-row{display:flex;gap:8px;flex-wrap:wrap;margin:2px 0 2px}
 
-    /* ── 符合度比例條 ── */
-    .score-bars{display:grid;gap:6px;margin:6px 0 2px}
-    .score-bar-row{display:grid;grid-template-columns:80px 1fr 36px;align-items:center;gap:8px;font-size:11px;color:var(--muted)}
-    .score-bar-track{height:5px;border-radius:999px;background:var(--bar-bg);overflow:hidden}
+    /* ── 符合度比例條（緊湊版）── */
+    .score-bars{display:grid;gap:4px;margin:4px 0 0}
+    .score-bar-row{display:grid;grid-template-columns:52px 1fr 32px;align-items:center;gap:7px;font-size:11px;color:var(--muted)}
+    .score-bar-track{height:4px;border-radius:999px;background:var(--bar-bg);overflow:hidden}
     .score-bar-fill{height:100%;border-radius:inherit;background:linear-gradient(90deg,var(--theme-grad-a),var(--theme-grad-b));width:0;transition:width .8s cubic-bezier(.16,1,.3,1)}
     .score-pct{font-size:11px;color:var(--accent);font-weight:600;text-align:right}
 
@@ -163,13 +167,12 @@
     .platform-icons{grid-column:1/-1;display:flex;justify-content:center;gap:14px;padding:4px 0 0}
     .platform-icons span{width:32px;height:32px;border-radius:50%;border:1px solid var(--border);background:color-mix(in oklab,var(--surface-2) 88%,white);display:grid;place-items:center;font-size:14px}
     .share-hint{grid-column:1/-1;text-align:center;font-size:11px;color:var(--muted);line-height:1.5;padding:2px 0 0}
-    .result-cta{margin-top:0}
+    .result-cta{margin-top:0;padding-bottom:2px}
     .restart-btn{width:100%;min-height:42px}
     .share-btn.loading{opacity:.7;pointer-events:none}
     .share-btn.loading::after{content:'';display:inline-block;width:14px;height:14px;border:2px solid currentColor;border-top-color:transparent;border-radius:50%;animation:spin .7s linear infinite;margin-left:6px}
     @keyframes spin{to{transform:rotate(360deg)}}
 
-    /* ── 截圖卡片 ── */
     .share-shot{position:fixed;left:0;top:0;transform:translateX(9999px);width:1080px;aspect-ratio:4/5;padding:64px;color:#1f1c16;pointer-events:none}
     .share-shot-card{position:relative;overflow:hidden;border-radius:42px;padding:56px;height:100%;border:1px solid rgba(40,37,29,.12);box-shadow:0 30px 90px rgba(0,0,0,.08);display:flex;flex-direction:column}
     .share-shot-card::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at top left,rgba(199,165,106,.18),transparent 42%),radial-gradient(circle at bottom right,rgba(141,159,181,.12),transparent 44%),repeating-linear-gradient(135deg,transparent 0 22px,rgba(31,28,22,.025) 22px 23px);pointer-events:none}
@@ -183,8 +186,6 @@
     .share-copy{font-size:28px;line-height:1.75;color:#6f6a61;max-width:24ch}
     .share-pills{display:flex;gap:12px;flex-wrap:wrap;margin:28px 0 0}
     .share-pill{padding:12px 18px;border-radius:999px;border:1px solid rgba(40,37,29,.12);background:rgba(255,255,255,.7);font-size:18px}
-
-    /* 截圖卡片內的比例條 */
     .share-score-bars{display:grid;gap:10px;margin:28px 0 0}
     .share-score-bar-row{display:grid;grid-template-columns:120px 1fr 48px;align-items:center;gap:12px;font-size:16px;color:#6f6a61}
     .share-score-bar-track{height:6px;border-radius:999px;background:rgba(40,37,29,.08);overflow:hidden}
@@ -192,7 +193,6 @@
     .share-score-bar-fill.m{background:linear-gradient(90deg,#c7a56a,#d4b67a)}
     .share-score-bar-fill.e{background:linear-gradient(90deg,#8d9fb5,#9fb0c4)}
     .share-score-pct{font-size:16px;font-weight:600;text-align:right}
-
     .share-footer{position:relative;z-index:1;margin-top:auto;display:flex;justify-content:space-between;align-items:flex-end}
     .share-footer-text{font-size:18px;letter-spacing:.12em;text-transform:uppercase;color:#6f6a61}
     .share-qr-hint{font-size:15px;color:#aaa49a;letter-spacing:.06em}
@@ -210,7 +210,7 @@
       .screen{padding:calc(66px + env(safe-area-inset-top)) 12px calc(12px + env(safe-area-inset-bottom))}
       .quiz{gap:10px}
       .result-layout{height:auto}
-      .result-card{height:min(100%,calc(100svh - 88px - env(safe-area-inset-top) - env(safe-area-inset-bottom)));padding:14px;border-radius:24px;gap:8px;transform:scale(.98)}
+      .result-card{height:min(100%,calc(100svh - 88px - env(safe-area-inset-top) - env(safe-area-inset-bottom)));padding:14px;border-radius:24px;gap:6px}
       .share-row{grid-template-columns:1fr 1fr}
       .result-section p,.result-desc{-webkit-line-clamp:2}
     }
@@ -231,7 +231,13 @@
       .quiz{width:min(82vw,920px)}
       .logo-image{width:min(48vw,540px)}
       .sub{max-width:40ch}
-      .result-card{max-width:920px;height:min(100%,calc(100svh - 122px - env(safe-area-inset-top) - env(safe-area-inset-bottom)));grid-template-columns:1.15fr .85fr;grid-template-rows:auto auto auto;column-gap:20px}
+      .result-card{
+        max-width:920px;
+        height:min(100%,calc(100svh - 122px - env(safe-area-inset-top) - env(safe-area-inset-bottom)));
+        grid-template-columns:1.15fr .85fr;
+        grid-template-rows:auto auto auto;
+        column-gap:20px;
+      }
       .result-hero{grid-column:1}
       .result-section:first-of-type{grid-column:1}
       .result-section:last-of-type{grid-column:2;grid-row:1/span 2;border-top:none;padding-top:0;padding-left:8px}
@@ -279,7 +285,6 @@
         <p class="question" id="questionText"></p>
         <div class="options" id="options"></div>
       </div>
-      <!-- 最後一題「即將揭曉」提示 -->
       <div class="reveal-hint" id="revealHint">你的結果即將揭曉</div>
       <div class="nav">
         <button class="ghost" id="backBtn" type="button">上一題</button>
@@ -291,7 +296,6 @@
 
   <section class="screen" id="resultScreen" hidden>
     <div class="reveal-burst" id="revealBurst" aria-hidden="true"></div>
-    <!-- 粒子容器 -->
     <div class="particles" id="particlesEl" aria-hidden="true"></div>
     <div class="result-screen-bg" aria-hidden="true"></div>
     <div class="cinema-wash" aria-hidden="true"></div>
@@ -316,7 +320,6 @@
           <h2>你的組合特質</h2>
           <div class="result-pill-row" id="resultPills"></div>
           <p class="result-desc" id="resultDesc"></p>
-          <!-- 符合度比例條 -->
           <div class="score-bars" id="scoreBars"></div>
         </div>
         <div class="share-row">
@@ -351,7 +354,6 @@
       <div class="share-tag" id="shareTag"></div>
       <div class="share-copy" id="shareDesc"></div>
       <div class="share-pills" id="sharePills"></div>
-      <!-- 截圖卡片內比例條 -->
       <div class="share-score-bars" id="shareScoreBars"></div>
       <div class="share-footer">
         <span class="share-footer-text">U&ME · YOUR INNER TEMPO</span>
@@ -366,7 +368,6 @@ document.getElementById('curtain').addEventListener('animationend',function(){th
 
 const root=document.documentElement,
   stage=document.getElementById('stage'),
-  glowEl=document.getElementById('glowEl'),
   themeBtn=document.getElementById('themeBtn'),
   introScreen=document.getElementById('introScreen'),
   quizScreen=document.getElementById('quizScreen'),
@@ -406,7 +407,6 @@ const root=document.documentElement,
   sharePills=document.getElementById('sharePills'),
   shareScoreBars=document.getElementById('shareScoreBars');
 
-// 各題對應光暈色相（前3題暖金→中間藍灰→後段深紫金）
 const glowHues=['38','38','38','210','210','210','195','195','195','45','45','45'];
 
 const questions=[
@@ -471,10 +471,7 @@ const setScreen=s=>{
   requestAnimationFrame(()=>s.classList.add('active'));
 };
 
-// 更新光暈色相
-const updateGlowHue=i=>{
-  root.style.setProperty('--glow-hue', glowHues[i]+'deg');
-};
+const updateGlowHue=i=>root.style.setProperty('--glow-hue',glowHues[i]+'deg');
 
 const updateProgress=()=>{
   const pct=Math.max(0,Math.min(100,(state.index/(questions.length-1))*100));
@@ -510,11 +507,8 @@ const renderQuestion=()=>{
   optionsEl.innerHTML='';
   updateProgress();
   updateGlowHue(i);
-
-  // 最後一題且已選答案 → 顯示「即將揭曉」
   const isLast=i===questions.length-1;
-  revealHint.classList.toggle('show', isLast && state.answers[i]!==null);
-
+  revealHint.classList.toggle('show',isLast&&state.answers[i]!==null);
   questions[i].a.forEach((txt,idx)=>{
     const key=['A','B','C','D'][idx];
     const b=document.createElement('button');
@@ -522,7 +516,6 @@ const renderQuestion=()=>{
     if(state.answers[i]===key)b.classList.add('selected');
     b.addEventListener('click',()=>{
       if(state.sliding)return;
-      // 防止 300ms 內重複點擊
       optionsEl.style.pointerEvents='none';
       setTimeout(()=>optionsEl.style.pointerEvents='',320);
       state.answers[i]=key;
@@ -572,87 +565,59 @@ const computeResult=()=>{
   ].join('');
 };
 
-// ── 粒子爆發 ────────────────────────────────────────────────────────
 function fireParticles(isE){
   particlesEl.innerHTML='';
-  const colors=isE
-    ?['#8d9fb5','#9fb0c4','#b8c9d8','#c7d8e8','#d4b67a']
-    :['#c7a56a','#d4b67a','#e2c98a','#f0dfa8','#9fb0c4'];
-  const cx=window.innerWidth/2, cy=window.innerHeight*0.38;
+  const colors=isE?['#8d9fb5','#9fb0c4','#b8c9d8','#c7d8e8','#d4b67a']:['#c7a56a','#d4b67a','#e2c98a','#f0dfa8','#9fb0c4'];
+  const cx=window.innerWidth/2,cy=window.innerHeight*0.38;
   for(let i=0;i<14;i++){
-    const p=document.createElement('div');
-    p.className='particle';
+    const p=document.createElement('div');p.className='particle';
     const size=4+Math.random()*8;
     const angle=Math.random()*360;
     const dist=80+Math.random()*180;
     const dx=Math.cos(angle*Math.PI/180)*dist+'px';
-    const dy=(Math.sin(angle*Math.PI/180)*dist - 30)+'px';
+    const dy=(Math.sin(angle*Math.PI/180)*dist-30)+'px';
     const color=colors[Math.floor(Math.random()*colors.length)];
     const dur=600+Math.random()*500;
     const delay=Math.random()*200;
-    p.style.cssText=`
-      width:${size}px;height:${size}px;
-      left:${cx}px;top:${cy}px;
-      background:${color};
-      --dx:${dx};--dy:${dy};
-      animation:particleFly ${dur}ms cubic-bezier(.2,.8,.4,1) ${delay}ms forwards;
-      box-shadow:0 0 ${size*2}px ${color};
-    `;
+    p.style.cssText=`width:${size}px;height:${size}px;left:${cx}px;top:${cy}px;background:${color};--dx:${dx};--dy:${dy};animation:particleFly ${dur}ms cubic-bezier(.2,.8,.4,1) ${delay}ms forwards;box-shadow:0 0 ${size*2}px ${color};`;
     particlesEl.appendChild(p);
   }
 }
 
-// ── 符合度比例條 ─────────────────────────────────────────────────────
+const DIMS=[
+  {label:'節奏',a:'Mood',   b:'Energy', aChar:'M'},
+  {label:'靠近',a:'Intimacy',b:'Direct', aChar:'I'},
+  {label:'關係',a:'Romance',b:'Touch',  aChar:'R'},
+  {label:'慾望',a:'Curious',b:'Lust',   aChar:'C'},
+];
+
 function buildScoreBars(code,score,isE){
-  const dims=[
-    {label:'節奏',  a:'Mood',    b:'Energy',   aChar:'M', bChar:'E'},
-    {label:'靠近',  a:'Intimacy',b:'Direct',   aChar:'I', bChar:'D'},
-    {label:'關係',  a:'Romance', b:'Touch',    aChar:'R', bChar:'T'},
-    {label:'慾望',  a:'Curious', b:'Lust',     aChar:'C', bChar:'L'},
-  ];
   scoreBars.innerHTML='';
-  dims.forEach((d,di)=>{
+  DIMS.forEach((d,di)=>{
     const total=(score[d.a]||0)+(score[d.b]||0)||1;
-    const chosen=code[di];
-    const chosenScore=score[chosen===d.aChar?d.a:d.b]||0;
-    const pct=Math.round(chosenScore/total*100);
+    const chosen=code[di]===d.aChar?d.a:d.b;
+    const pct=Math.round((score[chosen]||0)/total*100);
     const row=document.createElement('div');
     row.className='score-bar-row';
-    row.innerHTML=`
-      <span>${d.label}</span>
-      <div class="score-bar-track"><div class="score-bar-fill" data-pct="${pct}"></div></div>
-      <span class="score-pct">${pct}%</span>
-    `;
+    row.innerHTML=`<span>${d.label}</span><div class="score-bar-track"><div class="score-bar-fill" data-pct="${pct}"></div></div><span class="score-pct">${pct}%</span>`;
     scoreBars.appendChild(row);
   });
-  // 延遲觸發動畫
   setTimeout(()=>{
-    scoreBars.querySelectorAll('.score-bar-fill').forEach(el=>{
-      el.style.width=el.dataset.pct+'%';
-    });
+    scoreBars.querySelectorAll('.score-bar-fill').forEach(el=>{el.style.width=el.dataset.pct+'%';});
   },600);
 
-  // 同步截圖卡片內比例條
   shareScoreBars.innerHTML='';
-  dims.forEach((d,di)=>{
+  DIMS.forEach((d,di)=>{
     const total=(score[d.a]||0)+(score[d.b]||0)||1;
-    const chosen=code[di];
-    const chosenScore=score[chosen===d.aChar?d.a:d.b]||0;
-    const pct=Math.round(chosenScore/total*100);
+    const chosen=code[di]===d.aChar?d.a:d.b;
+    const pct=Math.round((score[chosen]||0)/total*100);
     const row=document.createElement('div');
     row.className='share-score-bar-row';
-    row.innerHTML=`
-      <span>${d.label}</span>
-      <div class="share-score-bar-track">
-        <div class="share-score-bar-fill ${isE?'e':'m'}" style="width:${pct}%"></div>
-      </div>
-      <span class="share-score-pct" style="color:${isE?'#8d9fb5':'#c7a56a'}">${pct}%</span>
-    `;
+    row.innerHTML=`<span>${d.label}</span><div class="share-score-bar-track"><div class="share-score-bar-fill ${isE?'e':'m'}" style="width:${pct}%"></div></div><span class="share-score-pct" style="color:${isE?'#8d9fb5':'#c7a56a'}">${pct}%</span>`;
     shareScoreBars.appendChild(row);
   });
 }
 
-// ── Slot Machine ──────────────────────────────────────────────────────
 const CHARS='ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 const slotStyle=document.createElement('style');
 slotStyle.textContent=`@keyframes slotLock{0%{transform:translateY(0)}30%{transform:translateY(-4px)}65%{transform:translateY(2px)}100%{transform:translateY(0)}}`;
@@ -664,37 +629,18 @@ function runSlotMachine(targetCode){
   const slots=chars.map(()=>{
     const wrap=document.createElement('span');wrap.className='slot-char';
     const inner=document.createElement('div');inner.className='slot-inner';
-    for(let i=0;i<18;i++){
-      const s=document.createElement('span');
-      s.textContent=CHARS[Math.floor(Math.random()*CHARS.length)];
-      inner.appendChild(s);
-    }
+    for(let i=0;i<18;i++){const s=document.createElement('span');s.textContent=CHARS[Math.floor(Math.random()*CHARS.length)];inner.appendChild(s);}
     const target=document.createElement('span');target.textContent='?';
-    inner.appendChild(target);
-    wrap.appendChild(inner);
-    resultCodeEl.appendChild(wrap);
+    inner.appendChild(target);wrap.appendChild(inner);resultCodeEl.appendChild(wrap);
     return{wrap,inner,target};
   });
   chars.forEach((ch,ci)=>{
     const{inner,target,wrap}=slots[ci];
-    const delay=ci*320+200;
-    const duration=520+ci*80;
-    setTimeout(()=>{
-      inner.style.transition=`transform ${duration}ms cubic-bezier(.22,.68,0,1.2)`;
-      inner.style.transform=`translateY(-${(inner.children.length-1)*1.1}em)`;
-    },delay);
-    setTimeout(()=>{
-      target.textContent=ch;
-      inner.style.transition='none';
-      wrap.style.animation='slotLock .32s cubic-bezier(.36,.07,.19,.97)';
-      setTimeout(()=>wrap.style.animation='',380);
-    },delay+duration+40);
+    const delay=ci*320+200,duration=520+ci*80;
+    setTimeout(()=>{inner.style.transition=`transform ${duration}ms cubic-bezier(.22,.68,0,1.2)`;inner.style.transform=`translateY(-${(inner.children.length-1)*1.1}em)`;},delay);
+    setTimeout(()=>{target.textContent=ch;inner.style.transition='none';wrap.style.animation='slotLock .32s cubic-bezier(.36,.07,.19,.97)';setTimeout(()=>wrap.style.animation='',380);},delay+duration+40);
   });
-  const totalDelay=chars.length*320+200+700;
-  setTimeout(()=>{
-    resultName.classList.add('show');
-    resultTag.classList.add('show');
-  },totalDelay);
+  setTimeout(()=>{resultName.classList.add('show');resultTag.classList.add('show');},chars.length*320+200+700);
 }
 
 const showResult=()=>{
@@ -703,14 +649,8 @@ const showResult=()=>{
   const isE=code.startsWith('E');
   root.setAttribute('data-result-theme',isE?'E':'M');
   shareCard.className=`share-shot-card theme-${isE?'e':'m'}`;
-
-  revealBurst.classList.remove('fire');
-  void revealBurst.offsetWidth;
-  revealBurst.classList.add('fire');
-
-  // 粒子爆發
+  revealBurst.classList.remove('fire');void revealBurst.offsetWidth;revealBurst.classList.add('fire');
   setTimeout(()=>fireParticles(isE),200);
-
   resultName.textContent=r.name;resultName.classList.remove('show');
   resultTag.textContent=r.tag;resultTag.classList.remove('show');
   resultDesc.textContent=r.desc;
@@ -722,10 +662,7 @@ const showResult=()=>{
   resultDrive.textContent=code[3]==='C'?'步調：探索':'步調：熱烈';
   resultPills.innerHTML='';
   r.pills.forEach(t=>{const s=document.createElement('span');s.className='pill';s.textContent=t;resultPills.appendChild(s);});
-
-  // 比例條
   buildScoreBars(code,state.score,isE);
-
   shareCode.textContent=code;
   shareName.textContent=r.name;
   shareTag.textContent=r.tag;
@@ -733,7 +670,6 @@ const showResult=()=>{
   shareDesc.textContent=r.desc;
   sharePills.innerHTML='';
   r.pills.forEach(t=>{const el=document.createElement('span');el.className='share-pill';el.textContent=t;sharePills.appendChild(el);});
-
   setScreen(resultScreen);
   setTimeout(()=>runSlotMachine(code),480);
 };
@@ -749,11 +685,7 @@ const restartToStart=()=>{
 };
 
 async function makeShareBlob(){
-  const canvas=await html2canvas(shareShot,{
-    backgroundColor:null,scale:2,useCORS:true,allowTaint:true,
-    x:0,y:0,scrollX:-9999,scrollY:0,
-    width:1080,height:shareShot.offsetHeight
-  });
+  const canvas=await html2canvas(shareShot,{backgroundColor:null,scale:2,useCORS:true,allowTaint:true,x:0,y:0,scrollX:-9999,scrollY:0,width:1080,height:shareShot.offsetHeight});
   return new Promise(resolve=>canvas.toBlob(blob=>resolve(blob),'image/png',1));
 }
 async function downloadBlob(blob,filename){
