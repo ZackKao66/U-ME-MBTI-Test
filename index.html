@@ -120,17 +120,13 @@
     .next:disabled,.ghost:disabled{opacity:.35;cursor:not-allowed;transform:none;box-shadow:none}
     .footer-note{font-size:11px;color:var(--muted);text-align:center;opacity:.7}
 
-    /* ✅ result-code：slot 期間純色，結束後套漸層 */
     .result-code{font-family:var(--font-display);font-size:clamp(36px,11vw,76px);line-height:1;margin-bottom:2px;letter-spacing:.1em;display:flex;gap:.05em;color:#d7dbe2;}
     .result-code.revealed{background:linear-gradient(135deg,#d7dbe2 0%,#98aab8 45%,#566573 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
     .result-code.revealed span{display:inline;}
-
-    /* slot 動畫用 */
     .slot-char{display:inline-block;position:relative;overflow:hidden;height:1.1em;width:.72em;vertical-align:top}
     .slot-inner{display:flex;flex-direction:column;transition:none}
     .slot-inner span{display:block;height:1.1em;line-height:1.1;text-align:center}
 
-    /* ✅ result-name */
     .result-name{font-size:clamp(22px,5.5vw,36px);font-weight:700;margin-bottom:1px;font-family:var(--font-display);line-height:1.05;letter-spacing:-.01em;color:#d7dbe2;opacity:0;transform:translateY(9px);transition:opacity .55s ease,transform .55s ease;}
     .result-name.show{opacity:1;transform:none}
     .result-name.revealed{background:linear-gradient(120deg,#d7dbe2 0%,#98aab8 60%,#566573 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
@@ -148,7 +144,17 @@
     @keyframes particleFly{0%{opacity:.9;transform:translate(0,0) scale(1)}100%{opacity:0;transform:translate(var(--dx),var(--dy)) scale(0)}}
 
     .result-layout{width:min(100%,940px);height:100%;display:grid;align-items:center;position:relative;z-index:3}
-    .result-card{max-width:100%;height:min(100%,calc(100svh - 108px - env(safe-area-inset-top) - env(safe-area-inset-bottom)));display:grid;grid-template-rows:auto auto auto auto;gap:9px;text-align:left;border-radius:28px;padding:18px;background:linear-gradient(160deg,#111f3a,#0f1b34);position:relative;overflow-y:auto;-webkit-overflow-scrolling:touch;border:1px solid rgba(152,170,184,.15);box-shadow:0 28px 72px rgba(12,23,48,.65),inset 0 1px 0 rgba(215,219,226,.08);animation:resultRise 950ms cubic-bezier(.16,1,.3,1) both;}
+    .result-card{
+      max-width:100%;
+      height:min(100%,calc(100svh - 108px - env(safe-area-inset-top) - env(safe-area-inset-bottom)));
+      display:grid;grid-template-rows:auto auto auto auto;gap:9px;
+      text-align:left;border-radius:28px;padding:18px;
+      background:linear-gradient(160deg,#111f3a,#0f1b34);
+      position:relative;overflow-y:auto;-webkit-overflow-scrolling:touch;
+      border:1px solid rgba(152,170,184,.15);
+      box-shadow:0 28px 72px rgba(12,23,48,.65),inset 0 1px 0 rgba(215,219,226,.08);
+      animation:resultRise 950ms cubic-bezier(.16,1,.3,1) both;
+    }
     .result-card::-webkit-scrollbar{display:none}
     .result-card{scrollbar-width:none;-ms-overflow-style:none}
     .result-card::after{content:'';position:absolute;top:0;left:18px;right:18px;height:1px;background:linear-gradient(90deg,transparent,rgba(152,170,184,.38),rgba(215,219,226,.22),rgba(152,170,184,.38),transparent);border-radius:999px;pointer-events:none;z-index:2}
@@ -188,32 +194,6 @@
     @keyframes scrollHintIn{to{opacity:.6}}
     @keyframes scrollHintOut{to{opacity:0}}
     @keyframes bounceDown{0%,100%{transform:translateY(0)}50%{transform:translateY(4px)}}
-
-    .share-shot{position:fixed;left:0;top:0;transform:translateX(9999px);width:1080px;aspect-ratio:4/5;padding:56px;color:#d7dbe2;pointer-events:none}
-    .share-shot-card{position:relative;overflow:hidden;border-radius:40px;padding:52px;height:100%;border:1px solid rgba(152,170,184,.12);box-shadow:0 40px 100px rgba(12,23,48,.7);display:flex;flex-direction:column}
-    .share-shot-card.theme-m{background:linear-gradient(155deg,#0f1e38 0%,#1a2d4a 50%,#0c1730 100%)}
-    .share-shot-card.theme-e{background:linear-gradient(155deg,#111f3a 0%,#0c1730 60%,#0a1526 100%)}
-    .share-shot-card::before{content:"";position:absolute;inset:0;background:radial-gradient(ellipse 70% 50% at 50% -10%,rgba(33,57,90,.55),transparent),repeating-linear-gradient(135deg,transparent 0 24px,rgba(215,219,226,.022) 24px 25px);pointer-events:none}
-    .share-shot-card::after{content:'';position:absolute;top:0;left:52px;right:52px;height:1px;background:linear-gradient(90deg,transparent,rgba(152,170,184,.4),rgba(215,219,226,.25),rgba(152,170,184,.4),transparent)}
-    .share-logo-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:36px;position:relative;z-index:1}
-    .share-logo-img{height:28px;width:auto;filter:brightness(0) saturate(100%) invert(88%) sepia(8%) saturate(200%) hue-rotate(185deg) brightness(110%)}
-    .share-brand-text{font-size:18px;letter-spacing:.2em;text-transform:uppercase;color:#566573}
-    .share-code{font-family:Georgia,serif;font-size:108px;line-height:1;margin-bottom:14px;background:linear-gradient(130deg,#d7dbe2 0%,#98aab8 50%,#566573 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;position:relative;z-index:1}
-    .share-name{font-family:Georgia,serif;font-size:54px;line-height:1.05;margin-bottom:10px;color:#d7dbe2;position:relative;z-index:1}
-    .share-tag{font-size:20px;letter-spacing:.18em;text-transform:uppercase;margin-bottom:20px;color:#98aab8;position:relative;z-index:1}
-    .share-copy{font-size:26px;line-height:1.78;color:#98aab8;max-width:22ch;position:relative;z-index:1}
-    .share-pills{display:flex;gap:10px;flex-wrap:wrap;margin:24px 0 0;position:relative;z-index:1}
-    .share-pill{padding:10px 16px;border-radius:999px;border:1px solid rgba(152,170,184,.18);background:rgba(33,57,90,.45);font-size:17px;color:#d7dbe2}
-    .share-score-bars{display:grid;gap:10px;margin:24px 0 0;position:relative;z-index:1}
-    .share-score-bar-row{display:grid;grid-template-columns:110px 1fr 44px;align-items:center;gap:12px;font-size:16px;color:#98aab8}
-    .share-score-bar-track{height:5px;border-radius:999px;background:rgba(152,170,184,.1);overflow:hidden}
-    .share-score-bar-fill{height:100%;border-radius:inherit}
-    .share-score-bar-fill.m{background:linear-gradient(90deg,#21395a,#98aab8)}
-    .share-score-bar-fill.e{background:linear-gradient(90deg,#566573,#d7dbe2)}
-    .share-score-pct{font-size:15px;font-weight:700;text-align:right;color:#98aab8}
-    .share-footer{position:relative;z-index:1;margin-top:auto;display:flex;justify-content:space-between;align-items:flex-end;padding-top:28px;border-top:1px solid rgba(152,170,184,.1)}
-    .share-footer-text{font-size:17px;letter-spacing:.14em;text-transform:uppercase;color:#566573}
-    .share-qr-hint{font-size:14px;color:#21395a;letter-spacing:.08em}
 
     .copyright{position:fixed;bottom:calc(7px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);font-size:9.5px;color:rgba(152,170,184,.4);letter-spacing:.1em;white-space:nowrap;pointer-events:none;z-index:999;font-family:var(--font-body)}
 
@@ -380,25 +360,6 @@
       </div>
     </div>
   </section>
-
-  <div class="share-shot" id="shareShot" aria-hidden="true">
-    <div class="share-shot-card theme-m" id="shareCard">
-      <div class="share-logo-row">
-        <img class="share-logo-img" src="assets/U&ME logo 1_去背版本.png" alt="U&ME">
-        <span class="share-brand-text">MBTI RESULT</span>
-      </div>
-      <div class="share-code" id="shareCode"></div>
-      <div class="share-name" id="shareName"></div>
-      <div class="share-tag" id="shareTag"></div>
-      <div class="share-copy" id="shareDesc"></div>
-      <div class="share-pills" id="sharePills"></div>
-      <div class="share-score-bars" id="shareScoreBars"></div>
-      <div class="share-footer">
-        <span class="share-footer-text">U&amp;ME · YOUR INNER TEMPO</span>
-        <span class="share-qr-hint">掃碼測驗你的類型</span>
-      </div>
-    </div>
-  </div>
 </main>
 
 <p class="copyright">© U&amp;ME ® 商標已於中華民國註冊，保留一切權利</p>
@@ -446,14 +407,6 @@ const root=document.documentElement,
   resultDrive=document.getElementById('resultDrive'),
   revealBurst=document.getElementById('revealBurst'),
   particlesEl=document.getElementById('particlesEl'),
-  shareShot=document.getElementById('shareShot'),
-  shareCard=document.getElementById('shareCard'),
-  shareCode=document.getElementById('shareCode'),
-  shareName=document.getElementById('shareName'),
-  shareTag=document.getElementById('shareTag'),
-  shareDesc=document.getElementById('shareDesc'),
-  sharePills=document.getElementById('sharePills'),
-  shareScoreBars=document.getElementById('shareScoreBars'),
   stage=document.getElementById('stage');
 
 const questions=[
@@ -609,7 +562,7 @@ const DIMS=[
   {label:'慾望',a:'Curious',b:'Lust',aChar:'C'},
 ];
 
-function buildScoreBars(code,score,isE){
+function buildScoreBars(code,score){
   scoreBars.innerHTML='';
   DIMS.forEach((d,di)=>{
     const total=(score[d.a]||0)+(score[d.b]||0)||1;
@@ -620,15 +573,6 @@ function buildScoreBars(code,score,isE){
     scoreBars.appendChild(row);
   });
   setTimeout(()=>scoreBars.querySelectorAll('.score-bar-fill').forEach(el=>el.style.width=el.dataset.pct+'%'),650);
-  shareScoreBars.innerHTML='';
-  DIMS.forEach((d,di)=>{
-    const total=(score[d.a]||0)+(score[d.b]||0)||1;
-    const chosen=code[di]===d.aChar?d.a:d.b;
-    const pct=Math.round((score[chosen]||0)/total*100);
-    const row=document.createElement('div');row.className='share-score-bar-row';
-    row.innerHTML=`<span>${d.label}</span><div class="share-score-bar-track"><div class="share-score-bar-fill ${isE?'e':'m'}" style="width:${pct}%"></div></div><span class="share-score-pct">${pct}%</span>`;
-    shareScoreBars.appendChild(row);
-  });
 }
 
 const CHARS='ABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -637,8 +581,6 @@ function runSlotMachine(code){
   resultCodeEl.innerHTML='';
   resultCodeEl.classList.remove('revealed');
   const chars=[...code];
-
-  // 建立 slot 動畫結構
   const slots=chars.map(()=>{
     const wrap=document.createElement('span');wrap.className='slot-char';
     const inner=document.createElement('div');inner.className='slot-inner';
@@ -651,8 +593,6 @@ function runSlotMachine(code){
     inner.appendChild(tgt);wrap.appendChild(inner);resultCodeEl.appendChild(wrap);
     return{wrap,inner,tgt};
   });
-
-  // 每個字母依序滾動並鎖定
   chars.forEach((ch,ci)=>{
     const{inner,tgt,wrap}=slots[ci];
     const delay=ci*340+180,dur=540+ci*90;
@@ -667,14 +607,12 @@ function runSlotMachine(code){
       setTimeout(()=>wrap.style.animation='',400);
     },delay+dur+40);
   });
-
-  // ✅ 全部鎖定後：清空重建為純 span，套漸層不會衝突
   const totalDelay=chars.length*340+180+720;
   setTimeout(()=>{
+    // ✅ 清空重建純 span，漸層正確作用
     resultCodeEl.innerHTML='';
     chars.forEach(ch=>{
-      const s=document.createElement('span');
-      s.textContent=ch;
+      const s=document.createElement('span');s.textContent=ch;
       resultCodeEl.appendChild(s);
     });
     resultCodeEl.classList.add('revealed');
@@ -687,7 +625,6 @@ function runSlotMachine(code){
 const showResult=()=>{
   const code=computeResult(),r=results[code]||results.MIRC,isE=code.startsWith('E');
   root.setAttribute('data-result-theme',isE?'E':'M');
-  shareCard.className=`share-shot-card theme-${isE?'e':'m'}`;
   revealBurst.classList.remove('fire');void revealBurst.offsetWidth;revealBurst.classList.add('fire');
   setTimeout(()=>fireParticles(),180);
   resultName.textContent=r.name;
@@ -702,10 +639,7 @@ const showResult=()=>{
   resultDrive.textContent=code[3]==='C'?'步調：探索':'步調：熱烈';
   resultPills.innerHTML='';
   r.pills.forEach(t=>{const s=document.createElement('span');s.className='pill';s.textContent=t;resultPills.appendChild(s);});
-  buildScoreBars(code,state.score,isE);
-  shareCode.textContent=code;shareName.textContent=r.name;shareTag.textContent=r.tag;shareDesc.textContent=r.desc;
-  sharePills.innerHTML='';
-  r.pills.forEach(t=>{const el=document.createElement('span');el.className='share-pill';el.textContent=t;sharePills.appendChild(el);});
+  buildScoreBars(code,state.score);
   setScreen(resultScreen);
   setTimeout(()=>runSlotMachine(code),500);
 };
@@ -718,32 +652,63 @@ const restartToStart=()=>{
   setScreen(introScreen);
 };
 
+// ✅ 截圖來源：結果卡片本身
 async function makeShareBlob(){
-  const c=await html2canvas(shareShot,{backgroundColor:null,scale:2,useCORS:true,allowTaint:true,x:0,y:0,scrollX:-9999,scrollY:0,width:1080,height:shareShot.offsetHeight});
+  const card=document.getElementById('resultCard');
+  // 暫時展開卡片以截到完整內容
+  const origOverflow=card.style.overflowY;
+  const origHeight=card.style.height;
+  card.style.overflowY='visible';
+  card.style.height='auto';
+  await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)));
+  const c=await html2canvas(card,{
+    backgroundColor:'#0f1b34',
+    scale:2,
+    useCORS:true,
+    allowTaint:true,
+    scrollX:0,
+    scrollY:0,
+    width:card.offsetWidth,
+    height:card.scrollHeight
+  });
+  // 還原樣式
+  card.style.overflowY=origOverflow;
+  card.style.height=origHeight;
   return new Promise(r=>c.toBlob(b=>r(b),'image/png',1));
 }
+
 async function dlBlob(blob,name){
   const u=URL.createObjectURL(blob),a=document.createElement('a');
   a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(u);
 }
+
 async function handleShare(){
-  const code=shareCode.textContent;
-  shareBtn.classList.add('loading');shareBtn.querySelector('svg').style.display='none';
+  const code=resultCodeEl.textContent.replace(/\s/g,'').slice(0,4)||'MBTI';
+  const svgEl=shareBtn.querySelector('svg');
+  shareBtn.classList.add('loading');if(svgEl)svgEl.style.display='none';
   try{
     const blob=await makeShareBlob();
     const file=new File([blob],`ume-mbti-${code}.png`,{type:'image/png',lastModified:Date.now()});
-    const data={files:[file],title:'U&ME MBTI 結果',text:`我在 U&ME MBTI 測到 ${code}｜${shareName.textContent}｜${shareTag.textContent}\n\n測測你是哪種類型 👇`};
+    const data={
+      files:[file],
+      title:'U&ME MBTI 結果',
+      text:`我在 U&ME MBTI 測到 ${code}｜${resultName.textContent}｜${resultTag.textContent}\n\n測測你是哪種類型 👇`
+    };
     if(navigator.canShare&&navigator.canShare(data))await navigator.share(data);
     else{await dlBlob(blob,`ume-mbti-${code}.png`);alert('已下載圖片，請手動上傳到你想分享的平台 🙌');}
   }catch(e){if(e.name!=='AbortError')console.warn(e);}
-  finally{shareBtn.classList.remove('loading');shareBtn.querySelector('svg').style.display='';}
+  finally{shareBtn.classList.remove('loading');if(svgEl)svgEl.style.display='';}
 }
+
 async function handleSave(){
-  const code=shareCode.textContent,orig=saveBtn.innerHTML;
-  saveBtn.classList.add('loading');saveBtn.querySelector('svg').style.display='none';
+  const code=resultCodeEl.textContent.replace(/\s/g,'').slice(0,4)||'MBTI';
+  const orig=saveBtn.innerHTML;
+  const svgEl=saveBtn.querySelector('svg');
+  saveBtn.classList.add('loading');if(svgEl)svgEl.style.display='none';
   try{
-    const blob=await makeShareBlob();await dlBlob(blob,`ume-mbti-${code}.png`);
-    saveBtn.classList.remove('loading');saveBtn.querySelector('svg').style.display='';
+    const blob=await makeShareBlob();
+    await dlBlob(blob,`ume-mbti-${code}.png`);
+    saveBtn.classList.remove('loading');if(svgEl)svgEl.style.display='';
     saveBtn.innerHTML='<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> 已儲存';
     setTimeout(()=>saveBtn.innerHTML=orig,1800);
   }catch(e){saveBtn.classList.remove('loading');saveBtn.innerHTML=orig;}
