@@ -4,7 +4,6 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>U&ME MBTI</title>
-  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
   <style>
     :root{
       --bg:#0c1730;--surface:#111f3a;--surface-2:#1a2d4a;
@@ -166,38 +165,6 @@
     .share-btn.loading::after{content:'';display:inline-block;width:13px;height:13px;border:2px solid currentColor;border-top-color:transparent;border-radius:50%;animation:spin .7s linear infinite;margin-left:5px}
     @keyframes spin{to{transform:rotate(360deg)}}
 
-    /* ✅ 高質感分享圖 9:16 */
-    .share-canvas{position:fixed;left:-9999px;top:0;width:1080px;height:1920px;overflow:hidden;pointer-events:none;}
-    .share-canvas-inner{width:100%;height:100%;background:linear-gradient(160deg,#07101e 0%,#0d1b30 40%,#111f3a 70%,#09131f 100%);position:relative;display:flex;flex-direction:column;padding:96px 88px 88px;}
-    .sc-glow-1{position:absolute;width:960px;height:960px;border-radius:50%;background:radial-gradient(circle,rgba(33,57,90,.6),transparent 65%);top:-220px;left:-240px;filter:blur(100px);pointer-events:none}
-    .sc-glow-2{position:absolute;width:720px;height:720px;border-radius:50%;background:radial-gradient(circle,rgba(86,101,115,.38),transparent 65%);bottom:-120px;right:-180px;filter:blur(85px);pointer-events:none}
-    .sc-glow-3{position:absolute;width:480px;height:480px;border-radius:50%;background:radial-gradient(circle,rgba(152,170,184,.1),transparent 65%);top:52%;left:50%;transform:translate(-50%,-50%);filter:blur(70px);pointer-events:none}
-    .sc-texture{position:absolute;inset:0;background:repeating-linear-gradient(135deg,transparent 0 32px,rgba(215,219,226,.016) 32px 33px);pointer-events:none}
-    .sc-top-line{position:absolute;top:0;left:88px;right:88px;height:1px;background:linear-gradient(90deg,transparent,rgba(152,170,184,.5),rgba(215,219,226,.28),rgba(152,170,184,.5),transparent)}
-    .sc-header{display:flex;align-items:center;justify-content:space-between;position:relative;z-index:1;margin-bottom:0}
-    .sc-logo{height:38px;width:auto;filter:brightness(0) saturate(100%) invert(88%) sepia(8%) saturate(200%) hue-rotate(185deg) brightness(110%)}
-    .sc-brand-label{font-family:'Inter',system-ui,sans-serif;font-size:22px;letter-spacing:.28em;text-transform:uppercase;color:rgba(152,170,184,.45)}
-    .sc-main{flex:1;display:flex;flex-direction:column;justify-content:center;position:relative;z-index:1;padding:56px 0 40px}
-    .sc-eyebrow{font-family:'Inter',system-ui,sans-serif;font-size:20px;letter-spacing:.32em;text-transform:uppercase;color:rgba(152,170,184,.5);margin-bottom:28px}
-    .sc-code{font-family:'Georgia',serif;font-size:210px;line-height:.88;letter-spacing:.1em;margin-bottom:44px;background:linear-gradient(130deg,#ffffff 0%,#d7dbe2 25%,#98aab8 60%,#566573 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
-    .sc-divider{width:56px;height:2px;background:linear-gradient(90deg,rgba(152,170,184,.55),rgba(86,101,115,.25));margin-bottom:32px;border-radius:999px}
-    .sc-name{font-family:'Georgia',serif;font-size:68px;line-height:1.08;margin-bottom:14px;color:#d7dbe2;font-weight:400}
-    .sc-tag{font-family:'Inter',system-ui,sans-serif;font-size:22px;letter-spacing:.24em;text-transform:uppercase;color:rgba(152,170,184,.62);margin-bottom:52px}
-    .sc-desc{font-family:'Inter',system-ui,sans-serif;font-size:28px;line-height:1.8;color:rgba(152,170,184,.7);max-width:800px;margin-bottom:52px}
-    .sc-pills{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:56px}
-    .sc-pill{padding:13px 26px;border-radius:999px;border:1px solid rgba(152,170,184,.18);background:rgba(33,57,90,.38);font-family:'Inter',system-ui,sans-serif;font-size:21px;letter-spacing:.07em;color:rgba(215,219,226,.75);}
-    .sc-bars{display:grid;gap:16px}
-    .sc-bar-row{display:grid;grid-template-columns:90px 1fr 60px;align-items:center;gap:18px}
-    .sc-bar-label{font-family:'Inter',system-ui,sans-serif;font-size:19px;color:rgba(152,170,184,.55);letter-spacing:.06em}
-    .sc-bar-track{height:3px;border-radius:999px;background:rgba(152,170,184,.1);overflow:hidden}
-    .sc-bar-fill{height:100%;border-radius:inherit}
-    .sc-bar-fill.m{background:linear-gradient(90deg,#21395a,#98aab8)}
-    .sc-bar-fill.e{background:linear-gradient(90deg,#566573,#d7dbe2)}
-    .sc-bar-pct{font-family:'Inter',system-ui,sans-serif;font-size:18px;font-weight:700;text-align:right;color:rgba(152,170,184,.6)}
-    .sc-footer{position:relative;z-index:1;display:flex;align-items:center;justify-content:space-between;padding-top:44px;border-top:1px solid rgba(152,170,184,.09);}
-    .sc-footer-left{font-family:'Inter',system-ui,sans-serif;font-size:19px;letter-spacing:.2em;text-transform:uppercase;color:rgba(86,101,115,.65)}
-    .sc-footer-right{font-family:'Inter',system-ui,sans-serif;font-size:17px;color:rgba(86,101,115,.45);letter-spacing:.08em}
-
     .copyright{position:fixed;bottom:calc(7px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);font-size:9.5px;color:rgba(152,170,184,.4);letter-spacing:.1em;white-space:nowrap;pointer-events:none;z-index:999}
     @keyframes drift{50%{transform:translateY(-8px) scale(1.015)}}
     @keyframes resultRise{from{opacity:0;transform:translateY(20px) scale(.982)}to{opacity:1;transform:none}}
@@ -348,40 +315,12 @@
       </div>
     </div>
   </section>
-
-  <!-- ✅ 高質感分享圖，離屏渲染 -->
-  <div class="share-canvas" id="shareCanvas">
-    <div class="share-canvas-inner">
-      <div class="sc-glow-1"></div>
-      <div class="sc-glow-2"></div>
-      <div class="sc-glow-3"></div>
-      <div class="sc-texture"></div>
-      <div class="sc-top-line"></div>
-      <div class="sc-header">
-        <img class="sc-logo" src="assets/U&ME logo 1_去背版本.png" alt="U&ME">
-        <span class="sc-brand-label">MBTI RESULT</span>
-      </div>
-      <div class="sc-main">
-        <div class="sc-eyebrow">你的內心組合</div>
-        <div class="sc-code" id="scCode">MIRC</div>
-        <div class="sc-divider"></div>
-        <div class="sc-name" id="scName">柔光守護者</div>
-        <div class="sc-tag" id="scTag">慢慢升溫型</div>
-        <div class="sc-desc" id="scDesc">妳喜歡氛圍先到位，再慢慢打開感受。</div>
-        <div class="sc-pills" id="scPills"></div>
-        <div class="sc-bars" id="scBars"></div>
-      </div>
-      <div class="sc-footer">
-        <span class="sc-footer-left">U&amp;ME · YOUR INNER TEMPO</span>
-        <span class="sc-footer-right">測測你是哪種類型</span>
-      </div>
-    </div>
-  </div>
 </main>
 
 <p class="copyright">© U&amp;ME ® 商標已於中華民國註冊，保留一切權利</p>
 
 <script>
+// ── 星星
 (()=>{
   const el=document.getElementById('starsEl');
   for(let i=0;i<65;i++){
@@ -394,6 +333,7 @@
 
 document.getElementById('curtain').addEventListener('animationend',function(){this.remove()},{once:true});
 
+// ── DOM refs
 const root=document.documentElement,
   introScreen=document.getElementById('introScreen'),
   quizScreen=document.getElementById('quizScreen'),
@@ -424,15 +364,12 @@ const root=document.documentElement,
   resultDrive=document.getElementById('resultDrive'),
   revealBurst=document.getElementById('revealBurst'),
   particlesEl=document.getElementById('particlesEl'),
-  stage=document.getElementById('stage'),
-  shareCanvas=document.getElementById('shareCanvas'),
-  scCode=document.getElementById('scCode'),
-  scName=document.getElementById('scName'),
-  scTag=document.getElementById('scTag'),
-  scDesc=document.getElementById('scDesc'),
-  scPills=document.getElementById('scPills'),
-  scBars=document.getElementById('scBars');
+  stage=document.getElementById('stage');
 
+// 分享圖資料 store
+const shareData={code:'',name:'',tag:'',desc:'',pills:[],bars:[],isE:false};
+
+// ── 題目
 const questions=[
   {q:'第一次靠近時，你更在意什麼？',a:['A. 氛圍有沒有對，感覺要先到位。','B. 反應夠不夠快，張力要立刻出現。','C. 感覺有沒有慢慢升起來。','D. 能不能直接進入狀態。']},
   {q:'你比較容易被哪種方式打動？',a:['A. 溫柔、慢慢、一步一步。','B. 直接、明確、很到位。','C. 有情感、帶曖昧、會想多看一眼。','D. 觸感明顯、身體立刻有感。']},
@@ -482,8 +419,16 @@ const results={
   EDTL:{name:'烈感探索者',tag:'直球烈感型',desc:'妳是很強烈、很直接、很知道自己要什麼的類型。妳不太繞，也不等，偏好鮮明，點燃後存在感極強。',pills:['烈感','直球','存在感']}
 };
 
+const DIMS=[
+  {label:'節奏',a:'Mood',b:'Energy',aChar:'M'},
+  {label:'靠近',a:'Intimacy',b:'Direct',aChar:'I'},
+  {label:'關係',a:'Romance',b:'Touch',aChar:'R'},
+  {label:'慾望',a:'Curious',b:'Lust',aChar:'C'},
+];
+
 const state={index:0,answers:Array(questions.length).fill(null),score:{Mood:0,Energy:0,Intimacy:0,Direct:0,Romance:0,Touch:0,Curious:0,Lust:0},sliding:false};
 
+// ── 畫面切換
 const setScreen=s=>{
   [introScreen,quizScreen,resultScreen].forEach(el=>{el.hidden=el!==s;el.classList.remove('active')});
   s.hidden=false;requestAnimationFrame(()=>s.classList.add('active'));
@@ -578,45 +523,29 @@ function fireParticles(){
   }
 }
 
-const DIMS=[
-  {label:'節奏',a:'Mood',b:'Energy',aChar:'M'},
-  {label:'靠近',a:'Intimacy',b:'Direct',aChar:'I'},
-  {label:'關係',a:'Romance',b:'Touch',aChar:'R'},
-  {label:'慾望',a:'Curious',b:'Lust',aChar:'C'},
-];
-
-function buildScoreBars(code,score,isE){
-  scoreBars.innerHTML='';scBars.innerHTML='';
+function buildScoreBars(code,score){
+  scoreBars.innerHTML='';
+  shareData.bars=[];
   DIMS.forEach((d,di)=>{
     const total=(score[d.a]||0)+(score[d.b]||0)||1;
     const chosen=code[di]===d.aChar?d.a:d.b;
     const pct=Math.round((score[chosen]||0)/total*100);
-    // 結果卡
     const row=document.createElement('div');row.className='score-bar-row';
     row.innerHTML=`<span>${d.label}</span><div class="score-bar-track"><div class="score-bar-fill" data-pct="${pct}"></div></div><span class="score-pct">${pct}%</span>`;
     scoreBars.appendChild(row);
-    // 分享圖
-    const srow=document.createElement('div');srow.className='sc-bar-row';
-    srow.innerHTML=`<span class="sc-bar-label">${d.label}</span><div class="sc-bar-track"><div class="sc-bar-fill ${isE?'e':'m'}" style="width:${pct}%"></div></div><span class="sc-bar-pct">${pct}%</span>`;
-    scBars.appendChild(srow);
+    shareData.bars.push({label:d.label,pct});
   });
   setTimeout(()=>scoreBars.querySelectorAll('.score-bar-fill').forEach(el=>el.style.width=el.dataset.pct+'%'),650);
 }
 
 const CHARS='ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-
 function runSlotMachine(code){
-  resultCodeEl.innerHTML='';
-  resultCodeEl.classList.remove('revealed');
+  resultCodeEl.innerHTML='';resultCodeEl.classList.remove('revealed');
   const chars=[...code];
   const slots=chars.map(()=>{
     const wrap=document.createElement('span');wrap.className='slot-char';
     const inner=document.createElement('div');inner.className='slot-inner';
-    for(let i=0;i<20;i++){
-      const s=document.createElement('span');
-      s.textContent=CHARS[Math.floor(Math.random()*CHARS.length)];
-      inner.appendChild(s);
-    }
+    for(let i=0;i<20;i++){const s=document.createElement('span');s.textContent=CHARS[Math.floor(Math.random()*CHARS.length)];inner.appendChild(s);}
     const tgt=document.createElement('span');tgt.textContent='?';
     inner.appendChild(tgt);wrap.appendChild(inner);resultCodeEl.appendChild(wrap);
     return{wrap,inner,tgt};
@@ -624,25 +553,15 @@ function runSlotMachine(code){
   chars.forEach((ch,ci)=>{
     const{inner,tgt,wrap}=slots[ci];
     const delay=ci*340+180,dur=540+ci*90;
-    setTimeout(()=>{
-      inner.style.transition=`transform ${dur}ms cubic-bezier(.22,.68,0,1.2)`;
-      inner.style.transform=`translateY(-${(inner.children.length-1)*1.1}em)`;
-    },delay);
-    setTimeout(()=>{
-      tgt.textContent=ch;inner.style.transition='none';
-      wrap.style.animation='slotLock .34s cubic-bezier(.36,.07,.19,.97)';
-      setTimeout(()=>wrap.style.animation='',400);
-    },delay+dur+40);
+    setTimeout(()=>{inner.style.transition=`transform ${dur}ms cubic-bezier(.22,.68,0,1.2)`;inner.style.transform=`translateY(-${(inner.children.length-1)*1.1}em)`;},delay);
+    setTimeout(()=>{tgt.textContent=ch;inner.style.transition='none';wrap.style.animation='slotLock .34s cubic-bezier(.36,.07,.19,.97)';setTimeout(()=>wrap.style.animation='',400);},delay+dur+40);
   });
   const totalDelay=chars.length*340+180+720;
   setTimeout(()=>{
     resultCodeEl.innerHTML='';
-    chars.forEach(ch=>{
-      const s=document.createElement('span');s.textContent=ch;resultCodeEl.appendChild(s);
-    });
+    chars.forEach(ch=>{const s=document.createElement('span');s.textContent=ch;resultCodeEl.appendChild(s);});
     resultCodeEl.classList.add('revealed');
-    resultName.classList.add('show');
-    setTimeout(()=>resultName.classList.add('revealed'),100);
+    resultName.classList.add('show');setTimeout(()=>resultName.classList.add('revealed'),100);
     resultTag.classList.add('show');
   },totalDelay);
 }
@@ -652,8 +571,7 @@ const showResult=()=>{
   root.setAttribute('data-result-theme',isE?'E':'M');
   revealBurst.classList.remove('fire');void revealBurst.offsetWidth;revealBurst.classList.add('fire');
   setTimeout(()=>fireParticles(),180);
-  resultName.textContent=r.name;
-  resultName.classList.remove('show','revealed');
+  resultName.textContent=r.name;resultName.classList.remove('show','revealed');
   resultTag.textContent=r.tag;resultTag.classList.remove('show');
   resultDesc.textContent=r.desc;
   resultCategory.textContent=code.startsWith('M')
@@ -664,11 +582,10 @@ const showResult=()=>{
   resultDrive.textContent=code[3]==='C'?'步調：探索':'步調：熱烈';
   resultPills.innerHTML='';
   r.pills.forEach(t=>{const s=document.createElement('span');s.className='pill';s.textContent=t;resultPills.appendChild(s);});
-  // 填充分享圖內容
-  scCode.textContent=code;scName.textContent=r.name;scTag.textContent=r.tag;scDesc.textContent=r.desc;
-  scPills.innerHTML='';
-  r.pills.forEach(t=>{const s=document.createElement('span');s.className='sc-pill';s.textContent=t;scPills.appendChild(s);});
-  buildScoreBars(code,state.score,isE);
+  // 存入分享資料
+  shareData.code=code;shareData.name=r.name;shareData.tag=r.tag;shareData.desc=r.desc;
+  shareData.pills=[...r.pills];shareData.isE=isE;
+  buildScoreBars(code,state.score);
   setScreen(resultScreen);
   setTimeout(()=>runSlotMachine(code),500);
 };
@@ -681,14 +598,183 @@ const restartToStart=()=>{
   setScreen(introScreen);
 };
 
-// ✅ 截高質感分享圖（離屏 1080×1920）
+// ── 工具：圓角矩形路徑
+function roundRect(ctx,x,y,w,h,r){
+  ctx.beginPath();
+  ctx.moveTo(x+r,y);ctx.lineTo(x+w-r,y);ctx.quadraticCurveTo(x+w,y,x+w,y+r);
+  ctx.lineTo(x+w,y+h-r);ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);
+  ctx.lineTo(x+r,y+h);ctx.quadraticCurveTo(x,y+h,x,y+h-r);
+  ctx.lineTo(x,y+r);ctx.quadraticCurveTo(x,y,x+r,y);
+  ctx.closePath();
+}
+
+// ── 分享圖：用 Canvas API 直接繪製，不依賴 html2canvas
 async function makeShareBlob(){
-  const c=await html2canvas(shareCanvas,{
-    backgroundColor:null,scale:2,useCORS:true,allowTaint:true,
-    x:0,y:0,scrollX:-9999,scrollY:0,
-    width:1080,height:1920
+  const{code,name,tag,desc,pills,bars,isE}=shareData;
+  const W=1080,H=1920,DPR=2;
+  const cv=document.createElement('canvas');
+  cv.width=W*DPR;cv.height=H*DPR;
+  const ctx=cv.getContext('2d');
+  ctx.scale(DPR,DPR);
+
+  // 背景
+  const bg=ctx.createLinearGradient(0,0,W,H);
+  bg.addColorStop(0,'#07101e');bg.addColorStop(.4,'#0d1b30');
+  bg.addColorStop(.7,'#111f3a');bg.addColorStop(1,'#09131f');
+  ctx.fillStyle=bg;ctx.fillRect(0,0,W,H);
+
+  // 光暈
+  function glow(x,y,r,c1,c2){
+    const g=ctx.createRadialGradient(x,y,0,x,y,r);
+    g.addColorStop(0,c1);g.addColorStop(1,c2);
+    ctx.save();ctx.globalCompositeOperation='screen';
+    ctx.fillStyle=g;ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fill();ctx.restore();
+  }
+  glow(-100,-150,700,'rgba(33,57,90,.6)','rgba(33,57,90,0)');
+  glow(W+100,H+80,600,'rgba(86,101,115,.38)','rgba(86,101,115,0)');
+  glow(W*.5,H*.5,420,'rgba(152,170,184,.11)','rgba(152,170,184,0)');
+
+  // 細格紋
+  ctx.save();
+  for(let x=0;x<W+H;x+=34){
+    ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x-H,H);
+    ctx.strokeStyle='rgba(215,219,226,.016)';ctx.lineWidth=1;ctx.stroke();
+  }
+  ctx.restore();
+
+  // 頂部光線
+  const tl=ctx.createLinearGradient(88,0,W-88,0);
+  tl.addColorStop(0,'rgba(152,170,184,0)');tl.addColorStop(.3,'rgba(152,170,184,.5)');
+  tl.addColorStop(.5,'rgba(215,219,226,.28)');tl.addColorStop(.7,'rgba(152,170,184,.5)');
+  tl.addColorStop(1,'rgba(152,170,184,0)');
+  ctx.save();ctx.strokeStyle=tl;ctx.lineWidth=1;
+  ctx.beginPath();ctx.moveTo(88,0);ctx.lineTo(W-88,0);ctx.stroke();ctx.restore();
+
+  // Header 品牌
+  ctx.save();
+  ctx.font='600 21px Inter,Arial,sans-serif';
+  ctx.fillStyle='rgba(152,170,184,.42)';
+  ctx.textAlign='right';ctx.textBaseline='top';
+  ctx.fillText('MBTI RESULT',W-88,96);
+  ctx.restore();
+
+  // U&ME 品牌小字（左）
+  ctx.save();
+  ctx.font='600 21px Inter,Arial,sans-serif';
+  ctx.fillStyle='rgba(152,170,184,.42)';
+  ctx.textAlign='left';ctx.textBaseline='top';
+  ctx.fillText('U&ME',88,96);
+  ctx.restore();
+
+  // MBTI 超大字
+  const codeGrad=ctx.createLinearGradient(80,300,W-80,560);
+  codeGrad.addColorStop(0,'rgba(255,255,255,.96)');
+  codeGrad.addColorStop(.22,'#e8ecf0');
+  codeGrad.addColorStop(.55,'#98aab8');
+  codeGrad.addColorStop(1,'#566573');
+  ctx.save();
+  ctx.font='400 196px Georgia,serif';
+  ctx.fillStyle=codeGrad;
+  ctx.textAlign='left';ctx.textBaseline='alphabetic';
+  ctx.fillText(code,80,530);
+  ctx.restore();
+
+  // 分隔線
+  ctx.save();
+  const dl=ctx.createLinearGradient(88,575,200,575);
+  dl.addColorStop(0,'rgba(152,170,184,.55)');dl.addColorStop(1,'rgba(86,101,115,.15)');
+  ctx.strokeStyle=dl;ctx.lineWidth=2;
+  ctx.beginPath();ctx.moveTo(88,578);ctx.lineTo(156,578);ctx.stroke();
+  ctx.restore();
+
+  // 名稱
+  ctx.save();
+  ctx.font='400 60px Georgia,serif';
+  ctx.fillStyle='#d7dbe2';ctx.textAlign='left';ctx.textBaseline='alphabetic';
+  ctx.fillText(name,88,668);
+  ctx.restore();
+
+  // Tag
+  ctx.save();
+  ctx.font='400 20px Inter,Arial,sans-serif';
+  ctx.fillStyle='rgba(152,170,184,.6)';ctx.textAlign='left';ctx.textBaseline='alphabetic';
+  ctx.fillText(tag.toUpperCase(),88,716);
+  ctx.restore();
+
+  // 描述（自動換行，中文逐字）
+  ctx.save();
+  ctx.font='400 25px Inter,Arial,sans-serif';
+  ctx.fillStyle='rgba(152,170,184,.72)';ctx.textAlign='left';ctx.textBaseline='alphabetic';
+  const maxTW=W-176,lineH=44;
+  let line='',ly=810;
+  for(const ch of desc){
+    const test=line+ch;
+    if(ctx.measureText(test).width>maxTW&&line.length){
+      ctx.fillText(line,88,ly);line=ch;ly+=lineH;
+    }else{line=test;}
+  }
+  if(line)ctx.fillText(line,88,ly);
+  ctx.restore();
+
+  // Pills
+  ctx.save();
+  ctx.font='400 19px Inter,Arial,sans-serif';
+  let px=88,py=ly+72;
+  pills.forEach(txt=>{
+    const tw=ctx.measureText(txt).width+52;
+    roundRect(ctx,px,py-26,tw,42,21);
+    ctx.fillStyle='rgba(33,57,90,.42)';ctx.fill();
+    ctx.strokeStyle='rgba(152,170,184,.18)';ctx.lineWidth=1;ctx.stroke();
+    ctx.fillStyle='rgba(215,219,226,.78)';
+    ctx.fillText(txt,px+26,py+7);
+    px+=tw+14;
   });
-  return new Promise(r=>c.toBlob(b=>r(b),'image/png',1));
+  ctx.restore();
+
+  // 分數條
+  let by=py+90;
+  bars.forEach(b=>{
+    ctx.save();
+    ctx.font='400 18px Inter,Arial,sans-serif';
+    ctx.fillStyle='rgba(152,170,184,.52)';ctx.textAlign='left';ctx.textBaseline='middle';
+    ctx.fillText(b.label,88,by);
+    // track
+    roundRect(ctx,192,by-5,650,4,2);
+    ctx.fillStyle='rgba(152,170,184,.1)';ctx.fill();
+    // fill bar
+    const bw=650*(b.pct/100);
+    if(bw>0){
+      roundRect(ctx,192,by-5,bw,4,2);
+      const bg2=ctx.createLinearGradient(192,0,192+650,0);
+      if(isE){bg2.addColorStop(0,'#566573');bg2.addColorStop(1,'#d7dbe2');}
+      else{bg2.addColorStop(0,'#21395a');bg2.addColorStop(1,'#98aab8');}
+      ctx.fillStyle=bg2;ctx.fill();
+    }
+    // pct
+    ctx.font='700 16px Inter,Arial,sans-serif';
+    ctx.fillStyle='rgba(152,170,184,.62)';ctx.textAlign='right';ctx.textBaseline='middle';
+    ctx.fillText(b.pct+'%',W-88,by);
+    ctx.restore();
+    by+=50;
+  });
+
+  // 底部分隔線
+  ctx.save();
+  ctx.strokeStyle='rgba(152,170,184,.1)';ctx.lineWidth=1;
+  ctx.beginPath();ctx.moveTo(88,H-130);ctx.lineTo(W-88,H-130);ctx.stroke();
+  ctx.restore();
+
+  // Footer
+  ctx.save();
+  ctx.font='400 17px Inter,Arial,sans-serif';
+  ctx.fillStyle='rgba(86,101,115,.62)';
+  ctx.textAlign='left';ctx.textBaseline='middle';
+  ctx.fillText('U&ME · YOUR INNER TEMPO',88,H-80);
+  ctx.textAlign='right';ctx.fillStyle='rgba(86,101,115,.45)';
+  ctx.fillText('測測你是哪種類型',W-88,H-80);
+  ctx.restore();
+
+  return new Promise(r=>cv.toBlob(b=>r(b),'image/png',1));
 }
 
 async function dlBlob(blob,name){
@@ -697,32 +783,39 @@ async function dlBlob(blob,name){
 }
 
 async function handleShare(){
-  const code=scCode.textContent||'MBTI';
+  const orig=shareBtn.innerHTML;
   const svgEl=shareBtn.querySelector('svg');
   shareBtn.classList.add('loading');if(svgEl)svgEl.style.display='none';
   try{
     const blob=await makeShareBlob();
-    const file=new File([blob],`ume-mbti-${code}.png`,{type:'image/png',lastModified:Date.now()});
-    const data={files:[file],title:'U&ME MBTI 結果',text:`我在 U&ME MBTI 測到 ${code}｜${scName.textContent}｜${scTag.textContent}\n\n測測你是哪種類型 👇`};
+    const fname=`ume-mbti-${shareData.code||'result'}.png`;
+    const file=new File([blob],fname,{type:'image/png',lastModified:Date.now()});
+    const data={
+      files:[file],
+      title:'U&ME MBTI 結果',
+      text:`我在 U&ME MBTI 測到 ${shareData.code}｜${shareData.name}｜${shareData.tag}\n\n測測你是哪種類型 👇`
+    };
     if(navigator.canShare&&navigator.canShare(data))await navigator.share(data);
-    else{await dlBlob(blob,`ume-mbti-${code}.png`);alert('已下載圖片，請手動上傳到你想分享的平台 🙌');}
+    else{await dlBlob(blob,fname);alert('已下載圖片，請手動上傳到你想分享的平台 🙌');}
   }catch(e){if(e.name!=='AbortError')console.warn(e);}
-  finally{shareBtn.classList.remove('loading');if(svgEl)svgEl.style.display='';}
+  finally{shareBtn.classList.remove('loading');if(svgEl)svgEl.style.display='';shareBtn.innerHTML=orig;}
 }
 
 async function handleSave(){
-  const code=scCode.textContent||'MBTI',orig=saveBtn.innerHTML;
+  const orig=saveBtn.innerHTML;
   const svgEl=saveBtn.querySelector('svg');
   saveBtn.classList.add('loading');if(svgEl)svgEl.style.display='none';
   try{
     const blob=await makeShareBlob();
-    await dlBlob(blob,`ume-mbti-${code}.png`);
+    const fname=`ume-mbti-${shareData.code||'result'}.png`;
+    await dlBlob(blob,fname);
     saveBtn.classList.remove('loading');if(svgEl)svgEl.style.display='';
     saveBtn.innerHTML='<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> 已儲存';
-    setTimeout(()=>saveBtn.innerHTML=orig,1800);
-  }catch(e){saveBtn.classList.remove('loading');saveBtn.innerHTML=orig;}
+    setTimeout(()=>{saveBtn.innerHTML=orig;},1800);
+  }catch(e){saveBtn.classList.remove('loading');if(svgEl)svgEl.style.display='';saveBtn.innerHTML=orig;}
 }
 
+// ── 事件
 startBtn.addEventListener('click',startQuiz);
 nextBtn.addEventListener('click',()=>goNext('forward'));
 backBtn.addEventListener('click',goPrev);
