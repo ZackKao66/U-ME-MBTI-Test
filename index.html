@@ -204,6 +204,8 @@
 
           <div class="share-row">
             <button class="share-btn primary" id="shareBtn" type="button">分享圖片</button>
+            <button class="share-btn" id="lineBtn" type="button">分享到 LINE</button>
+            <button class="share-btn" id="igBtn" type="button">分享到 IG</button>
             <button class="share-btn" id="saveBtn" type="button">下載圖片</button>
           </div>
 
@@ -230,7 +232,7 @@
   </main>
 
   <script>
-    const root=document.documentElement,stage=document.getElementById('stage'),themeBtn=document.getElementById('themeBtn'),introScreen=document.getElementById('introScreen'),quizScreen=document.getElementById('quizScreen'),resultScreen=document.getElementById('resultScreen'),startBtn=document.getElementById('startBtn'),backBtn=document.getElementById('backBtn'),nextBtn=document.getElementById('nextBtn'),restartBtn=document.getElementById('restartBtn'),saveBtn=document.getElementById('saveBtn'),questionText=document.getElementById('questionText'),optionsEl=document.getElementById('options'),quizTitle=document.getElementById('quizTitle'),quizProgress=document.getElementById('quizProgress'),progressFill=document.getElementById('progressFill'),resultCode=document.getElementById('resultCode'),resultName=document.getElementById('resultName'),resultTag=document.getElementById('resultTag'),resultDesc=document.getElementById('resultDesc'),resultPills=document.getElementById('resultPills'),resultCategory=document.getElementById('resultCategory'),resultMood=document.getElementById('resultMood'),resultPace=document.getElementById('resultPace'),resultDrive=document.getElementById('resultDrive'),shareBtn=document.getElementById('shareBtn'),shareShot=document.getElementById('shareShot'),shareCode=document.getElementById('shareCode'),shareName=document.getElementById('shareName'),shareTag=document.getElementById('shareTag'),shareDesc=document.getElementById('shareDesc'),sharePills=document.getElementById('sharePills');
+    const root=document.documentElement,stage=document.getElementById('stage'),themeBtn=document.getElementById('themeBtn'),introScreen=document.getElementById('introScreen'),quizScreen=document.getElementById('quizScreen'),resultScreen=document.getElementById('resultScreen'),startBtn=document.getElementById('startBtn'),backBtn=document.getElementById('backBtn'),nextBtn=document.getElementById('nextBtn'),restartBtn=document.getElementById('restartBtn'),saveBtn=document.getElementById('saveBtn'),lineBtn=document.getElementById('lineBtn'),igBtn=document.getElementById('igBtn'),questionText=document.getElementById('questionText'),optionsEl=document.getElementById('options'),quizTitle=document.getElementById('quizTitle'),quizProgress=document.getElementById('quizProgress'),progressFill=document.getElementById('progressFill'),resultCode=document.getElementById('resultCode'),resultName=document.getElementById('resultName'),resultTag=document.getElementById('resultTag'),resultDesc=document.getElementById('resultDesc'),resultPills=document.getElementById('resultPills'),resultCategory=document.getElementById('resultCategory'),resultMood=document.getElementById('resultMood'),resultPace=document.getElementById('resultPace'),resultDrive=document.getElementById('resultDrive'),shareBtn=document.getElementById('shareBtn'),shareShot=document.getElementById('shareShot'),shareCode=document.getElementById('shareCode'),shareName=document.getElementById('shareName'),shareTag=document.getElementById('shareTag'),shareDesc=document.getElementById('shareDesc'),sharePills=document.getElementById('sharePills');
 
     const questions=[
       {q:'第一次靠近時，你更在意什麼？',a:['A. 氛圍有沒有對。','B. 反應來得夠不夠快。','C. 感覺有沒有慢慢升起來。','D. 能不能直接進入狀態。']},
@@ -401,7 +403,7 @@
       setScreen(introScreen);
     };
 
-    async function captureShareBlob(){
+    async function makeShareBlob(){
       const canvas=await html2canvas(shareShot,{backgroundColor:'#f7f4ee',scale:2,useCORS:true});
       return new Promise(resolve=>canvas.toBlob(blob=>resolve(blob),'image/png',1));
     }
@@ -415,6 +417,30 @@
       a.click();
       a.remove();
       URL.revokeObjectURL(url);
+    }
+
+    async function fallbackDownloadCurrent(){
+      const blob=await makeShareBlob();
+      await downloadBlob(blob,`ume-mbti-${resultCode.textContent}.png`);
+    }
+
+    async function shareViaSystem(){
+      const blob=await makeShareBlob();
+      const file=new File([blob],`ume-mbti-${resultCode.textContent}.png`,{type:'image/png',lastModified:Date.now()});
+      const shareData={files:[file],title:'U&ME MBTI 結果',text:`我在 U&ME MBTI 測到 ${resultCode.textContent}｜${resultName.textContent}｜${resultTag.textContent}`};
+      if(navigator.canShare&&navigator.canShare(shareData)) return navigator.share(shareData);
+      await downloadBlob(blob,`ume-mbti-${resultCode.textContent}.png`);
+    }
+
+    function openLineShare(){
+      const text=encodeURIComponent(`我在 U&ME MBTI 測到 ${resultCode.textContent}｜${resultName.textContent}｜${resultTag.textContent}`);
+      const url=encodeURIComponent(location.href.split('#')[0]);
+      const lineUrl=`https://line.me/R/msg/text/?${text}%20${url}`;
+      window.open(lineUrl,'_blank','noopener');
+    }
+
+    async function openIgShare(){
+      try{await shareViaSystem()}catch(e){await fallbackDownloadCurrent()}
     }
 
     root.setAttribute('data-theme',matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');
@@ -438,8 +464,7 @@
     saveBtn.addEventListener('click',async()=>{
       try{
         saveBtn.textContent='產生中...';
-        const blob=await captureShareBlob();
-        await downloadBlob(blob,`ume-mbti-${resultCode.textContent}.png`);
+        await fallbackDownloadCurrent();
         saveBtn.textContent='已下載';
         setTimeout(()=>saveBtn.textContent='下載圖片',1400);
       }catch(e){
@@ -450,21 +475,15 @@
     shareBtn.addEventListener('click',async()=>{
       try{
         shareBtn.textContent='產生中...';
-        const blob=await captureShareBlob();
-        const file=new File([blob],`ume-mbti-${resultCode.textContent}.png`,{type:'image/png',lastModified:Date.now()});
-        const shareData={files:[file],title:'U&ME MBTI 結果',text:`我在 U&ME MBTI 測到 ${resultCode.textContent}｜${resultName.textContent}｜${resultTag.textContent}`};
-        if(navigator.canShare&&navigator.canShare(shareData)){
-          await navigator.share(shareData);
-          shareBtn.textContent='分享圖片';
-        }else{
-          await downloadBlob(blob,`ume-mbti-${resultCode.textContent}.png`);
-          shareBtn.textContent='已下載圖片';
-          setTimeout(()=>shareBtn.textContent='分享圖片',1400);
-        }
+        await shareViaSystem();
+        shareBtn.textContent='分享圖片';
       }catch(e){
         shareBtn.textContent='分享圖片';
       }
     });
+
+    lineBtn.addEventListener('click',()=>openLineShare());
+    igBtn.addEventListener('click',()=>openIgShare());
   </script>
 </body>
 </html>
