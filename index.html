@@ -46,7 +46,6 @@
     .start:hover{transform:scale(1.06);box-shadow:0 18px 40px rgba(184,155,98,.32)}
     .start::before{content:"開始";font-size:14px}
 
-    /* ── 測驗 ── */
     .quiz{width:min(100%,760px);display:grid;gap:12px;justify-items:stretch;text-align:left;position:relative;z-index:2}
     .quiz-head{display:flex;justify-content:space-between;align-items:flex-end;gap:12px}
     .quiz-kicker{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
@@ -57,9 +56,7 @@
     .progress-bar.complete>span{animation:barComplete .6s ease forwards}
     @keyframes barComplete{0%{filter:brightness(1)}40%{filter:brightness(1.6) saturate(1.5)}100%{filter:brightness(1)}}
 
-    /* 卡片：拿掉所有會讓整體位移的 animation，只保留換題滑動 */
     .card{border:1px solid var(--border);background:color-mix(in oklab,var(--surface) 84%,white);border-radius:22px;padding:16px;box-shadow:0 18px 46px rgba(0,0,0,.06);backdrop-filter:blur(10px);will-change:transform,opacity}
-    /* 換題滑動 */
     .card.exit-left{animation:exitLeft .2s cubic-bezier(.4,0,1,1) both}
     .card.enter-right{animation:enterRight .26s cubic-bezier(0,0,.2,1) both}
     .card.exit-right{animation:exitRight .2s cubic-bezier(.4,0,1,1) both}
@@ -71,23 +68,15 @@
 
     .question{margin:0 0 14px;font-size:clamp(18px,5vw,28px);line-height:1.35;font-weight:700}
     .options{display:grid;gap:10px}
-
-    /* 選項：回饋改在選項自身，不影響卡片 */
     .option{
       width:100%;min-height:52px;text-align:left;padding:14px;
       border-radius:16px;border:1px solid var(--border);
       background:var(--surface-2);color:var(--text);cursor:pointer;
       line-height:1.45;font-size:15px;white-space:pre-line;
       position:relative;overflow:hidden;
-      /* 所有過渡都在選項自己身上，不外溢 */
       transition:background .16s ease,border-color .16s ease,box-shadow .16s ease,transform .14s ease;
     }
-    .option:hover{
-      border-color:color-mix(in oklab,var(--accent) 42%,var(--border));
-      background:color-mix(in oklab,var(--surface-2) 84%,var(--accent) 6%);
-      box-shadow:0 8px 18px rgba(0,0,0,.04);
-    }
-    /* 點擊瞬間：選項自身輕微縮放，有感但不影響卡片 */
+    .option:hover{border-color:color-mix(in oklab,var(--accent) 42%,var(--border));background:color-mix(in oklab,var(--surface-2) 84%,var(--accent) 6%);box-shadow:0 8px 18px rgba(0,0,0,.04)}
     .option:active{transform:scale(.985)}
     .option.selected{
       border-color:color-mix(in oklab,var(--accent) 68%,var(--border));
@@ -95,20 +84,9 @@
       box-shadow:inset 0 0 0 1.5px color-mix(in oklab,var(--accent) 22%,transparent),0 6px 16px rgba(0,0,0,.04);
       transform:none;
     }
-    /* 選中光暈：純 ::after 偽元素，不改變 layout */
-    .option.selected::after{
-      content:'';position:absolute;inset:0;border-radius:inherit;
-      background:radial-gradient(ellipse at 28% 50%,color-mix(in oklab,var(--accent) 20%,transparent),transparent 68%);
-      pointer-events:none;
-      animation:optionGlow .38s ease forwards;
-    }
+    .option.selected::after{content:'';position:absolute;inset:0;border-radius:inherit;background:radial-gradient(ellipse at 28% 50%,color-mix(in oklab,var(--accent) 20%,transparent),transparent 68%);pointer-events:none;animation:optionGlow .38s ease forwards}
     @keyframes optionGlow{from{opacity:0}to{opacity:1}}
-    /* 選中打勾標記 */
-    .option.selected::before{
-      content:'✓';position:absolute;right:14px;top:50%;transform:translateY(-50%);
-      font-size:13px;color:var(--accent);font-weight:700;opacity:0;
-      animation:checkIn .25s cubic-bezier(.16,1,.3,1) .06s forwards;
-    }
+    .option.selected::before{content:'✓';position:absolute;right:14px;top:50%;transform:translateY(-50%);font-size:13px;color:var(--accent);font-weight:700;opacity:0;animation:checkIn .25s cubic-bezier(.16,1,.3,1) .06s forwards}
     @keyframes checkIn{from{opacity:0;transform:translateY(-50%) scale(.6)}to{opacity:1;transform:translateY(-50%) scale(1)}}
 
     .nav{display:flex;justify-content:space-between;gap:10px;align-items:center}
@@ -119,12 +97,12 @@
     .next:disabled,.ghost:disabled{opacity:.45;cursor:not-allowed;transform:none}
     .footer-note{font-size:11px;color:var(--muted);text-align:center}
 
-    /* ── 結果 ── */
     .result-screen-bg{position:absolute;inset:0;background:radial-gradient(circle at 50% 30%,var(--theme-glow),transparent 40%),radial-gradient(circle at 20% 80%,color-mix(in oklab,var(--accent-2) 8%,transparent),transparent 38%);opacity:.95;pointer-events:none;animation:drift 18s ease-in-out infinite;transition:background .8s ease}
     .cinema-wash{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.03),transparent 18%,transparent 82%,rgba(0,0,0,.04));pointer-events:none;z-index:0}
     .reveal-burst{position:absolute;inset:0;background:radial-gradient(circle at 50% 40%,color-mix(in oklab,var(--accent) 28%,transparent),transparent 55%);opacity:0;pointer-events:none;z-index:1}
     .reveal-burst.fire{animation:burst .9s cubic-bezier(.16,1,.3,1) forwards}
     @keyframes burst{0%{opacity:.9;transform:scale(.7)}60%{opacity:.5}100%{opacity:0;transform:scale(1.4)}}
+
     .result-layout{width:min(100%,920px);height:100%;display:grid;align-items:center}
     .result-card{max-width:100%;height:min(100%,calc(100svh - 110px - env(safe-area-inset-top) - env(safe-area-inset-bottom)));display:grid;grid-template-rows:auto auto auto auto;gap:10px;text-align:left;border-radius:28px;padding:16px;background:linear-gradient(180deg,color-mix(in oklab,var(--surface) 68%,white),color-mix(in oklab,var(--surface-2) 92%,var(--accent) 5%));position:relative;overflow:hidden;border:1px solid color-mix(in oklab,var(--accent) 18%,var(--border));box-shadow:0 24px 60px rgba(0,0,0,.08);transform-origin:center bottom;animation:resultRise 900ms cubic-bezier(.16,1,.3,1) both}
     .result-card::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at top left,color-mix(in oklab,var(--accent) 14%,transparent),transparent 42%),radial-gradient(circle at bottom right,color-mix(in oklab,var(--accent-2) 10%,transparent),transparent 44%),repeating-linear-gradient(135deg,transparent 0 22px,color-mix(in oklab,var(--text) 2%,transparent) 22px 23px);opacity:.9;pointer-events:none}
@@ -137,7 +115,6 @@
     .result-section p,.result-desc{margin:0;color:var(--muted);line-height:1.55;font-size:13px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
     .result-pill-row{display:flex;gap:8px;flex-wrap:wrap;margin:4px 0 2px}
 
-    /* Slot Machine */
     .result-code{font-family:var(--font-display);font-size:clamp(34px,11vw,72px);line-height:1;margin-bottom:2px;letter-spacing:.12em;display:flex;gap:.06em}
     .slot-char{display:inline-block;position:relative;overflow:hidden;height:1.1em;width:.72em;vertical-align:top}
     .slot-inner{display:flex;flex-direction:column;transition:none}
@@ -147,7 +124,6 @@
     .result-tag{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);opacity:0;transition:opacity .4s ease .1s}
     .result-tag.show{opacity:1}
 
-    /* 分享 */
     .share-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:4px}
     .share-btn{border:1px solid var(--border);background:color-mix(in oklab,var(--surface) 78%,white);color:var(--text);min-height:48px;padding:12px 16px;border-radius:16px;display:flex;align-items:center;justify-content:center;gap:8px;font-size:14px;font-weight:600;letter-spacing:.02em}
     .share-btn svg{flex-shrink:0}
@@ -161,8 +137,15 @@
     .share-btn.loading::after{content:'';display:inline-block;width:14px;height:14px;border:2px solid currentColor;border-top-color:transparent;border-radius:50%;animation:spin .7s linear infinite;margin-left:6px}
     @keyframes spin{to{transform:rotate(360deg)}}
 
-    /* 截圖卡片 */
-    .share-shot{position:fixed;visibility:hidden;left:0;top:0;width:1080px;aspect-ratio:4/5;padding:64px;color:#1f1c16;pointer-events:none}
+    /* ── 截圖卡片：永遠推到視窗右側外，使用者看不見，html2canvas 仍可截到 ── */
+    .share-shot{
+      position:fixed;
+      left:0;top:0;
+      transform:translateX(9999px);
+      width:1080px;aspect-ratio:4/5;padding:64px;
+      color:#1f1c16;pointer-events:none;
+      /* 不需要任何 visibility/display 切換 */
+    }
     .share-shot-card{position:relative;overflow:hidden;border-radius:42px;padding:56px;height:100%;border:1px solid rgba(40,37,29,.12);box-shadow:0 30px 90px rgba(0,0,0,.08);display:flex;flex-direction:column}
     .share-shot-card::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at top left,rgba(199,165,106,.18),transparent 42%),radial-gradient(circle at bottom right,rgba(141,159,181,.12),transparent 44%),repeating-linear-gradient(135deg,transparent 0 22px,rgba(31,28,22,.025) 22px 23px);pointer-events:none}
     .share-shot-card.theme-m{background:linear-gradient(160deg,#fdf9f2,#f5ede0)}
@@ -314,6 +297,7 @@
     </div>
   </section>
 
+  <!-- 截圖卡片：translateX(9999px) 推到視窗外，使用者永遠看不到 -->
   <div class="share-shot" id="shareShot" aria-hidden="true">
     <div class="share-shot-card theme-m" id="shareCard">
       <div class="share-brand">U&ME MBTI RESULT</div>
@@ -421,7 +405,7 @@ const state={
   index:0,
   answers:Array(questions.length).fill(null),
   score:{Mood:0,Energy:0,Intimacy:0,Direct:0,Romance:0,Touch:0,Slow:0,Lust:0},
-  sliding:false   // ← 防止滑動期間重複觸發
+  sliding:false
 };
 
 const setScreen=s=>{
@@ -439,19 +423,16 @@ const updateProgress=()=>{
   }
 };
 
-// ── 卡片換題滑動（加鎖，防止動畫未完就再觸發）────────────────────────
 function slideCard(direction,cb){
   if(state.sliding)return;
   state.sliding=true;
   const exitClass=direction==='forward'?'exit-left':'exit-right';
   const enterClass=direction==='forward'?'enter-right':'enter-left';
-
   quizCard.classList.add(exitClass);
   quizCard.addEventListener('animationend',function onExit(){
     quizCard.removeEventListener('animationend',onExit);
     quizCard.classList.remove(exitClass);
-    cb(); // 更新內容
-    // 強制 reflow 確保動畫重置
+    cb();
     void quizCard.offsetWidth;
     quizCard.classList.add(enterClass);
     quizCard.addEventListener('animationend',function onEnter(){
@@ -462,7 +443,7 @@ function slideCard(direction,cb){
   });
 }
 
-const renderQuestion=(skipAnim)=>{
+const renderQuestion=()=>{
   const i=state.index;
   quizTitle.textContent=`第 ${i+1} 題`;
   quizProgress.textContent=`${i+1} / ${questions.length}`;
@@ -475,9 +456,9 @@ const renderQuestion=(skipAnim)=>{
     b.className='option';b.type='button';b.textContent=txt;
     if(state.answers[i]===key)b.classList.add('selected');
     b.addEventListener('click',()=>{
-      if(state.sliding)return; // 滑動中忽略點擊
+      if(state.sliding)return;
       state.answers[i]=key;
-      renderQuestion(true); // 更新選中狀態，不重跑滑動
+      renderQuestion();
       if(i<questions.length-1){
         setTimeout(()=>goNext('forward'),300);
       }else{
@@ -496,22 +477,18 @@ function goNext(dir='forward'){
   if(state.answers[state.index]==null||state.sliding)return;
   if(state.index<questions.length-1){
     slideCard(dir,()=>{state.index+=1;renderQuestion();});
-  }else{
-    showResult();
-  }
+  }else{showResult();}
 }
 function goPrev(){
   if(state.index>0&&!state.sliding){
     slideCard('back',()=>{state.index-=1;renderQuestion();});
   }
 }
-
 const startQuiz=()=>{
   state.index=0;state.sliding=false;
   state.answers=Array(questions.length).fill(null);
   progressFill.style.width='0%';
-  setScreen(quizScreen);
-  renderQuestion();
+  setScreen(quizScreen);renderQuestion();
 };
 
 const computeResult=()=>{
@@ -528,7 +505,7 @@ const computeResult=()=>{
   ].join('');
 };
 
-// ── Slot Machine ──────────────────────────────────────────────────────
+// Slot Machine
 const CHARS='ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 const slotStyle=document.createElement('style');
 slotStyle.textContent=`@keyframes slotLock{0%{transform:translateY(0)}30%{transform:translateY(-4px)}65%{transform:translateY(2px)}100%{transform:translateY(0)}}`;
@@ -612,30 +589,46 @@ const restartToStart=()=>{
   setScreen(introScreen);
 };
 
+// ── 截圖函式：不需要任何顯示/隱藏切換 ──────────────────────────────
 async function makeShareBlob(){
-  shareShot.style.visibility='visible';
-  await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)));
-  const canvas=await html2canvas(shareShot,{backgroundColor:null,scale:2,useCORS:true});
-  shareShot.style.visibility='hidden';
+  const canvas=await html2canvas(shareShot,{
+    backgroundColor:null,
+    scale:2,
+    useCORS:true,
+    allowTaint:true,
+    x:0,
+    y:0,
+    scrollX:-9999,   // 告訴 html2canvas 元素實際位置偏移
+    scrollY:0,
+    width:1080,
+    height:shareShot.offsetHeight
+  });
   return new Promise(resolve=>canvas.toBlob(blob=>resolve(blob),'image/png',1));
 }
+
 async function downloadBlob(blob,filename){
   const url=URL.createObjectURL(blob);
   const a=document.createElement('a');a.href=url;a.download=filename;
   document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);
 }
+
 async function handleShare(){
   const code=shareCode.textContent;
   shareBtn.classList.add('loading');shareBtn.querySelector('svg').style.display='none';
   try{
     const blob=await makeShareBlob();
     const file=new File([blob],`ume-mbti-${code}.png`,{type:'image/png',lastModified:Date.now()});
-    const data={files:[file],title:'U&ME MBTI 結果',text:`我在 U&ME MBTI 測到 ${code}｜${shareName.textContent}｜${shareTag.textContent}\n\n測測你是哪種類型 👇`};
+    const data={
+      files:[file],
+      title:'U&ME MBTI 結果',
+      text:`我在 U&ME MBTI 測到 ${code}｜${shareName.textContent}｜${shareTag.textContent}\n\n測測你是哪種類型 👇`
+    };
     if(navigator.canShare&&navigator.canShare(data))await navigator.share(data);
     else{await downloadBlob(blob,`ume-mbti-${code}.png`);alert('已下載圖片，請手動上傳到你想分享的平台 🙌');}
   }catch(e){if(e.name!=='AbortError')console.warn(e);}
   finally{shareBtn.classList.remove('loading');shareBtn.querySelector('svg').style.display='';}
 }
+
 async function handleSave(){
   const code=shareCode.textContent;
   const orig=saveBtn.innerHTML;
