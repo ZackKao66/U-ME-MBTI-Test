@@ -114,10 +114,6 @@
     .next:active,.next:disabled{transform:none}
     .next:disabled,.ghost:disabled{opacity:.35;cursor:not-allowed}
     .footer-note{font-size:clamp(10px,1.6vw,11px);color:var(--muted);text-align:center;opacity:.7}
-    .result-character{width:100%;max-width:260px;margin:0 auto 8px;position:relative;z-index:1;opacity:0;transform:translateY(16px) scale(.96);transition:opacity .8s cubic-bezier(.16,1,.3,1),transform .8s cubic-bezier(.16,1,.3,1);}
-    .result-character.show{opacity:1;transform:none}
-    .result-character img{width:100%;height:auto;display:block;filter:drop-shadow(0 8px 32px rgba(12,23,48,.55));}
-    @media(min-width:900px){.result-character{max-width:200px;margin:0 0 8px;}}
     .result-code{font-family:var(--font-display);font-size:clamp(32px,9vw,72px);line-height:1;margin-bottom:2px;letter-spacing:.1em;display:flex;gap:.05em;color:#d7dbe2;}
     .result-code.revealed{background:linear-gradient(135deg,#d7dbe2 0%,#98aab8 45%,#566573 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
     .result-code.revealed span{display:inline;}
@@ -274,10 +270,6 @@
       <div class="card result-card" id="resultCard">
         <div class="result-hero">
           <div style="font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);opacity:.8;position:relative;z-index:1">你的組合</div>
-          <!-- 角色圖 -->
-          <div class="result-character" id="resultCharacter">
-            <img id="resultCharacterImg" src="" alt="角色圖">
-          </div>
           <div class="result-code" id="resultCode"></div>
           <div class="result-name" id="resultName"></div>
           <div class="result-tag" id="resultTag"></div>
@@ -369,9 +361,7 @@ const root=document.documentElement,
   resumeBanner=document.getElementById('resumeBanner'),
   resumeInfo=document.getElementById('resumeInfo'),
   resumeContinue=document.getElementById('resumeContinue'),
-  resumeDiscard=document.getElementById('resumeDiscard'),
-  resultCharacterEl=document.getElementById('resultCharacter'),
-  resultCharacterImg=document.getElementById('resultCharacterImg');
+  resumeDiscard=document.getElementById('resumeDiscard');
 
 const shareData={code:'',name:'',tag:'',desc:'',pills:[],bars:[],isE:false,match:''};
 
@@ -414,8 +404,7 @@ const results={
   MDRC:{name:'溫柔引導者',tag:'溫柔直入型',desc:'妳表面柔和，但其實知道自己要什麼。妳不喜歡繞太久，偏好在有情感鋪陳後直接進入重點。',pills:['溫柔','直接','有感'],match:'EITL'},
   MDRL:{name:'曖昧引導者',tag:'曖昧直覺型',desc:'妳喜歡明確，但不喜歡太冷。妳要的是有溫度的直接，帶著曖昧與情緒靠近，一旦確認就快速推進。',pills:['曖昧','溫度','推進'],match:'EITC'},
   MDTC:{name:'體感引導者',tag:'體感主導型',desc:'妳偏好清楚、直接，一切都要讓身體先有反應。妳會慢慢確認感受，但方向從來不模糊。',pills:['體感','反應','主導'],match:'EIRL'},
-  MDTL:{name:'直感引導者',tag:'直球慾感型',desc:'妳不想猜，也不喜歡太多
-    MDTL:{name:'直感引導者',tag:'直球慾感型',desc:'妳不想猜，也不喜歡太多模糊，妳想要的是直接而有感。偏好明確、反應直接，點燃後完全不需要等。',pills:['直球','慾感','明確'],match:'EIRC'},
+  MDTL:{name:'直感引導者',tag:'直球慾感型',desc:'妳不想猜，也不喜歡太多模糊，妳想要的是直接而有感。偏好明確、反應直接，點燃後完全不需要等。',pills:['直球','慾感','明確'],match:'EIRC'},
   EIRC:{name:'霧感感官者',tag:'情緒探索型',desc:'妳偏刺激，但不是粗暴，而是想透過情緒與新鮮感打開感受。妳喜歡探索，會在曖昧中慢慢找到自己的節奏。',pills:['霧感','探索','情緒'],match:'MDTL'},
   EIRL:{name:'熱感感官者',tag:'高溫曖昧型',desc:'妳對情感與慾望都有反應，而且不太怕熱度。妳喜歡強烈一點的氛圍，點燃後就會快速進入更深的感受。',pills:['高溫','曖昧','慾感'],match:'MDTC'},
   EITC:{name:'細節感官者',tag:'刺激試探型',desc:'妳喜歡先試試看，感受有沒有對味。妳的反應很快，喜歡新鮮、喜歡摸索，也願意慢慢多嘗試不同方式。',pills:['試探','新鮮','反應快'],match:'MDRL'},
@@ -475,36 +464,14 @@ function preloadLogo(){
 }
 preloadLogo();
 
-/* ── ✅ 角色圖檔名對照表（方法 A）── */
-const characterFiles={
-  MIRC:'MIRC_柔光守護者_綿羊',
-  MIRL:'MIRL_微熱守護者_貓',
-  MITC:'MITC_觸感守護者_樹懶',
-  MITL:'MITL_感受守護者_樹懶',
-  MDRC:'MDRC_溫柔引導者_鹿',
-  MDRL:'MDRL_曖昧引導者_狐狸',
-  MDTC:'MDTC_體感引導者_獵豹',
-  MDTL:'MDTL_直感引導者_狼',
-  EIRC:'EIRC_霧感感官者_兔子',
-  EIRL:'EIRL_熱感感官者_天鵝',
-  EITC:'EITC_細節感官者_貓頭鷹',
-  EITL:'EITL_強感感官者_黑豹',
-  EDRC:'EDRC_悄然探索者_浣熊',
-  EDRL:'EDRL_慾感探索者_獅子',
-  EDTC:'EDTC_直覺探索者_老鷹',
-  EDTL:'EDTL_烈感探索者_老虎',
-};
-
 /* ── 角色圖預載 ── */
 let characterImg=null;
 function preloadCharacter(code){
   return new Promise(resolve=>{
-    const filename=characterFiles[code];
-    if(!filename){characterImg=null;return resolve(null);}
     const img=new Image();
     img.onload=()=>{characterImg=img;resolve(img);};
     img.onerror=()=>{characterImg=null;resolve(null);};
-    img.src=`assets/characters/${filename}.png`;
+    img.src=`assets/characters/${code}.png`;
   });
 }
 
@@ -619,7 +586,7 @@ const restartToStart=()=>{
   setScreen(introScreen);resumeBanner.classList.remove('show');
 };
 
-/* ── 計分 ── */
+/* ── 計分（全量防重複）── */
 const computeResult=()=>{
   const fresh={Mood:0,Energy:0,Intimacy:0,Direct:0,Romance:0,Touch:0,Curious:0,Lust:0};
   state.answers.forEach((ans,i)=>{if(!ans)return;const[k,v]=scoreMap[i][ans];fresh[k]+=v;});
@@ -684,7 +651,7 @@ function runSlotMachine(code){
   },totalDelay);
 }
 
-/* ── 顯示結果（含角色圖）── */
+/* ── 顯示結果 ── */
 const showResult=()=>{
   const code=computeResult(),r=results[code]||results.MIRC,isE=code.startsWith('E');
   root.setAttribute('data-result-theme',isE?'E':'M');
@@ -707,20 +674,7 @@ const showResult=()=>{
   shareData.desc=r.desc;shareData.pills=[...r.pills];shareData.isE=isE;shareData.match=mCode;
   buildScoreBars(code,state.score);
   clearProgress();
-
-  /* ── 角色圖顯示 ── */
-  resultCharacterEl.classList.remove('show');
-  resultCharacterImg.src='';
-  resultCharacterEl.style.display='';
-  preloadCharacter(code).then(img=>{
-    if(img){
-      resultCharacterImg.src=img.src;
-      setTimeout(()=>resultCharacterEl.classList.add('show'),400);
-    } else {
-      resultCharacterEl.style.display='none';
-    }
-  });
-
+  preloadCharacter(code);
   setScreen(resultScreen);
   setTimeout(()=>runSlotMachine(code),500);
 };
@@ -736,7 +690,7 @@ function roundRect(ctx,x,y,w,h,r){
   ctx.closePath();
 }
 
-/* ── makeShareBlob（JPEG 0.92 + DPR=2）── */
+/* ── makeShareBlob（JPEG 0.92 + DPR=2 高畫質）── */
 async function makeShareBlob(){
   await preloadCanvasFonts();
   if(!logoImg)await preloadLogo();
@@ -789,6 +743,15 @@ async function makeShareBlob(){
     const dh=CHAR_H,dw=dh*aspect;
     const dx=CHAR_X+(CHAR_W-dw)/2,dy=CHAR_Y;
     ctx.save();ctx.drawImage(characterImg,dx,dy,dw,dh);ctx.restore();
+  } else {
+    ctx.save();
+    ctx.strokeStyle='rgba(152,170,184,.1)';ctx.lineWidth=1;ctx.setLineDash([8,8]);
+    roundRect(ctx,CHAR_X+20,CHAR_Y+20,CHAR_W-40,CHAR_H-40,24);ctx.stroke();
+    ctx.fillStyle='rgba(152,170,184,.03)';ctx.fill();
+    ctx.font=`400 20px ${FB}`;ctx.fillStyle='rgba(152,170,184,.15)';
+    ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.fillText('角色圖預留區',CHAR_X+CHAR_W/2,CHAR_Y+CHAR_H/2);
+    ctx.setLineDash([]);ctx.restore();
   }
 
   /* 6. 頂部細線 */
@@ -820,7 +783,8 @@ async function makeShareBlob(){
   ctx.shadowColor=isE?'rgba(140,165,185,.35)':'rgba(50,90,150,.35)';ctx.shadowBlur=55;
   const codeGrad=ctx.createLinearGradient(CX,0,CX+580,0);
   codeGrad.addColorStop(0,'#ffffff');codeGrad.addColorStop(.25,'#e8edf2');
-  codeGrad.addColorStop(.6,'#98aab8');codeGrad.addColorStop(1,isE?'#7a9ab0':'#4a6580');
+  codeGrad.addColor
+    codeGrad.addColorStop(.6,'#98aab8');codeGrad.addColorStop(1,isE?'#7a9ab0':'#4a6580');
   ctx.font=`400 178px ${FD}`;ctx.fillStyle=codeGrad;
   ctx.textAlign='left';ctx.textBaseline='alphabetic';
   ctx.fillText(code,CX-6,CT+192);
@@ -830,6 +794,7 @@ async function makeShareBlob(){
   const NAME_Y=CT+236;
   ctx.save();ctx.font=`400 52px ${FD}`;ctx.fillStyle='#d7dbe2';
   ctx.textAlign='left';ctx.textBaseline='alphabetic';ctx.fillText(name,CX,NAME_Y);ctx.restore();
+
   ctx.save();ctx.font=`400 17px ${FB}`;ctx.fillStyle='rgba(152,170,184,.55)';
   ctx.textAlign='left';ctx.textBaseline='alphabetic';ctx.fillText(tag.toUpperCase(),CX,NAME_Y+38);ctx.restore();
 
@@ -911,6 +876,7 @@ async function makeShareBlob(){
   ctx.textAlign='right';ctx.fillStyle='rgba(86,101,115,.4)';ctx.fillText('測測你是哪種類型',W-68,FOOTER_Y+14);
   ctx.restore();
 
+  /* ✅ JPEG 0.92 輸出，DPR=2 解析度完全保留，檔案從 10MB 降至約 2MB */
   return new Promise(r=>cv.toBlob(b=>r(b),'image/jpeg',0.92));
 }
 
