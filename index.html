@@ -464,14 +464,40 @@ function preloadLogo(){
 }
 preloadLogo();
 
+/* ── 角色圖對照表 ── */
+const characterImages = {
+  "EDRC": "EDRC_悄然探索者_浣熊.png",
+  "EDRL": "EDRL_慾感探索者_獅子.png",
+  "EDTC": "EDTC_直覺探索者_老鷹.png",
+  "EDTL": "EDTL_烈感探索者_老虎.png",
+  "EIRC": "EIRC_霧感感官者_兔子.png",
+  "EIRL": "EIRL_熱感感官者_天鵝.png",
+  "EITC": "EITC_細節感官者_貓頭鷹.png",
+  "EITL": "EITL_強感感官者_黑豹.png",
+  "MDRC": "MDRC_溫柔引導者_鹿.png",
+  "MDRL": "MDRL_曖昧引導者_狐狸.png",
+  "MDTC": "MDTC_體感引導者_獵豹.png",
+  "MDTL": "MDTL_直感引導者_狼.png",
+  "MIRC": "MIRC_柔光守護者_綿羊.png",
+  "MIRL": "MIRL_微熱守護者_貓咪.png",
+  "MITC": "MITC_觸感守護者_水獺.png",
+  "MITL": "MITL_感受守護者_樹懶.png"
+};
+
 /* ── 角色圖預載 ── */
-let characterImg=null;
-function preloadCharacter(code){
-  return new Promise(resolve=>{
-    const img=new Image();
-    img.onload=()=>{characterImg=img;resolve(img);};
-    img.onerror=()=>{characterImg=null;resolve(null);};
-    img.src=`assets/characters/${code}.png`;
+let characterImg = null;
+function preloadCharacter(code) {
+  return new Promise(resolve => {
+    const fileName = characterImages[code];
+    if (!fileName) {
+      characterImg = null;
+      resolve(null);
+      return;
+    }
+    const img = new Image();
+    img.onload = () => { characterImg = img; resolve(img); };
+    img.onerror = () => { characterImg = null; resolve(null); };
+    img.src = `assets/characters/${fileName}`;
   });
 }
 
