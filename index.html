@@ -1,4 +1,4 @@
-<!doctype html>
+<<!doctype html>
 <html lang="zh-Hant">
 <head>
   <meta charset="utf-8" />
@@ -312,60 +312,49 @@
 <p class="copyright">© U&amp;ME ® 商標已於中華民國註冊，保留一切權利</p>
 
 <script>
-/* ── 星星 ── */
-(()=>{
-  const el=document.getElementById('starsEl');
-  for(let i=0;i<65;i++){
-    const s=document.createElement('div');s.className='star';
-    const sz=.8+Math.random()*2.4,peak=.1+Math.random()*.3;
-    s.style.cssText=`width:${sz}px;height:${sz}px;left:${Math.random()*100}%;top:${Math.random()*100}%;--dur:${2+Math.random()*5}s;--delay:${Math.random()*6}s;--peak:${peak}`;
-    el.appendChild(s);
-  }
-})();
+(()=>{const el=document.getElementById('starsEl');for(let i=0;i<65;i++){const s=document.createElement('div');s.className='star';const sz=.8+Math.random()*2.4,peak=.1+Math.random()*.3;s.style.cssText=`width:${sz}px;height:${sz}px;left:${Math.random()*100}%;top:${Math.random()*100}%;--dur:${2+Math.random()*5}s;--delay:${Math.random()*6}s;--peak:${peak}`;el.appendChild(s)}})();
 document.getElementById('curtain').addEventListener('animationend',function(){this.remove()},{once:true});
 
-/* ── DOM refs ── */
 const root=document.documentElement,
-  introScreen=document.getElementById('introScreen'),
-  quizScreen=document.getElementById('quizScreen'),
-  resultScreen=document.getElementById('resultScreen'),
-  startBtn=document.getElementById('startBtn'),
-  backBtn=document.getElementById('backBtn'),
-  nextBtn=document.getElementById('nextBtn'),
-  restartBtn=document.getElementById('restartBtn'),
-  saveBtn=document.getElementById('saveBtn'),
-  shareBtn=document.getElementById('shareBtn'),
-  questionText=document.getElementById('questionText'),
-  optionsEl=document.getElementById('options'),
-  quizTitle=document.getElementById('quizTitle'),
-  quizProgress=document.getElementById('quizProgress'),
-  progressFill=document.getElementById('progressFill'),
-  progressLabel=document.getElementById('progressLabel'),
-  quizCard=document.getElementById('quizCard'),
-  revealHint=document.getElementById('revealHint'),
-  resultCodeEl=document.getElementById('resultCode'),
-  resultName=document.getElementById('resultName'),
-  resultTag=document.getElementById('resultTag'),
-  resultDesc=document.getElementById('resultDesc'),
-  resultPills=document.getElementById('resultPills'),
-  scoreBars=document.getElementById('scoreBars'),
-  resultCategory=document.getElementById('resultCategory'),
-  resultMood=document.getElementById('resultMood'),
-  resultPace=document.getElementById('resultPace'),
-  resultDrive=document.getElementById('resultDrive'),
-  matchBadge=document.getElementById('matchBadge'),
-  matchCode=document.getElementById('matchCode'),
-  revealBurst=document.getElementById('revealBurst'),
-  particlesEl=document.getElementById('particlesEl'),
-  stage=document.getElementById('stage'),
-  resumeBanner=document.getElementById('resumeBanner'),
-  resumeInfo=document.getElementById('resumeInfo'),
-  resumeContinue=document.getElementById('resumeContinue'),
-  resumeDiscard=document.getElementById('resumeDiscard');
+introScreen=document.getElementById('introScreen'),
+quizScreen=document.getElementById('quizScreen'),
+resultScreen=document.getElementById('resultScreen'),
+startBtn=document.getElementById('startBtn'),
+backBtn=document.getElementById('backBtn'),
+nextBtn=document.getElementById('nextBtn'),
+restartBtn=document.getElementById('restartBtn'),
+saveBtn=document.getElementById('saveBtn'),
+shareBtn=document.getElementById('shareBtn'),
+questionText=document.getElementById('questionText'),
+optionsEl=document.getElementById('options'),
+quizTitle=document.getElementById('quizTitle'),
+quizProgress=document.getElementById('quizProgress'),
+progressFill=document.getElementById('progressFill'),
+progressLabel=document.getElementById('progressLabel'),
+quizCard=document.getElementById('quizCard'),
+revealHint=document.getElementById('revealHint'),
+resultCodeEl=document.getElementById('resultCode'),
+resultName=document.getElementById('resultName'),
+resultTag=document.getElementById('resultTag'),
+resultDesc=document.getElementById('resultDesc'),
+resultPills=document.getElementById('resultPills'),
+scoreBars=document.getElementById('scoreBars'),
+resultCategory=document.getElementById('resultCategory'),
+resultMood=document.getElementById('resultMood'),
+resultPace=document.getElementById('resultPace'),
+resultDrive=document.getElementById('resultDrive'),
+matchBadge=document.getElementById('matchBadge'),
+matchCode=document.getElementById('matchCode'),
+revealBurst=document.getElementById('revealBurst'),
+particlesEl=document.getElementById('particlesEl'),
+stage=document.getElementById('stage'),
+resumeBanner=document.getElementById('resumeBanner'),
+resumeInfo=document.getElementById('resumeInfo'),
+resumeContinue=document.getElementById('resumeContinue'),
+resumeDiscard=document.getElementById('resumeDiscard');
 
 const shareData={code:'',name:'',tag:'',desc:'',pills:[],bars:[],isE:false,match:''};
 
-/* ── 題目資料 ── */
 const questions=[
   {q:'第一次靠近時，你更在意什麼？',a:['A. 氛圍有沒有對，感覺要先到位。','B. 反應夠不夠快，張力要立刻出現。','C. 感覺有沒有慢慢升起來。','D. 能不能直接進入狀態。']},
   {q:'你比較容易被哪種方式打動？',a:['A. 溫柔、慢慢、一步一步。','B. 直接、明確、很到位。','C. 有情感、帶曖昧、會想多看一眼。','D. 觸感明顯、身體立刻有感。']},
@@ -422,19 +411,15 @@ const DIMS=[
   {label:'慾望',a:'Curious',b:'Lust',aChar:'C'},
 ];
 
-/* ── Haptic ── */
 function haptic(ms=8){try{if(navigator.vibrate)navigator.vibrate(ms);}catch(e){}}
 
-/* ── LocalStorage ── */
 const LS_KEY='ume_mbti_progress';
 function saveProgress(){try{localStorage.setItem(LS_KEY,JSON.stringify({index:state.index,answers:state.answers,ts:Date.now()}));}catch(e){}}
 function loadProgress(){try{const raw=localStorage.getItem(LS_KEY);if(!raw)return null;const d=JSON.parse(raw);if(Date.now()-d.ts>86400000){localStorage.removeItem(LS_KEY);return null;}return d;}catch(e){return null;}}
 function clearProgress(){try{localStorage.removeItem(LS_KEY);}catch(e){}}
 
-/* ── 狀態 ── */
 const state={index:0,answers:Array(questions.length).fill(null),score:{Mood:0,Energy:0,Intimacy:0,Direct:0,Romance:0,Touch:0,Curious:0,Lust:0},sliding:false};
 
-/* ── Canvas 字型預載 ── */
 let canvasFontsReady=false;
 const CANVAS_FONT_BODY='Noto Sans TC';
 const CANVAS_FONT_DISPLAY='Noto Serif TC';
@@ -452,7 +437,6 @@ async function preloadCanvasFonts(){
 }
 preloadCanvasFonts();
 
-/* ── Logo 預載 ── */
 let logoImg=null;
 function preloadLogo(){
   return new Promise(resolve=>{
@@ -464,7 +448,6 @@ function preloadLogo(){
 }
 preloadLogo();
 
-/* ── 角色圖對照表 ── */
 const characterImages = {
   "EDRC": "EDRC_悄然探索者_浣熊.png",
   "EDRL": "EDRL_慾感探索者_獅子.png",
@@ -484,31 +467,24 @@ const characterImages = {
   "MITL": "MITL_感受守護者_樹懶.png"
 };
 
-/* ── 角色圖預載 ── */
 let characterImg = null;
-function preloadCharacter(code) {
-  return new Promise(resolve => {
+function preloadCharacter(code){
+  return new Promise(resolve=>{
     const fileName = characterImages[code];
-    if (!fileName) {
-      characterImg = null;
-      resolve(null);
-      return;
-    }
-    const img = new Image();
-    img.onload = () => { characterImg = img; resolve(img); };
-    img.onerror = () => { characterImg = null; resolve(null); };
-    img.src = `assets/characters/${fileName}`;
+    if(!fileName){characterImg=null;resolve(null);return;}
+    const img=new Image();
+    img.onload=()=>{characterImg=img;resolve(img);};
+    img.onerror=()=>{characterImg=null;resolve(null);};
+    img.src=`assets/characters/${fileName}`;
   });
 }
 
-/* ── 畫面切換 ── */
 const setScreen=s=>{
   [introScreen,quizScreen,resultScreen].forEach(el=>{el.hidden=el!==s;el.classList.remove('active');});
   s.hidden=false;s.scrollTop=0;
   requestAnimationFrame(()=>s.classList.add('active'));
 };
 
-/* ── 進度條 ── */
 function progressLabelText(i,total){
   if(i===0)return'開始囉 ✦';
   if(i===total-1)return'最後一題 ✦';
@@ -525,7 +501,6 @@ const updateProgress=()=>{
   else if(!txt){cur.textContent='';}
 };
 
-/* ── 卡片動畫 ── */
 function slideCard(dir,cb){
   if(state.sliding)return;
   state.sliding=true;
@@ -544,7 +519,6 @@ function slideCard(dir,cb){
   });
 }
 
-/* ── 題目渲染 ── */
 function animateQuestion(text){
   questionText.innerHTML='';
   [...text].forEach((ch,i)=>{
@@ -553,6 +527,7 @@ function animateQuestion(text){
     questionText.appendChild(s);
   });
 }
+
 const renderQuestion=()=>{
   const i=state.index;
   quizTitle.textContent=`第 ${i+1} 題`;
@@ -574,53 +549,63 @@ const renderQuestion=()=>{
       haptic(8);
       b.classList.add('tap-bounce');
       b.addEventListener('animationend',()=>b.classList.remove('tap-bounce'),{once:true});
-      optionsEl.style.pointerEvents='none';
-      setTimeout(()=>optionsEl.style.pointerEvents='',320);
+      optionsEl.querySelectorAll('.option').forEach(el=>el.classList.remove('selected'));
+      b.classList.add('selected');
       state.answers[i]=key;
       saveProgress();
       renderQuestion();
       if(i<questions.length-1)setTimeout(()=>goNext('forward'),300);
-      else{nextBtn.disabled=false;nextBtn.textContent='完成';revealHint.classList.add('show');}
+      else nextBtn.disabled=false,nextBtn.textContent='完成',revealHint.classList.add('show');
     });
     optionsEl.appendChild(b);
   });
   backBtn.disabled=i===0;
   nextBtn.textContent=isLast?'完成':'下一題';
-  nextBtn.disabled=state.answers[i]==null;
+  nextBtn.disabled=state.answers[i]===null;
 };
 
-/* ── 前進 / 後退 ── */
 function goNext(dir='forward'){
-  if(state.answers[state.index]==null||state.sliding)return;
-  if(state.index<questions.length-1)slideCard(dir,()=>{state.index+=1;renderQuestion();});
+  if(state.answers[state.index]===null||state.sliding)return;
+  if(state.index<questions.length-1)slideCard(dir,()=>{state.index++;renderQuestion();});
   else showResult();
 }
 function goPrev(){
-  if(state.index>0&&!state.sliding)slideCard('back',()=>{state.index-=1;renderQuestion();});
+  if(state.index===0||state.sliding)return;
+  slideCard('back',()=>{state.index--;renderQuestion();});
+}
+function startQuiz(fromSaved=false){
+  if(!fromSaved)state.index=0,state.answers=Array(questions.length).fill(null);
+  state.sliding=false;
+  progressFill.style.width='0%';
+  revealHint.classList.remove('show');
+  setScreen(quizScreen);
+  renderQuestion();
 }
 
-/* ── 開始 / 重新 ── */
-const startQuiz=(fromSaved=false)=>{
-  if(!fromSaved){state.index=0;state.answers=Array(questions.length).fill(null);}
-  state.sliding=false;progressFill.style.width='0%';revealHint.classList.remove('show');
-  setScreen(quizScreen);renderQuestion();
-};
-const restartToStart=()=>{
+function restartToStart(){
   root.removeAttribute('data-result-theme');
-  state.index=0;state.sliding=false;state.answers=Array(questions.length).fill(null);
-  clearProgress();progressFill.style.width='0%';nextBtn.disabled=true;revealHint.classList.remove('show');
-  setScreen(introScreen);resumeBanner.classList.remove('show');
-};
+  state.index=0;
+  state.sliding=false;
+  state.answers=Array(questions.length).fill(null);
+  clearProgress();
+  progressFill.style.width='0%';
+  nextBtn.disabled=true;
+  revealHint.classList.remove('show');
+  setScreen(introScreen);
+  resumeBanner.classList.remove('show');
+}
 
-/* ── 計分（全量防重複）── */
-const computeResult=()=>{
+function computeResult(){
   const fresh={Mood:0,Energy:0,Intimacy:0,Direct:0,Romance:0,Touch:0,Curious:0,Lust:0};
-  state.answers.forEach((ans,i)=>{if(!ans)return;const[k,v]=scoreMap[i][ans];fresh[k]+=v;});
+  state.answers.forEach((ans,i)=>{
+    if(!ans)return;
+    const [k,v]=scoreMap[i][ans];
+    fresh[k]+=v;
+  });
   state.score=fresh;
-  return[fresh.Mood>=fresh.Energy?'M':'E',fresh.Intimacy>=fresh.Direct?'I':'D',fresh.Romance>=fresh.Touch?'R':'T',fresh.Curious>=fresh.Lust?'C':'L'].join('');
-};
+  return [fresh.Mood>fresh.Energy?'M':'E',fresh.Intimacy>fresh.Direct?'I':'D',fresh.Romance>fresh.Touch?'R':'T',fresh.Curious>fresh.Lust?'C':'L'].join('');
+}
 
-/* ── 粒子 ── */
 function fireParticles(){
   particlesEl.innerHTML='';
   const colors=['#98aab8','#d7dbe2','#566573','#21395a','#b8c9d8','#e2e6ec'];
@@ -628,7 +613,7 @@ function fireParticles(){
   for(let i=0;i<28;i++){
     const p=document.createElement('div');p.className='particle';
     const sz=2+Math.random()*8,angle=Math.random()*360,dist=80+Math.random()*220;
-    const dx=Math.cos(angle*Math.PI/180)*dist+'px',dy=(Math.sin(angle*Math.PI/180)*dist-50)+'px';
+    const dx=`${Math.cos(angle*Math.PI/180)*dist}px`,dy=`${Math.sin(angle*Math.PI/180)*dist-50}px`;
     const color=colors[Math.floor(Math.random()*colors.length)];
     const dur=600+Math.random()*600,delay=Math.random()*300;
     p.style.cssText=`width:${sz}px;height:${sz}px;left:${cx}px;top:${cy}px;background:${color};--dx:${dx};--dy:${dy};animation:particleFly ${dur}ms cubic-bezier(.2,.8,.4,1) ${delay}ms forwards;box-shadow:0 0 ${sz*1.5}px ${color}44`;
@@ -636,248 +621,275 @@ function fireParticles(){
   }
 }
 
-/* ── 分數條 ── */
 function buildScoreBars(code,score){
-  scoreBars.innerHTML='';shareData.bars=[];
-  DIMS.forEach((d,di)=>{
-    const total=(score[d.a]||0)+(score[d.b]||0)||1;
-    const chosen=code[di]===d.aChar?d.a:d.b;
+  scoreBars.innerHTML='';
+  shareData.bars=[];
+  DIMS.forEach(d=>{
+    const total=score[d.a||0]+score[d.b||0];
+    const chosen=code.includes(d.aChar)?d.a:d.b;
     const pct=Math.round((score[chosen]||0)/total*100);
-    const row=document.createElement('div');row.className='score-bar-row';
+    const row=document.createElement('div');
+    row.className='score-bar-row';
     row.innerHTML=`<span>${d.label}</span><div class="score-bar-track"><div class="score-bar-fill" data-pct="${pct}"></div></div><span class="score-pct">${pct}%</span>`;
-    scoreBars.appendChild(row);shareData.bars.push({label:d.label,pct});
+    scoreBars.appendChild(row);
+    shareData.bars.push({label:d.label,pct});
   });
   setTimeout(()=>scoreBars.querySelectorAll('.score-bar-fill').forEach(el=>el.style.width=el.dataset.pct+'%'),700);
 }
 
-/* ── Slot machine ── */
 const CHARS='ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 function runSlotMachine(code){
-  resultCodeEl.innerHTML='';resultCodeEl.classList.remove('revealed');
+  resultCodeEl.innerHTML='';
+  resultCodeEl.classList.remove('revealed');
   const chars=[...code];
   const slots=chars.map(()=>{
     const wrap=document.createElement('span');wrap.className='slot-char';
     const inner=document.createElement('div');inner.className='slot-inner';
     for(let i=0;i<20;i++){const s=document.createElement('span');s.textContent=CHARS[Math.floor(Math.random()*CHARS.length)];inner.appendChild(s);}
-    const tgt=document.createElement('span');tgt.textContent='?';
+    const tgt=document.createElement('span');tgt.textContent='';
     inner.appendChild(tgt);wrap.appendChild(inner);resultCodeEl.appendChild(wrap);
-    return{wrap,inner,tgt};
+    return {wrap,inner,tgt};
   });
   chars.forEach((ch,ci)=>{
-    const{inner,tgt,wrap}=slots[ci];
+    const {inner,tgt,wrap}=slots[ci];
     const delay=ci*340+180,dur=540+ci*90;
-    setTimeout(()=>{inner.style.transition=`transform ${dur}ms cubic-bezier(.22,.68,0,1.2)`;inner.style.transform=`translateY(-${(inner.children.length-1)*1.1}em)`;},delay);
-    setTimeout(()=>{tgt.textContent=ch;inner.style.transition='none';wrap.style.animation='slotLock .34s cubic-bezier(.36,.07,.19,.97)';setTimeout(()=>wrap.style.animation='',400);},delay+dur+40);
+    setTimeout(()=>{
+      inner.style.transition=`transform ${dur}ms cubic-bezier(.22,.68,0,1.2)`;
+      inner.style.transform=`translateY(-${(inner.children.length-1)*1.1}em)`;
+    },delay);
+    setTimeout(()=>{
+      tgt.textContent=ch;
+      inner.style.transition='none';
+      wrap.style.animation='slotLock .34s cubic-bezier(.36,.07,.19,.97)';
+      setTimeout(()=>wrap.style.animation='',400);
+    },delay+dur+40);
   });
   const totalDelay=chars.length*340+180+720;
   setTimeout(()=>{
-    resultCodeEl.innerHTML='';chars.forEach(ch=>{const s=document.createElement('span');s.textContent=ch;resultCodeEl.appendChild(s);});
-    resultCodeEl.classList.add('revealed');resultName.classList.add('show');
-    setTimeout(()=>resultName.classList.add('revealed'),120);resultTag.classList.add('show');
+    resultCodeEl.innerHTML='';
+    chars.forEach(ch=>{const s=document.createElement('span');s.textContent=ch;resultCodeEl.appendChild(s);});
+    resultCodeEl.classList.add('revealed');
+    resultName.classList.add('show');
+    setTimeout(()=>resultName.classList.add('revealed'),120);
+    resultTag.classList.add('show');
   },totalDelay);
 }
 
-/* ── 顯示結果 ── */
-const showResult=()=>{
+async function showResult(){
   const code=computeResult(),r=results[code]||results.MIRC,isE=code.startsWith('E');
   root.setAttribute('data-result-theme',isE?'E':'M');
   revealBurst.classList.remove('fire');void revealBurst.offsetWidth;revealBurst.classList.add('fire');
   setTimeout(()=>fireParticles(),200);
-  resultName.textContent=r.name;resultName.classList.remove('show','revealed');
-  resultTag.textContent=r.tag;resultTag.classList.remove('show');
+
+  resultName.textContent=r.name;
+  resultName.classList.remove('show','revealed');
+  resultTag.textContent=r.tag;
+  resultTag.classList.remove('show');
   resultDesc.textContent=r.desc;
-  resultCategory.textContent=code.startsWith('M')
-    ?'妳屬於先感受、再進入的類型。妳需要氛圍、信任與細節慢慢堆疊，才會真正打開。'
-    :'妳屬於先被帶動、再投入的類型。妳喜歡明確節奏、立即回饋與更直接的互動。';
+  resultCategory.textContent=code.startsWith('M') ? '妳屬於先感受、再進入的類型。妳需要氛圍、信任與細節慢慢堆疊，才會真正打開。' : '妳屬於先被帶動、再投入的類型。妳喜歡明確節奏、立即回饋與更直接的互動。';
   resultMood.textContent=code[2]==='R'?'情感導向':'感官導向';
   resultPace.textContent=code.startsWith('M')?'節奏：氛圍':'節奏：直接';
   resultDrive.textContent=code[3]==='C'?'步調：探索':'步調：熱烈';
-  const mCode=r.match||'';matchCode.textContent=mCode;
-  if(results[mCode])matchBadge.title=results[mCode].name;
+  matchCode.textContent=r.match||'';
+  if(results[r.match])matchBadge.title=results[r.match].name;
+
   resultPills.innerHTML='';
-  r.pills.forEach(t=>{const s=document.createElement('span');s.className='pill';s.textContent=t;resultPills.appendChild(s);});
-  shareData.code=code;shareData.name=r.name;shareData.tag=r.tag;
-  shareData.desc=r.desc;shareData.pills=[...r.pills];shareData.isE=isE;shareData.match=mCode;
+  r.pills.forEach(t=>{const s=document.createElement('span');s.className='pill';s.textContent=t;resultPills.appendChild(s)});
+
+  shareData.code=code;
+  shareData.name=r.name;
+  shareData.tag=r.tag;
+  shareData.desc=r.desc;
+  shareData.pills=[...r.pills];
+  shareData.isE=isE;
+  shareData.match=r.match||'';
+
   buildScoreBars(code,state.score);
   clearProgress();
-  preloadCharacter(code);
+  await preloadCharacter(code);
   setScreen(resultScreen);
   setTimeout(()=>runSlotMachine(code),500);
-};
+}
 
-/* ── Canvas helpers ── */
 function roundRect(ctx,x,y,w,h,r){
-  if(w<=0)return;
+  if(w<0||h<0)return;
   ctx.beginPath();
-  ctx.moveTo(x+r,y);ctx.lineTo(x+w-r,y);ctx.quadraticCurveTo(x+w,y,x+w,y+r);
-  ctx.lineTo(x+w,y+h-r);ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);
-  ctx.lineTo(x+r,y+h);ctx.quadraticCurveTo(x,y+h,x,y+h-r);
-  ctx.lineTo(x,y+r);ctx.quadraticCurveTo(x,y,x+r,y);
+  ctx.moveTo(x+r,y);
+  ctx.lineTo(x+w-r,y);
+  ctx.quadraticCurveTo(x+w,y,x+w,y+r);
+  ctx.lineTo(x+w,y+h-r);
+  ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);
+  ctx.lineTo(x+r,y+h);
+  ctx.quadraticCurveTo(x,y+h,x,y+h-r);
+  ctx.lineTo(x,y+r);
+  ctx.quadraticCurveTo(x,y,x+r,y);
   ctx.closePath();
 }
 
-/* ── makeShareBlob（JPEG 0.92 + DPR=2 高畫質）── */
 async function makeShareBlob(){
   await preloadCanvasFonts();
   if(!logoImg)await preloadLogo();
-  const{code,name,tag,desc,pills,bars,isE,match}=shareData;
+  const {code,name,tag,desc,pills,bars,isE,match}=shareData;
   const W=1080,H=1920,DPR=2;
-  const cv=document.createElement('canvas');cv.width=W*DPR;cv.height=H*DPR;
-  const ctx=cv.getContext('2d');ctx.scale(DPR,DPR);
-  const FB=canvasFontsReady?`${CANVAS_FONT_BODY},Arial,sans-serif`:'Arial,sans-serif';
-  const FD=canvasFontsReady?`${CANVAS_FONT_DISPLAY},Georgia,serif`:'Georgia,serif';
+  const cv=document.createElement('canvas');
+  cv.width=W*DPR;cv.height=H*DPR;
+  const ctx=cv.getContext('2d');
+  ctx.scale(DPR,DPR);
 
-  /* 1. 背景 */
+  const FB=canvasFontsReady?CANVAS_FONT_BODY:',Arial,sans-serif':'Arial,sans-serif';
+  const FD=canvasFontsReady?CANVAS_FONT_DISPLAY:'Georgia,serif';
+
   const bgGrad=ctx.createLinearGradient(0,0,W,H);
-  bgGrad.addColorStop(0,'#060d1a');bgGrad.addColorStop(.35,'#0a1526');
-  bgGrad.addColorStop(.7,'#0f1c35');bgGrad.addColorStop(1,'#070d1c');
+  bgGrad.addColorStop(0,'#0d1a2b');
+  bgGrad.addColorStop(.35,'#0a1526');
+  bgGrad.addColorStop(.7,'#0f1c35');
+  bgGrad.addColorStop(1,'#070d1c');
   ctx.fillStyle=bgGrad;ctx.fillRect(0,0,W,H);
 
   function radialGlow(x,y,r,c1,c2,blend='screen'){
-    const g=ctx.createRadialGradient(x,y,0,x,y,r);g.addColorStop(0,c1);g.addColorStop(1,c2);
+    const g=ctx.createRadialGradient(x,y,0,x,y,r);
+    g.addColorStop(0,c1);g.addColorStop(1,c2);
     ctx.save();ctx.globalCompositeOperation=blend;ctx.fillStyle=g;ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fill();ctx.restore();
   }
 
-  /* 2. 環境光 */
   radialGlow(W*.5,-80,820,'rgba(25,50,90,.72)','rgba(25,50,90,0)');
   radialGlow(W*.85,H*.22,520,isE?'rgba(90,110,130,.38)':'rgba(30,58,100,.42)','rgba(30,58,100,0)');
   radialGlow(-60,H*.6,600,'rgba(15,35,70,.5)','rgba(15,35,70,0)');
   radialGlow(W*.5,H*.55,700,'rgba(152,170,184,.055)','rgba(152,170,184,0)');
 
-  /* 3. 斜線紋理 */
   ctx.save();ctx.globalAlpha=.022;ctx.strokeStyle='#c8d4e0';ctx.lineWidth=1;
-  for(let x=-H;x<W+H;x+=38){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x+H,H);ctx.stroke();}
+  for(let x=-H;x<W+H;x+=38){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x+H,H);ctx.stroke()}
   ctx.globalAlpha=1;ctx.restore();
 
-  /* 4. 星星 */
-  ctx.save();
   const ss=code.charCodeAt(0)*31+code.charCodeAt(1)*17;
   for(let i=0;i<70;i++){
-    const sx=((ss*i*137.5+i*431)%997)/997*W;
-    const sy=((ss*i*97.3+i*317)%991)/991*H;
-    const sr=.3+((i*73)%10)/10*2.6,sa=.03+((i*53)%10)/10*.32;
+    const sx=((ss+i*137.5)%997)/997*W;
+    const sy=((ss+i*97.3)%317)/317*H;
+    const sr=.3+i%7*.2;
+    const sa=.03+i%5*.01+.02;
     ctx.globalAlpha=sa;ctx.fillStyle='#d7dbe2';ctx.beginPath();ctx.arc(sx,sy,sr,0,Math.PI*2);ctx.fill();
   }
-  ctx.globalAlpha=1;ctx.restore();
+  ctx.globalAlpha=1;
 
-  /* 5. 角色圖區 */
-  const CHAR_X=W*0.38,CHAR_Y=H*0.06,CHAR_W=W*0.62,CHAR_H=H*0.52;
-  radialGlow(CHAR_X+CHAR_W*.5,CHAR_Y+CHAR_H*.45,CHAR_W*.72,
-    isE?'rgba(80,105,130,.28)':'rgba(30,60,100,.32)','rgba(30,60,100,0)');
+  const CHARX=W*.38,CHARY=H*.06,CHARW=W*.62,CHARH=H*.52;
+  radialGlow(CHARX+CHARW*.5,CHARY+CHARH*.45,CHARW*.72,isE?'rgba(80,105,130,.28)':'rgba(30,60,100,.32)','rgba(30,60,100,0)');
   if(characterImg){
     const aspect=characterImg.naturalWidth/characterImg.naturalHeight;
-    const dh=CHAR_H,dw=dh*aspect;
-    const dx=CHAR_X+(CHAR_W-dw)/2,dy=CHAR_Y;
+    const dh=CHARH,dw=dh*aspect;
+    const dx=CHARX+(CHARW-dw)/2,dy=CHARY;
     ctx.save();ctx.drawImage(characterImg,dx,dy,dw,dh);ctx.restore();
-  } else {
+  }else{
     ctx.save();
-    ctx.strokeStyle='rgba(152,170,184,.1)';ctx.lineWidth=1;ctx.setLineDash([8,8]);
-    roundRect(ctx,CHAR_X+20,CHAR_Y+20,CHAR_W-40,CHAR_H-40,24);ctx.stroke();
-    ctx.fillStyle='rgba(152,170,184,.03)';ctx.fill();
-    ctx.font=`400 20px ${FB}`;ctx.fillStyle='rgba(152,170,184,.15)';
+    ctx.strokeStyle='rgba(152,170,184,.1)';
+    ctx.lineWidth=1;
+    ctx.setLineDash([8,8]);
+    roundRect(ctx,CHARX+20,CHARY+20,CHARW-40,CHARH-40,24);
+    ctx.stroke();
+    ctx.fillStyle='rgba(152,170,184,.03)';
+    ctx.fill();
+    ctx.font=`400 20px ${FB}`;
+    ctx.fillStyle='rgba(152,170,184,.15)';
     ctx.textAlign='center';ctx.textBaseline='middle';
-    ctx.fillText('角色圖預留區',CHAR_X+CHAR_W/2,CHAR_Y+CHAR_H/2);
-    ctx.setLineDash([]);ctx.restore();
+    ctx.fillText('No Image',CHARX+CHARW/2,CHARY+CHARH/2);
+    ctx.setLineDash([]);
+    ctx.restore();
   }
 
-  /* 6. 頂部細線 */
   const topLine=ctx.createLinearGradient(0,0,W,0);
-  topLine.addColorStop(0,'rgba(152,170,184,0)');topLine.addColorStop(.2,'rgba(152,170,184,.35)');
-  topLine.addColorStop(.5,'rgba(215,219,226,.55)');topLine.addColorStop(.8,'rgba(152,170,184,.35)');
+  topLine.addColorStop(0,'rgba(152,170,184,0)');
+  topLine.addColorStop(.2,'rgba(152,170,184,.35)');
+  topLine.addColorStop(.5,'rgba(215,219,226,.55)');
+  topLine.addColorStop(.8,'rgba(152,170,184,.35)');
   topLine.addColorStop(1,'rgba(152,170,184,0)');
   ctx.save();ctx.strokeStyle=topLine;ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(0,1);ctx.lineTo(W,1);ctx.stroke();ctx.restore();
 
-  /* 7. Logo */
-  if(logoImg){
-    const lh=52,lw=logoImg.naturalWidth*(lh/logoImg.naturalHeight);
-    ctx.save();ctx.globalAlpha=.9;ctx.filter='brightness(0) invert(1)';
-    ctx.drawImage(logoImg,68,68,lw,lh);ctx.filter='none';ctx.restore();
-  }
-  ctx.save();ctx.font=`700 13px ${FB}`;ctx.fillStyle='rgba(152,170,184,.38)';
-  ctx.textAlign='right';ctx.textBaseline='middle';ctx.fillText('MBTI RESULT',W-68,94);ctx.restore();
-
-  /* 8. 內容區 */
-  const CX=68,CT=H*0.52;
+  const CX=68,CTH=H*.52;
   const sepLine=ctx.createLinearGradient(CX,0,CX+320,0);
-  sepLine.addColorStop(0,'rgba(152,170,184,.55)');sepLine.addColorStop(1,'rgba(152,170,184,0)');
-  ctx.save();ctx.strokeStyle=sepLine;ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(CX,CT-28);ctx.lineTo(CX+300,CT-28);ctx.stroke();ctx.restore();
-  ctx.save();ctx.font=`400 16px ${FB}`;ctx.fillStyle='rgba(152,170,184,.48)';
-  ctx.textAlign='left';ctx.textBaseline='alphabetic';ctx.fillText('YOUR TYPE',CX,CT);ctx.restore();
+  sepLine.addColorStop(0,'rgba(152,170,184,.55)');
+  sepLine.addColorStop(1,'rgba(152,170,184,0)');
+  ctx.save();ctx.strokeStyle=sepLine;ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(CX,CTH-28);ctx.lineTo(CX+300,CTH-28);ctx.stroke();ctx.restore();
 
-  /* 9. MBTI CODE 大字 */
+  ctx.save();ctx.font=`400 16px ${FB}`;ctx.fillStyle='rgba(152,170,184,.48)';
+  ctx.textAlign='left';ctx.textBaseline='alphabetic';ctx.fillText('YOUR TYPE',CX,CTH);ctx.restore();
+
   ctx.save();
-  ctx.shadowColor=isE?'rgba(140,165,185,.35)':'rgba(50,90,150,.35)';ctx.shadowBlur=55;
+  ctx.shadowColor=isE?'rgba(140,165,185,.35)':'rgba(50,90,150,.35)';
+  ctx.shadowBlur=55;
   const codeGrad=ctx.createLinearGradient(CX,0,CX+580,0);
-  codeGrad.addColorStop(0,'#ffffff');codeGrad.addColorStop(.25,'#e8edf2');
-  codeGrad.addColor
-    codeGrad.addColorStop(.6,'#98aab8');codeGrad.addColorStop(1,isE?'#7a9ab0':'#4a6580');
-  ctx.font=`400 178px ${FD}`;ctx.fillStyle=codeGrad;
+  codeGrad.addColorStop(0,'#ffffff');
+  codeGrad.addColorStop(.25,'#e8edf2');
+  codeGrad.addColorStop(.6,'#98aab8');
+  codeGrad.addColorStop(1,isE?'#7a9ab0':'#4a6580');
+  ctx.font=`400 178px ${FD}`;
+  ctx.fillStyle=codeGrad;
   ctx.textAlign='left';ctx.textBaseline='alphabetic';
-  ctx.fillText(code,CX-6,CT+192);
+  ctx.fillText(code,CX-6,CTH+192);
   ctx.shadowBlur=0;ctx.restore();
 
-  /* 10. 名稱 & 標籤 */
-  const NAME_Y=CT+236;
-  ctx.save();ctx.font=`400 52px ${FD}`;ctx.fillStyle='#d7dbe2';
-  ctx.textAlign='left';ctx.textBaseline='alphabetic';ctx.fillText(name,CX,NAME_Y);ctx.restore();
+  const NAMEY=CTH+236;
+  ctx.save();ctx.font=`400 52px ${FD}`;ctx.fillStyle='#d7dbe2';ctx.textAlign='left';ctx.textBaseline='alphabetic';ctx.fillText(name,CX,NAMEY);ctx.restore();
+  ctx.save();ctx.font=`400 17px ${FB}`;ctx.fillStyle='rgba(152,170,184,.55)';ctx.textAlign='left';ctx.textBaseline='alphabetic';ctx.fillText(tag.toUpperCase(),CX,NAMEY+38);ctx.restore();
 
-  ctx.save();ctx.font=`400 17px ${FB}`;ctx.fillStyle='rgba(152,170,184,.55)';
-  ctx.textAlign='left';ctx.textBaseline='alphabetic';ctx.fillText(tag.toUpperCase(),CX,NAME_Y+38);ctx.restore();
-
-  /* 11. 描述文字（自動換行）*/
-  const DESC_Y=NAME_Y+86;
-  ctx.save();ctx.font=`400 22px ${FB}`;ctx.fillStyle='rgba(180,192,202,.68)';
-  ctx.textAlign='left';ctx.textBaseline='alphabetic';
-  const maxTW=W-CX-68,lineH=40;let line='',ly=DESC_Y;
+  const DESCY=NAMEY+86;
+  ctx.save();ctx.font=`400 22px ${FB}`;ctx.fillStyle='rgba(180,192,202,.68)';ctx.textAlign='left';ctx.textBaseline='alphabetic';
+  const maxTW=W-CX-68,lineH=40;
+  let line='',ly=DESCY;
   for(const ch of desc){
     const test=line+ch;
-    if(ctx.measureText(test).width>maxTW&&line.length){ctx.fillText(line,CX,ly);line=ch;ly+=lineH;}
-    else line=test;
+    if(ctx.measureText(test).width>maxTW&&line.length){
+      ctx.fillText(line,CX,ly);
+      line=ch;ly+=lineH;
+    }else line=test;
   }
   if(line)ctx.fillText(line,CX,ly);
   ctx.restore();
 
-  /* 12. Pills */
-  const PILL_Y=ly+56;
+  const PILLY=ly+56;
   ctx.save();ctx.font=`400 17px ${FB}`;
   let px=CX;
   pills.forEach(txt=>{
     const tw=ctx.measureText(txt).width+44;
-    roundRect(ctx,px,PILL_Y-24,tw,38,19);
-    const pillBg=ctx.createLinearGradient(px,PILL_Y-24,px,PILL_Y+14);
-    pillBg.addColorStop(0,'rgba(40,65,100,.55)');pillBg.addColorStop(1,'rgba(25,45,75,.35)');
+    roundRect(ctx,px,PILLY-24,tw,38,19);
+    const pillBg=ctx.createLinearGradient(px,PILLY-24,px,PILLY+14);
+    pillBg.addColorStop(0,'rgba(40,65,100,.55)');
+    pillBg.addColorStop(1,'rgba(25,45,75,.35)');
     ctx.fillStyle=pillBg;ctx.fill();
     ctx.strokeStyle='rgba(152,170,184,.22)';ctx.lineWidth=1;ctx.stroke();
-    ctx.fillStyle='rgba(200,212,222,.82)';ctx.fillText(txt,px+22,PILL_Y+6);
+    ctx.fillStyle='rgba(200,212,222,.82)';
+    ctx.fillText(txt,px+22,PILLY+6);
     px+=tw+10;
-  });ctx.restore();
+  });
+  ctx.restore();
 
-  /* 13. 分數條 */
-  let by=PILL_Y+62;
+  let by=PILLY+62;
   bars.forEach(b=>{
     ctx.save();
-    ctx.font=`400 16px ${FB}`;ctx.fillStyle='rgba(152,170,184,.5)';
-    ctx.textAlign='left';ctx.textBaseline='middle';ctx.fillText(b.label,CX,by);
+    ctx.font=`400 16px ${FB}`;
+    ctx.fillStyle='rgba(152,170,184,.5)';
+    ctx.textAlign='left';ctx.textBaseline='middle';
+    ctx.fillText(b.label,CX,by);
     const barX=CX+56,barW=W-CX-56-68;
-    roundRect(ctx,barX,by-3,barW,4,2);ctx.fillStyle='rgba(152,170,184,.1)';ctx.fill();
-    const bw=Math.max(0,barW*(b.pct/100));
+    roundRect(ctx,barX,by-3,barW,4,2);
+    ctx.fillStyle='rgba(152,170,184,.1)';ctx.fill();
+    const bw=Math.max(0,barW*b.pct/100);
     if(bw>0){
       roundRect(ctx,barX,by-3,bw,4,2);
       const barFill=ctx.createLinearGradient(barX,0,barX+barW,0);
-      isE?(barFill.addColorStop(0,'#4a6a88'),barFill.addColorStop(1,'#b8ccd8'))
-         :(barFill.addColorStop(0,'#1e3a5f'),barFill.addColorStop(1,'#7a9ab5'));
+      if(isE){barFill.addColorStop(0,'#4a6a88');barFill.addColorStop(1,'#b8ccd8')}
+      else{barFill.addColorStop(0,'#1e3a5f');barFill.addColorStop(1,'#7a9ab5')}
       ctx.fillStyle=barFill;ctx.fill();
-      radialGlow(barX+bw,by,12,'rgba(152,170,184,.4)','rgba(152,170,184,0)');
     }
-    ctx.font=`700 14px ${FB}`;ctx.fillStyle='rgba(152,170,184,.58)';
-    ctx.textAlign='right';ctx.textBaseline='middle';ctx.fillText(b.pct+'%',W-68,by);
-    ctx.restore();by+=48;
+    ctx.font=`700 14px ${FB}`;
+    ctx.fillStyle='rgba(152,170,184,.58)';
+    ctx.textAlign='right';ctx.textBaseline='middle';
+    ctx.fillText(`${b.pct}%`,W-68,by);
+    ctx.restore();
+    by+=48;
   });
 
-  /* 14. 最合拍 badge */
-  if(match){
-    const mName=results[match]?.name||match;
-    const mTxt=`✦  最合拍：${match}  ${mName}`;
+  const mName=results[match]?.name||match;
+  const mTxt=match ? `最合拍：${mName}` : '';
+  if(mTxt){
     ctx.save();ctx.font=`400 16px ${FB}`;
     const mW=ctx.measureText(mTxt).width+44;
     roundRect(ctx,CX,by+16,mW,36,18);
@@ -885,96 +897,92 @@ async function makeShareBlob(){
     ctx.strokeStyle='rgba(152,170,184,.18)';ctx.lineWidth=1;ctx.stroke();
     ctx.fillStyle='rgba(152,170,184,.62)';
     ctx.textAlign='left';ctx.textBaseline='middle';ctx.fillText(mTxt,CX+22,by+34);
-    ctx.restore();by+=68;
+    ctx.restore();
+    by+=68;
   }
 
-  /* 15. 底部細線 */
-  const FOOTER_Y=H-88;
+  const FOOTER=H-88;
   const footLine=ctx.createLinearGradient(0,0,W,0);
-  footLine.addColorStop(0,'rgba(152,170,184,0)');footLine.addColorStop(.15,'rgba(152,170,184,.2)');
-  footLine.addColorStop(.85,'rgba(152,170,184,.2)');footLine.addColorStop(1,'rgba(152,170,184,0)');
-  ctx.save();ctx.strokeStyle=footLine;ctx.lineWidth=1;
-  ctx.beginPath();ctx.moveTo(0,FOOTER_Y-20);ctx.lineTo(W,FOOTER_Y-20);ctx.stroke();ctx.restore();
+  footLine.addColorStop(0,'rgba(152,170,184,0)');
+  footLine.addColorStop(.15,'rgba(152,170,184,.2)');
+  footLine.addColorStop(.85,'rgba(152,170,184,.2)');
+  footLine.addColorStop(1,'rgba(152,170,184,0)');
+  ctx.save();ctx.strokeStyle=footLine;ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(0,FOOTER-20);ctx.lineTo(W,FOOTER-20);ctx.stroke();ctx.restore();
 
-  /* 16. 底部品牌文字 */
   ctx.save();ctx.font=`400 15px ${FB}`;ctx.fillStyle='rgba(86,101,115,.55)';
-  ctx.textAlign='left';ctx.textBaseline='middle';ctx.fillText('U&ME · YOUR INNER TEMPO',68,FOOTER_Y+14);
-  ctx.textAlign='right';ctx.fillStyle='rgba(86,101,115,.4)';ctx.fillText('測測你是哪種類型',W-68,FOOTER_Y+14);
+  ctx.textAlign='left';ctx.textBaseline='middle';ctx.fillText('UME YOUR INNER TEMPO',68,FOOTER+14);
+  ctx.textAlign='right';ctx.fillStyle='rgba(86,101,115,.4)';ctx.fillText(code,W-68,FOOTER+14);
   ctx.restore();
 
-  /* ✅ JPEG 0.92 輸出，DPR=2 解析度完全保留，檔案從 10MB 降至約 2MB */
-  return new Promise(r=>cv.toBlob(b=>r(b),'image/jpeg',0.92));
+  return new Promise(r=>cv.toBlob(r,'image/jpeg',0.92));
 }
 
-/* ── 下載 blob ── */
 async function dlBlob(blob,fname){
   const u=URL.createObjectURL(blob),a=document.createElement('a');
-  a.href=u;a.download=fname;document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(u);
+  a.href=u;a.download=fname;document.body.appendChild(a);a.click();a.remove();
+  setTimeout(()=>URL.revokeObjectURL(u),1000);
 }
 
-/* ── 分享 ── */
 async function handleShare(){
   const orig=shareBtn.innerHTML,svgEl=shareBtn.querySelector('svg');
-  shareBtn.classList.add('loading');if(svgEl)svgEl.style.display='none';
+  shareBtn.classList.add('loading');
+  if(svgEl)svgEl.style.display='none';
   try{
     const blob=await makeShareBlob();
-    const fname=`ume-mbti-${shareData.code||'result'}.jpg`;
+    const fname=`ume-mbti-${shareData.code}-result.jpg`;
     const file=new File([blob],fname,{type:'image/jpeg',lastModified:Date.now()});
-    const data={files:[file],title:'U&ME MBTI 結果',text:`我在 U&ME MBTI 測到 ${shareData.code}｜${shareData.name}｜${shareData.tag}\n\n測測你是哪種類型 👇`};
+    const data={files:[file],title:'U&ME MBTI',text:`U&ME MBTI ${shareData.code} ${shareData.name} ${shareData.tag}`};
     if(navigator.canShare&&navigator.canShare(data))await navigator.share(data);
-    else{await dlBlob(blob,fname);alert('已下載圖片，請手動上傳到你想分享的平台 🙌');}
-  }catch(e){if(e.name!=='AbortError')console.warn(e);}
+    else await dlBlob(blob,fname);
+  }catch(e){if(e.name!=='AbortError')console.warn(e)}
   finally{shareBtn.classList.remove('loading');if(svgEl)svgEl.style.display='';shareBtn.innerHTML=orig;}
 }
 
-/* ── 儲存 ── */
 async function handleSave(){
   const orig=saveBtn.innerHTML,svgEl=saveBtn.querySelector('svg');
-  saveBtn.classList.add('loading');if(svgEl)svgEl.style.display='none';
+  saveBtn.classList.add('loading');
+  if(svgEl)svgEl.style.display='none';
   try{
     const blob=await makeShareBlob();
-    const fname=`ume-mbti-${shareData.code||'result'}.jpg`;
+    const fname=`ume-mbti-${shareData.code}-result.jpg`;
     await dlBlob(blob,fname);
-    saveBtn.classList.remove('loading');if(svgEl)svgEl.style.display='';
-    saveBtn.innerHTML='<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> 已儲存';
-    setTimeout(()=>{saveBtn.innerHTML=orig;},1800);
+    saveBtn.classList.remove('loading');
+    if(svgEl)svgEl.style.display='';
+    saveBtn.innerHTML=orig;
+    setTimeout(()=>saveBtn.innerHTML=orig,1800);
   }catch(e){
-    saveBtn.classList.remove('loading');if(svgEl)svgEl.style.display='';saveBtn.innerHTML=orig;
+    saveBtn.classList.remove('loading');
+    if(svgEl)svgEl.style.display='';
+    saveBtn.innerHTML=orig;
   }
 }
 
-/* ── 恢復進度 banner ── */
-(()=>{
+function bannerResume(){
   const saved=loadProgress();
   if(saved&&saved.answers&&saved.answers.some(a=>a!==null)){
     const answered=saved.answers.filter(a=>a!==null).length;
-    resumeInfo.textContent=`（已完成 ${answered} / ${questions.length} 題）`;
+    resumeInfo.textContent=`（已答 ${answered}/${questions.length} 題）`;
     resumeBanner.classList.add('show');
-    resumeContinue.addEventListener('click',()=>{
-      state.index=saved.index||0;state.answers=saved.answers;
-      resumeBanner.classList.remove('show');startQuiz(true);
-    });
-    resumeDiscard.addEventListener('click',()=>{
-      clearProgress();resumeBanner.classList.remove('show');
-    });
+    resumeContinue.addEventListener('click',()=>{state.index=saved.index||0;state.answers=saved.answers;resumeBanner.classList.remove('show');startQuiz(true)},{once:true});
+    resumeDiscard.addEventListener('click',()=>{clearProgress();resumeBanner.classList.remove('show')},{once:true});
   }
-})();
+}
 
-/* ── 事件綁定 ── */
 startBtn.addEventListener('click',()=>startQuiz(false));
 nextBtn.addEventListener('click',()=>goNext('forward'));
 backBtn.addEventListener('click',goPrev);
 restartBtn.addEventListener('click',restartToStart);
 shareBtn.addEventListener('click',handleShare);
 saveBtn.addEventListener('click',handleSave);
+bannerResume();
 
-/* ── 漣漪效果 ── */
 stage.addEventListener('pointerdown',e=>{
   const r=document.createElement('span');
-  r.style.cssText='position:absolute;border-radius:50%;pointer-events:none;transform:translate(-50%,-50%);background:radial-gradient(circle,rgba(152,170,184,.18) 0%,transparent 68%);animation:rip .8s ease-out forwards;mix-blend-mode:screen;z-index:4';
+  r.style.cssText='position:absolute;border-radius:50%;pointer-events:none;transform:translate(-50%,-50%);background:radial-gradient(circle,rgba(152,170,184,.18) 0,transparent 68%);animation:rip .8s ease-out forwards;mix-blend-mode:screen;z-index:4';
   const rc=stage.getBoundingClientRect();
-  r.style.left=(e.clientX-rc.left)+'px';r.style.top=(e.clientY-rc.top)+'px';
-  stage.appendChild(r);r.addEventListener('animationend',()=>r.remove());
+  r.style.left=`${e.clientX-rc.left}px`;r.style.top=`${e.clientY-rc.top}px`;
+  stage.appendChild(r);
+  r.addEventListener('animationend',()=>r.remove(),{once:true});
 });
 </script>
 </body>
