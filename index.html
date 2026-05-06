@@ -465,34 +465,13 @@ function preloadLogo(){
 preloadLogo();
 
 /* ── 角色圖預載 ── */
-const characterFiles = {
-  MIRC: 'MIRC_柔光守護者_綿羊.png',
-  MIRL: 'MIRL_微熱守護者_貓咪.png',
-  MITC: 'MITC_觸感守護者_水獺.png',
-  MITL: 'MITL_感受守護者_樹懶.png',
-  MDRC: 'MDRC_溫柔引導者_鹿.png',
-  MDRL: 'MDRL_曖昧引導者_狐狸.png',
-  MDTC: 'MDTC_體感引導者_獵豹.png',
-  MDTL: 'MDTL_直感引導者_狼.png',
-  EIRC: 'EIRC_霧感感官者_兔子.png',
-  EIRL: 'EIRL_熱感感官者_天鵝.png',
-  EITC: 'EITC_細節感官者_貓頭鷹.png',
-  EITL: 'EITL_強感感官者_黑豹.png',
-  EDRC: 'EDRC_悄然探索者_浣熊.png',
-  EDRL: 'EDRL_慾感探索者_獅子.png',
-  EDTC: 'EDTC_直覺探索者_老鷹.png',
-  EDTL: 'EDTL_烈感探索者_老虎.png'
-};
-
-let characterImg = null;
+let characterImg=null;
 function preloadCharacter(code){
   return new Promise(resolve=>{
-    const file = characterFiles[code];
-    if(!file){characterImg=null;resolve(null);return;}
     const img=new Image();
     img.onload=()=>{characterImg=img;resolve(img);};
     img.onerror=()=>{characterImg=null;resolve(null);};
-    img.src=`assets/characters/${file}`;
+    img.src=`assets/characters/${code}.png`;
   });
 }
 
@@ -761,15 +740,9 @@ async function makeShareBlob(){
     isE?'rgba(80,105,130,.28)':'rgba(30,60,100,.32)','rgba(30,60,100,0)');
   if(characterImg){
     const aspect=characterImg.naturalWidth/characterImg.naturalHeight;
-    const dh=CHAR_H*0.92;
-    const dw=dh*aspect;
-    const dx=CHAR_X+(CHAR_W-dw)/2;
-    const dy=CHAR_Y+10;
-    ctx.save();
-    ctx.globalAlpha=0.95;
-    ctx.filter='drop-shadow(0 10px 26px rgba(12,23,48,.45)) brightness(1.03)';
-    ctx.drawImage(characterImg,dx,dy,dw,dh);
-    ctx.restore();
+    const dh=CHAR_H,dw=dh*aspect;
+    const dx=CHAR_X+(CHAR_W-dw)/2,dy=CHAR_Y;
+    ctx.save();ctx.drawImage(characterImg,dx,dy,dw,dh);ctx.restore();
   } else {
     ctx.save();
     ctx.strokeStyle='rgba(152,170,184,.1)';ctx.lineWidth=1;ctx.setLineDash([8,8]);
@@ -810,9 +783,8 @@ async function makeShareBlob(){
   ctx.shadowColor=isE?'rgba(140,165,185,.35)':'rgba(50,90,150,.35)';ctx.shadowBlur=55;
   const codeGrad=ctx.createLinearGradient(CX,0,CX+580,0);
   codeGrad.addColorStop(0,'#ffffff');codeGrad.addColorStop(.25,'#e8edf2');
-  codeGrad.addColorStop(.5,'#e8edf2');
-  codeGrad.addColorStop(.6,'#98aab8');
-  codeGrad.addColorStop(1,isE?'#7a9ab0':'#4a6580');
+  codeGrad.addColor
+    codeGrad.addColorStop(.6,'#98aab8');codeGrad.addColorStop(1,isE?'#7a9ab0':'#4a6580');
   ctx.font=`400 178px ${FD}`;ctx.fillStyle=codeGrad;
   ctx.textAlign='left';ctx.textBaseline='alphabetic';
   ctx.fillText(code,CX-6,CT+192);
