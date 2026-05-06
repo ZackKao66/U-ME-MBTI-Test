@@ -38,6 +38,10 @@
     .brandmark{display:flex;align-items:center;gap:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;font-size:10.5px;color:var(--muted)}
     .logo-mark{width:32px;height:32px;border-radius:50%;border:1px solid var(--border);display:grid;place-items:center;font-size:12px;color:var(--accent);background:rgba(33,57,90,.3);backdrop-filter:blur(8px)}
 
+    .progress-label{font-size:10px;letter-spacing:.14em;color:var(--accent);text-align:center;height:16px;overflow:hidden;position:relative}
+    .progress-label span{display:block;transition:transform .35s cubic-bezier(.16,1,.3,1),opacity .35s ease}
+    .progress-label span.out{transform:translateY(-100%);opacity:0}
+
     .screen{position:absolute;inset:0;display:grid;place-items:center;padding:calc(68px + env(safe-area-inset-top)) 14px calc(18px + env(safe-area-inset-bottom));text-align:center;transition:opacity .5s cubic-bezier(.16,1,.3,1),transform .5s cubic-bezier(.16,1,.3,1),filter .5s cubic-bezier(.16,1,.3,1);overflow:hidden}
     .screen[hidden]{opacity:0;pointer-events:none;transform:translateY(12px) scale(.98);filter:blur(10px)}
     .screen.active{opacity:1;transform:none;filter:none}
@@ -78,22 +82,26 @@
     .reveal-hint::before{content:'✦ ';font-size:9px}
 
     .card{border:1px solid var(--border);background:color-mix(in oklab,#111f3a 92%,rgba(33,57,90,.5));border-radius:22px;padding:16px;box-shadow:0 20px 52px rgba(12,23,48,.45),inset 0 1px 0 rgba(215,219,226,.1);backdrop-filter:blur(14px);}
-    .card.exit-left{animation:exitLeft .2s cubic-bezier(.4,0,1,1) both}
-    .card.enter-right{animation:enterRight .28s cubic-bezier(0,0,.2,1) both}
-    .card.exit-right{animation:exitRight .2s cubic-bezier(.4,0,1,1) both}
-    .card.enter-left{animation:enterLeft .28s cubic-bezier(0,0,.2,1) both}
-    @keyframes exitLeft{to{transform:translateX(-40px);opacity:0;filter:blur(3px)}}
-    @keyframes enterRight{from{transform:translateX(40px);opacity:0;filter:blur(3px)}to{transform:none;opacity:1;filter:none}}
-    @keyframes exitRight{to{transform:translateX(40px);opacity:0;filter:blur(3px)}}
-    @keyframes enterLeft{from{transform:translateX(-40px);opacity:0;filter:blur(3px)}to{transform:none;opacity:1;filter:none}}
+    .card.exit-left{animation:exitLeft .22s cubic-bezier(.4,0,1,1) both}
+    .card.enter-right{animation:enterRight .3s cubic-bezier(0,0,.2,1) both}
+    .card.exit-right{animation:exitRight .22s cubic-bezier(.4,0,1,1) both}
+    .card.enter-left{animation:enterLeft .3s cubic-bezier(0,0,.2,1) both}
+    @keyframes exitLeft{to{transform:translateX(-44px) scale(.97);opacity:0;filter:blur(4px)}}
+    @keyframes enterRight{from{transform:translateX(44px) scale(.97);opacity:0;filter:blur(4px)}to{transform:none;opacity:1;filter:none}}
+    @keyframes exitRight{to{transform:translateX(44px) scale(.97);opacity:0;filter:blur(4px)}}
+    @keyframes enterLeft{from{transform:translateX(-44px) scale(.97);opacity:0;filter:blur(4px)}to{transform:none;opacity:1;filter:none}}
 
-    .question{margin:0 0 13px;font-size:clamp(16px,4.5vw,24px);line-height:1.38;font-weight:700;color:var(--text)}
+    .question{margin:0 0 13px;font-size:clamp(16px,4.5vw,24px);line-height:1.45;font-weight:700;color:var(--text)}
+    .q-char{display:inline;opacity:0;animation:charIn .35s cubic-bezier(.16,1,.3,1) forwards;animation-delay:var(--cd,0s)}
+    @keyframes charIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
     .options{display:grid;gap:8px}
-    .option{width:100%;min-height:50px;text-align:left;padding:13px 38px 13px 14px;border-radius:14px;border:1px solid var(--border);background:rgba(33,57,90,.2);color:var(--text);line-height:1.45;font-size:14px;position:relative;overflow:hidden;transition:background .18s,border-color .18s,transform .14s;}
+    .option{width:100%;min-height:50px;text-align:left;padding:13px 38px 13px 14px;border-radius:14px;border:1px solid var(--border);background:rgba(33,57,90,.2);color:var(--text);line-height:1.45;font-size:14px;position:relative;overflow:hidden;transition:background .18s,border-color .18s,transform .14s,box-shadow .18s;opacity:0;animation:optIn .38s cubic-bezier(.16,1,.3,1) forwards;animation-delay:var(--od,0s)}
+    @keyframes optIn{from{opacity:0;transform:translateY(10px) scale(.98)}to{opacity:1;transform:none}}
     .option::after{content:'';position:absolute;left:0;top:8px;bottom:8px;width:2px;border-radius:999px;background:var(--accent);opacity:0;transform:scaleY(.4);transition:opacity .2s,transform .2s;}
-    .option:hover{border-color:rgba(152,170,184,.3);background:rgba(33,57,90,.38)}
+    .option:hover{border-color:rgba(152,170,184,.3);background:rgba(33,57,90,.38);box-shadow:0 4px 14px rgba(12,23,48,.28)}
     .option:active{transform:scale(.984)}
-    .option.selected{border-color:rgba(152,170,184,.48);background:rgba(33,57,90,.55)}
+    .option.selected{border-color:rgba(152,170,184,.48);background:rgba(33,57,90,.55);box-shadow:inset 0 0 0 1px rgba(152,170,184,.12),0 6px 18px rgba(12,23,48,.3)}
     .option.selected::after{opacity:1;transform:scaleY(1)}
     .option.selected .opt-check{opacity:1;transform:translateY(-50%) scale(1)}
     .opt-check{position:absolute;right:13px;top:50%;transform:translateY(-50%) scale(.5);width:20px;height:20px;border-radius:50%;background:rgba(152,170,184,.18);border:1px solid rgba(152,170,184,.32);display:grid;place-items:center;font-size:11px;color:var(--accent);font-weight:700;opacity:0;transition:opacity .22s,transform .22s cubic-bezier(.16,1,.3,1);}
@@ -116,10 +124,11 @@
     .slot-char{display:inline-block;overflow:hidden;height:1.1em;width:.72em;vertical-align:top}
     .slot-inner{display:flex;flex-direction:column}
     .slot-inner span{display:block;height:1.1em;line-height:1.1;text-align:center}
-    .result-name{font-size:clamp(22px,5.5vw,36px);font-weight:700;margin-bottom:1px;font-family:var(--font-display);line-height:1.05;color:#d7dbe2;opacity:0;transform:translateY(9px);transition:opacity .55s,transform .55s;}
-    .result-name.show{opacity:1;transform:none}
+
+    .result-name{font-size:clamp(22px,5.5vw,36px);font-weight:700;margin-bottom:1px;font-family:var(--font-display);line-height:1.05;color:#d7dbe2;opacity:0;filter:blur(14px);transform:translateY(12px) scale(.96);transition:opacity .7s ease,filter .7s ease,transform .7s cubic-bezier(.16,1,.3,1);}
+    .result-name.show{opacity:1;filter:blur(0);transform:none}
     .result-name.revealed{background:linear-gradient(120deg,#d7dbe2 0%,#98aab8 60%,#566573 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
-    .result-tag{font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--accent);opacity:0;transition:opacity .4s ease .12s}
+    .result-tag{font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--accent);opacity:0;transition:opacity .5s ease .2s}
     .result-tag.show{opacity:1}
 
     .result-screen-bg{position:absolute;inset:0;background:radial-gradient(ellipse 70% 50% at 50% 20%,var(--theme-glow),transparent 55%);pointer-events:none;animation:drift 20s ease-in-out infinite}
@@ -138,10 +147,17 @@
     .result-card::after{content:'';position:absolute;top:0;left:18px;right:18px;height:1px;background:linear-gradient(90deg,transparent,rgba(152,170,184,.38),rgba(215,219,226,.22),rgba(152,170,184,.38),transparent);pointer-events:none;z-index:2}
     .result-card::before{content:"";position:absolute;inset:0;border-radius:inherit;background:radial-gradient(circle at top left,rgba(33,57,90,.32),transparent 40%),repeating-linear-gradient(135deg,transparent 0 22px,rgba(215,219,226,.022) 22px 23px);pointer-events:none;z-index:0}
     .result-hero,.result-section,.share-row,.result-cta{position:relative;z-index:1}
-    .result-hero{display:grid;gap:5px}
+
+    .result-hero{display:grid;gap:5px;opacity:0;transform:translateY(14px);animation:sectionIn .7s cubic-bezier(.16,1,.3,1) .3s forwards}
+    .result-section{display:grid;gap:5px;padding-top:9px;border-top:1px solid rgba(152,170,184,.09);opacity:0;transform:translateY(12px)}
+    .result-section.s1{animation:sectionIn .65s cubic-bezier(.16,1,.3,1) .55s forwards}
+    .result-section.s2{animation:sectionIn .65s cubic-bezier(.16,1,.3,1) .72s forwards}
+    .share-row{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:4px;opacity:0;transform:translateY(10px);animation:sectionIn .6s cubic-bezier(.16,1,.3,1) .9s forwards}
+    .result-cta{padding-bottom:2px;opacity:0;transform:translateY(8px);animation:sectionIn .55s cubic-bezier(.16,1,.3,1) 1.05s forwards}
+    @keyframes sectionIn{to{opacity:1;transform:none}}
+
     .result-meta{display:flex;gap:7px;flex-wrap:wrap;margin-top:2px}
     .result-badge,.pill{padding:5px 10px;border-radius:999px;border:1px solid rgba(152,170,184,.18);background:rgba(33,57,90,.38);font-size:11px;letter-spacing:.06em;color:var(--muted)}
-    .result-section{display:grid;gap:5px;padding-top:9px;border-top:1px solid rgba(152,170,184,.09)}
     .result-section h2{margin:0;font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);font-weight:700;opacity:.8}
     .result-section p,.result-desc{margin:0;color:var(--muted);line-height:1.58;font-size:13px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
     .result-pill-row{display:flex;gap:7px;flex-wrap:wrap;margin:2px 0}
@@ -151,7 +167,6 @@
     .score-bar-fill{height:100%;border-radius:inherit;background:linear-gradient(90deg,var(--theme-grad-a),var(--theme-grad-b));width:0;transition:width .9s cubic-bezier(.16,1,.3,1)}
     .score-pct{font-size:10.5px;color:var(--accent);font-weight:700;text-align:right}
 
-    .share-row{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:4px}
     .share-btn{border:1px solid var(--border);background:rgba(33,57,90,.28);color:var(--text);min-height:46px;padding:11px 14px;border-radius:14px;display:flex;align-items:center;justify-content:center;gap:7px;font-size:13.5px;font-weight:600;backdrop-filter:blur(10px);transition:transform .18s,box-shadow .18s,background .18s}
     .share-btn.primary{background:linear-gradient(135deg,#21395a,#566573);border-color:rgba(152,170,184,.18);color:#d7dbe2;box-shadow:0 6px 22px rgba(12,23,48,.45)}
     .share-btn:hover{transform:translateY(-2px)}
@@ -159,15 +174,17 @@
     .platform-icons{grid-column:1/-1;display:flex;justify-content:center;gap:12px;padding:3px 0 0}
     .platform-icons span{width:30px;height:30px;border-radius:50%;border:1px solid var(--border);background:rgba(33,57,90,.35);display:grid;place-items:center;font-size:13px}
     .share-hint{grid-column:1/-1;text-align:center;font-size:10.5px;color:var(--muted);line-height:1.5;padding:2px 0 0;opacity:.8}
-    .result-cta{padding-bottom:2px}
     .restart-btn{width:100%;min-height:44px;font-size:14px}
     .share-btn.loading{opacity:.65;pointer-events:none}
     .share-btn.loading::after{content:'';display:inline-block;width:13px;height:13px;border:2px solid currentColor;border-top-color:transparent;border-radius:50%;animation:spin .7s linear infinite;margin-left:5px}
     @keyframes spin{to{transform:rotate(360deg)}}
 
+    .match-badge{display:inline-flex;align-items:center;gap:6px;padding:5px 11px;border-radius:999px;background:rgba(33,57,90,.45);border:1px solid rgba(152,170,184,.18);font-size:11px;color:var(--muted);margin-top:4px}
+    .match-badge b{color:var(--accent)}
+
     .copyright{position:fixed;bottom:calc(7px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);font-size:9.5px;color:rgba(152,170,184,.4);letter-spacing:.1em;white-space:nowrap;pointer-events:none;z-index:999}
     @keyframes drift{50%{transform:translateY(-8px) scale(1.015)}}
-    @keyframes resultRise{from{opacity:0;transform:translateY(20px) scale(.982)}to{opacity:1;transform:none}}
+    @keyframes resultRise{from{opacity:0;transform:translateY(22px) scale(.98)}to{opacity:1;transform:none}}
     @keyframes rip{from{width:0;height:0;opacity:.5}to{width:400px;height:400px;opacity:0}}
     @keyframes slotLock{0%{transform:translateY(0)}30%{transform:translateY(-5px)}65%{transform:translateY(2px)}100%{transform:translateY(0)}}
 
@@ -192,8 +209,8 @@
       .quiz{width:min(80vw,920px)}
       .result-card{max-width:940px;height:min(100%,calc(100svh - 128px - env(safe-area-inset-top) - env(safe-area-inset-bottom)));grid-template-columns:1.1fr .9fr;grid-template-rows:auto auto auto;column-gap:22px;}
       .result-hero{grid-column:1}
-      .result-section:first-of-type{grid-column:1}
-      .result-section:last-of-type{grid-column:2;grid-row:1/span 2;border-top:none;padding-top:0;padding-left:10px}
+      .result-section.s1{grid-column:1}
+      .result-section.s2{grid-column:2;grid-row:1/span 2;border-top:none;padding-top:0;padding-left:10px}
       .share-row{grid-column:1}
       .result-cta{grid-column:2;align-self:end}
     }
@@ -254,6 +271,7 @@
         <div class="quiz-progress" id="quizProgress">1 / 12</div>
       </div>
       <div class="progress-bar" id="progressBar"><span id="progressFill"></span></div>
+      <div class="progress-label" id="progressLabel"><span></span></div>
       <div class="card" id="quizCard">
         <p class="question" id="questionText"></p>
         <div class="options" id="options"></div>
@@ -284,12 +302,13 @@
             <span class="result-badge" id="resultPace"></span>
             <span class="result-badge" id="resultDrive"></span>
           </div>
+          <div class="match-badge" id="matchBadge">✦ 最合拍：<b id="matchCode">—</b></div>
         </div>
-        <div class="result-section">
+        <div class="result-section s1">
           <h2>角色分類說明</h2>
           <p id="resultCategory"></p>
         </div>
-        <div class="result-section">
+        <div class="result-section s2">
           <h2>你的組合特質</h2>
           <div class="result-pill-row" id="resultPills"></div>
           <p class="result-desc" id="resultDesc"></p>
@@ -320,7 +339,6 @@
 <p class="copyright">© U&amp;ME ® 商標已於中華民國註冊，保留一切權利</p>
 
 <script>
-// ── 星星
 (()=>{
   const el=document.getElementById('starsEl');
   for(let i=0;i<65;i++){
@@ -330,10 +348,8 @@
     el.appendChild(s);
   }
 })();
-
 document.getElementById('curtain').addEventListener('animationend',function(){this.remove()},{once:true});
 
-// ── DOM refs
 const root=document.documentElement,
   introScreen=document.getElementById('introScreen'),
   quizScreen=document.getElementById('quizScreen'),
@@ -349,7 +365,7 @@ const root=document.documentElement,
   quizTitle=document.getElementById('quizTitle'),
   quizProgress=document.getElementById('quizProgress'),
   progressFill=document.getElementById('progressFill'),
-  progressBar=document.getElementById('progressBar'),
+  progressLabel=document.getElementById('progressLabel'),
   quizCard=document.getElementById('quizCard'),
   revealHint=document.getElementById('revealHint'),
   resultCodeEl=document.getElementById('resultCode'),
@@ -362,14 +378,14 @@ const root=document.documentElement,
   resultMood=document.getElementById('resultMood'),
   resultPace=document.getElementById('resultPace'),
   resultDrive=document.getElementById('resultDrive'),
+  matchBadge=document.getElementById('matchBadge'),
+  matchCode=document.getElementById('matchCode'),
   revealBurst=document.getElementById('revealBurst'),
   particlesEl=document.getElementById('particlesEl'),
   stage=document.getElementById('stage');
 
-// 分享圖資料 store
-const shareData={code:'',name:'',tag:'',desc:'',pills:[],bars:[],isE:false};
+const shareData={code:'',name:'',tag:'',desc:'',pills:[],bars:[],isE:false,match:''};
 
-// ── 題目
 const questions=[
   {q:'第一次靠近時，你更在意什麼？',a:['A. 氛圍有沒有對，感覺要先到位。','B. 反應夠不夠快，張力要立刻出現。','C. 感覺有沒有慢慢升起來。','D. 能不能直接進入狀態。']},
   {q:'你比較容易被哪種方式打動？',a:['A. 溫柔、慢慢、一步一步。','B. 直接、明確、很到位。','C. 有情感、帶曖昧、會想多看一眼。','D. 觸感明顯、身體立刻有感。']},
@@ -401,22 +417,22 @@ const scoreMap=[
 ];
 
 const results={
-  MIRC:{name:'柔光守護者',tag:'慢慢升溫型',desc:'妳喜歡氛圍先到位，再慢慢打開感受。妳不是不主動，而是要先感受到安心與情緒流動，才會真正進入狀態。',pills:['溫柔','緩慢','氛圍感']},
-  MIRL:{name:'微熱守護者',tag:'情感慾流型',desc:'妳要的不是直接刺激，而是情緒與慾望一起被喚醒。妳對關係有感，對氛圍也有感，會在熟悉感中被快速點燃。',pills:['情感','熱度','慾感']},
-  MITC:{name:'觸感守護者',tag:'觸感探索型',desc:'妳重視感受本身，特別在意觸覺與互動的細節。妳喜歡慢慢摸索，不急著定義，但很敏銳。',pills:['觸感','細節','探索']},
-  MITL:{name:'感受守護者',tag:'感官沉浸型',desc:'妳一旦進入狀態，就會很投入，喜歡感官層層堆疊。妳重視觸感、節奏與身體回饋，而且點燃後非常直接。',pills:['沉浸','節奏','回饋']},
-  MDRC:{name:'溫柔引導者',tag:'溫柔直入型',desc:'妳表面柔和，但其實知道自己要什麼。妳不喜歡繞太久，偏好在有情感鋪陳後直接進入重點。',pills:['溫柔','直接','有感']},
-  MDRL:{name:'曖昧引導者',tag:'曖昧直覺型',desc:'妳喜歡明確，但不喜歡太冷。妳要的是有溫度的直接，帶著曖昧與情緒靠近，一旦確認就快速推進。',pills:['曖昧','溫度','推進']},
-  MDTC:{name:'體感引導者',tag:'體感主導型',desc:'妳偏好清楚、直接，一切都要讓身體先有反應。妳會慢慢確認感受，但方向從來不模糊。',pills:['體感','反應','主導']},
-  MDTL:{name:'直感引導者',tag:'直球慾感型',desc:'妳不想猜，也不喜歡太多模糊，妳想要的是直接而有感。偏好明確、反應直接，點燃後完全不需要等。',pills:['直球','慾感','明確']},
-  EIRC:{name:'霧感感官者',tag:'情緒探索型',desc:'妳偏刺激，但不是粗暴，而是想透過情緒與新鮮感打開感受。妳喜歡探索，會在曖昧中慢慢找到自己的節奏。',pills:['霧感','探索','情緒']},
-  EIRL:{name:'熱感感官者',tag:'高溫曖昧型',desc:'妳對情感與慾望都有反應，而且不太怕熱度。妳喜歡強烈一點的氛圍，點燃後就會快速進入更深的感受。',pills:['高溫','曖昧','慾感']},
-  EITC:{name:'細節感官者',tag:'刺激試探型',desc:'妳喜歡先試試看，感受有沒有對味。妳的反應很快，喜歡新鮮、喜歡摸索，也願意慢慢多嘗試不同方式。',pills:['試探','新鮮','反應快']},
-  EITL:{name:'強感感官者',tag:'強烈感官型',desc:'妳很容易被明確的刺激抓住，喜歡直接、有感、迅速反應的體驗。重點是感受要夠明顯，而且要快。',pills:['強烈','感官','直接']},
-  EDRC:{name:'悄然探索者',tag:'主動曖昧型',desc:'妳不一定要等別人帶，妳自己就很會製造氣氛。妳雖然直接，但不是冰冷，而是有情感、有曖昧、節奏穩健。',pills:['主動','曖昧','穩健']},
-  EDRL:{name:'慾感探索者',tag:'慾感引導型',desc:'妳是那種很會把節奏帶進去的人。妳知道怎麼讓氣氛升溫，也知道怎麼讓對方快速進入狀態。',pills:['節奏','升溫','引導']},
-  EDTC:{name:'直覺探索者',tag:'直接體驗型',desc:'妳重視當下的真實感受，喜歡清楚、直接、有效。妳不喜歡過度包裝，但也不急著衝刺，節奏是妳的。',pills:['直覺','體驗','有效']},
-  EDTL:{name:'烈感探索者',tag:'直球烈感型',desc:'妳是很強烈、很直接、很知道自己要什麼的類型。妳不太繞，也不等，偏好鮮明，點燃後存在感極強。',pills:['烈感','直球','存在感']}
+  MIRC:{name:'柔光守護者',tag:'慢慢升溫型',desc:'妳喜歡氛圍先到位，再慢慢打開感受。妳不是不主動，而是要先感受到安心與情緒流動，才會真正進入狀態。',pills:['溫柔','緩慢','氛圍感'],match:'EDTL'},
+  MIRL:{name:'微熱守護者',tag:'情感慾流型',desc:'妳要的不是直接刺激，而是情緒與慾望一起被喚醒。妳對關係有感，對氛圍也有感，會在熟悉感中被快速點燃。',pills:['情感','熱度','慾感'],match:'EDTC'},
+  MITC:{name:'觸感守護者',tag:'觸感探索型',desc:'妳重視感受本身，特別在意觸覺與互動的細節。妳喜歡慢慢摸索，不急著定義，但很敏銳。',pills:['觸感','細節','探索'],match:'EDRL'},
+  MITL:{name:'感受守護者',tag:'感官沉浸型',desc:'妳一旦進入狀態，就會很投入，喜歡感官層層堆疊。妳重視觸感、節奏與身體回饋，而且點燃後非常直接。',pills:['沉浸','節奏','回饋'],match:'EDRC'},
+  MDRC:{name:'溫柔引導者',tag:'溫柔直入型',desc:'妳表面柔和，但其實知道自己要什麼。妳不喜歡繞太久，偏好在有情感鋪陳後直接進入重點。',pills:['溫柔','直接','有感'],match:'EITL'},
+  MDRL:{name:'曖昧引導者',tag:'曖昧直覺型',desc:'妳喜歡明確，但不喜歡太冷。妳要的是有溫度的直接，帶著曖昧與情緒靠近，一旦確認就快速推進。',pills:['曖昧','溫度','推進'],match:'EITC'},
+  MDTC:{name:'體感引導者',tag:'體感主導型',desc:'妳偏好清楚、直接，一切都要讓身體先有反應。妳會慢慢確認感受，但方向從來不模糊。',pills:['體感','反應','主導'],match:'EIRL'},
+  MDTL:{name:'直感引導者',tag:'直球慾感型',desc:'妳不想猜，也不喜歡太多模糊，妳想要的是直接而有感。偏好明確、反應直接，點燃後完全不需要等。',pills:['直球','慾感','明確'],match:'EIRC'},
+  EIRC:{name:'霧感感官者',tag:'情緒探索型',desc:'妳偏刺激，但不是粗暴，而是想透過情緒與新鮮感打開感受。妳喜歡探索，會在曖昧中慢慢找到自己的節奏。',pills:['霧感','探索','情緒'],match:'MDTL'},
+  EIRL:{name:'熱感感官者',tag:'高溫曖昧型',desc:'妳對情感與慾望都有反應，而且不太怕熱度。妳喜歡強烈一點的氛圍，點燃後就會快速進入更深的感受。',pills:['高溫','曖昧','慾感'],match:'MDTC'},
+  EITC:{name:'細節感官者',tag:'刺激試探型',desc:'妳喜歡先試試看，感受有沒有對味。妳的反應很快，喜歡新鮮、喜歡摸索，也願意慢慢多嘗試不同方式。',pills:['試探','新鮮','反應快'],match:'MDRL'},
+  EITL:{name:'強感感官者',tag:'強烈感官型',desc:'妳很容易被明確的刺激抓住，喜歡直接、有感、迅速反應的體驗。重點是感受要夠明顯，而且要快。',pills:['強烈','感官','直接'],match:'MDRC'},
+  EDRC:{name:'悄然探索者',tag:'主動曖昧型',desc:'妳不一定要等別人帶，妳自己就很會製造氣氛。妳雖然直接，但不是冰冷，而是有情感、有曖昧、節奏穩健。',pills:['主動','曖昧','穩健'],match:'MITL'},
+  EDRL:{name:'慾感探索者',tag:'慾感引導型',desc:'妳是那種很會把節奏帶進去的人。妳知道怎麼讓氣氛升溫，也知道怎麼讓對方快速進入狀態。',pills:['節奏','升溫','引導'],match:'MITC'},
+  EDTC:{name:'直覺探索者',tag:'直接體驗型',desc:'妳重視當下的真實感受，喜歡清楚、直接、有效。妳不喜歡過度包裝，但也不急著衝刺，節奏是妳的。',pills:['直覺','體驗','有效'],match:'MIRL'},
+  EDTL:{name:'烈感探索者',tag:'直球烈感型',desc:'妳是很強烈、很直接、很知道自己要什麼的類型。妳不太繞，也不等，偏好鮮明，點燃後存在感極強。',pills:['烈感','直球','存在感'],match:'MIRC'}
 };
 
 const DIMS=[
@@ -426,29 +442,68 @@ const DIMS=[
   {label:'慾望',a:'Curious',b:'Lust',aChar:'C'},
 ];
 
-const state={index:0,answers:Array(questions.length).fill(null),score:{Mood:0,Energy:0,Intimacy:0,Direct:0,Romance:0,Touch:0,Curious:0,Lust:0},sliding:false};
+function progressLabelText(i,total){
+  if(i===0)return'開始囉 ✦';
+  if(i===total-1)return'最後一題 ✦';
+  if(i>=Math.floor(total*.6))return'快到了 ✦';
+  if(i>=Math.floor(total*.3))return'繼續深入 ✦';
+  return'';
+}
 
-// ── 畫面切換
+const state={
+  index:0,
+  answers:Array(questions.length).fill(null),
+  score:{Mood:0,Energy:0,Intimacy:0,Direct:0,Romance:0,Touch:0,Curious:0,Lust:0},
+  sliding:false
+};
+
 const setScreen=s=>{
-  [introScreen,quizScreen,resultScreen].forEach(el=>{el.hidden=el!==s;el.classList.remove('active')});
-  s.hidden=false;requestAnimationFrame(()=>s.classList.add('active'));
+  [introScreen,quizScreen,resultScreen].forEach(el=>{
+    el.hidden=el!==s;el.classList.remove('active');
+  });
+  s.hidden=false;
+  requestAnimationFrame(()=>s.classList.add('active'));
 };
 
 const updateProgress=()=>{
   const pct=Math.max(0,Math.min(100,(state.index/(questions.length-1))*100));
   progressFill.style.width=`${pct}%`;
+  const txt=progressLabelText(state.index,questions.length);
+  const cur=progressLabel.querySelector('span');
+  if(txt&&cur.textContent!==txt){
+    cur.classList.add('out');
+    setTimeout(()=>{cur.textContent=txt;cur.classList.remove('out');},220);
+  }else if(!txt){cur.textContent='';}
 };
 
 function slideCard(dir,cb){
-  if(state.sliding)return;state.sliding=true;
-  const ec=dir==='forward'?'exit-left':'exit-right',nc=dir==='forward'?'enter-right':'enter-left';
+  if(state.sliding)return;
+  state.sliding=true;
+  const ec=dir==='forward'?'exit-left':'exit-right';
+  const nc=dir==='forward'?'enter-right':'enter-left';
   quizCard.classList.add(ec);
   quizCard.addEventListener('animationend',function onE(){
-    quizCard.removeEventListener('animationend',onE);quizCard.classList.remove(ec);cb();
-    void quizCard.offsetWidth;quizCard.classList.add(nc);
+    quizCard.removeEventListener('animationend',onE);
+    quizCard.classList.remove(ec);
+    cb();
+    void quizCard.offsetWidth;
+    quizCard.classList.add(nc);
     quizCard.addEventListener('animationend',function onN(){
-      quizCard.removeEventListener('animationend',onN);quizCard.classList.remove(nc);state.sliding=false;
+      quizCard.removeEventListener('animationend',onN);
+      quizCard.classList.remove(nc);
+      state.sliding=false;
     });
+  });
+}
+
+function animateQuestion(text){
+  questionText.innerHTML='';
+  [...text].forEach((ch,i)=>{
+    const s=document.createElement('span');
+    s.className='q-char';
+    s.textContent=ch;
+    s.style.setProperty('--cd',`${Math.min(i*0.018,0.5)}s`);
+    questionText.appendChild(s);
   });
 }
 
@@ -456,13 +511,16 @@ const renderQuestion=()=>{
   const i=state.index;
   quizTitle.textContent=`第 ${i+1} 題`;
   quizProgress.textContent=`${i+1} / ${questions.length}`;
-  questionText.textContent=questions[i].q;
-  optionsEl.innerHTML='';updateProgress();
+  animateQuestion(questions[i].q);
+  optionsEl.innerHTML='';
+  updateProgress();
   const isLast=i===questions.length-1;
   revealHint.classList.toggle('show',isLast&&state.answers[i]!==null);
   questions[i].a.forEach((txt,idx)=>{
     const key=['A','B','C','D'][idx];
-    const b=document.createElement('button');b.className='option';b.type='button';
+    const b=document.createElement('button');
+    b.className='option';b.type='button';
+    b.style.setProperty('--od',`${0.12+idx*0.07}s`);
     b.innerHTML=`${txt}<span class="opt-check">✓</span>`;
     if(state.answers[i]===key)b.classList.add('selected');
     b.addEventListener('click',()=>{
@@ -471,9 +529,14 @@ const renderQuestion=()=>{
       b.addEventListener('animationend',()=>b.classList.remove('tap-bounce'),{once:true});
       optionsEl.style.pointerEvents='none';
       setTimeout(()=>optionsEl.style.pointerEvents='',320);
-      state.answers[i]=key;renderQuestion();
+      state.answers[i]=key;
+      renderQuestion();
       if(i<questions.length-1)setTimeout(()=>goNext('forward'),300);
-      else{nextBtn.disabled=false;nextBtn.textContent='完成';revealHint.classList.add('show');}
+      else{
+        nextBtn.disabled=false;
+        nextBtn.textContent='完成';
+        revealHint.classList.add('show');
+      }
     });
     optionsEl.appendChild(b);
   });
@@ -487,19 +550,27 @@ function goNext(dir='forward'){
   if(state.index<questions.length-1)slideCard(dir,()=>{state.index+=1;renderQuestion();});
   else showResult();
 }
+
 function goPrev(){
   if(state.index>0&&!state.sliding)slideCard('back',()=>{state.index-=1;renderQuestion();});
 }
+
 const startQuiz=()=>{
   state.index=0;state.sliding=false;
   state.answers=Array(questions.length).fill(null);
-  progressFill.style.width='0%';revealHint.classList.remove('show');
-  setScreen(quizScreen);renderQuestion();
+  progressFill.style.width='0%';
+  revealHint.classList.remove('show');
+  setScreen(quizScreen);
+  renderQuestion();
 };
 
 const computeResult=()=>{
   state.score={Mood:0,Energy:0,Intimacy:0,Direct:0,Romance:0,Touch:0,Curious:0,Lust:0};
-  state.answers.forEach((ans,i)=>{if(!ans)return;const[k,v]=scoreMap[i][ans];state.score[k]+=v;});
+  state.answers.forEach((ans,i)=>{
+    if(!ans)return;
+    const[k,v]=scoreMap[i][ans];
+    state.score[k]+=v;
+  });
   return[
     state.score.Mood>=state.score.Energy?'M':'E',
     state.score.Intimacy>=state.score.Direct?'I':'D',
@@ -510,22 +581,22 @@ const computeResult=()=>{
 
 function fireParticles(){
   particlesEl.innerHTML='';
-  const colors=['#98aab8','#d7dbe2','#566573','#21395a','#b8c9d8'];
+  const colors=['#98aab8','#d7dbe2','#566573','#21395a','#b8c9d8','#e2e6ec'];
   const cx=window.innerWidth/2,cy=window.innerHeight*.36;
-  for(let i=0;i<20;i++){
+  for(let i=0;i<28;i++){
     const p=document.createElement('div');p.className='particle';
-    const sz=2.5+Math.random()*7,angle=Math.random()*360,dist=70+Math.random()*200;
-    const dx=Math.cos(angle*Math.PI/180)*dist+'px',dy=(Math.sin(angle*Math.PI/180)*dist-40)+'px';
+    const sz=2+Math.random()*8,angle=Math.random()*360,dist=80+Math.random()*220;
+    const dx=Math.cos(angle*Math.PI/180)*dist+'px';
+    const dy=(Math.sin(angle*Math.PI/180)*dist-50)+'px';
     const color=colors[Math.floor(Math.random()*colors.length)];
-    const dur=550+Math.random()*550,delay=Math.random()*250;
-    p.style.cssText=`width:${sz}px;height:${sz}px;left:${cx}px;top:${cy}px;background:${color};--dx:${dx};--dy:${dy};animation:particleFly ${dur}ms cubic-bezier(.2,.8,.4,1) ${delay}ms forwards;`;
+    const dur=600+Math.random()*600,delay=Math.random()*300;
+    p.style.cssText=`width:${sz}px;height:${sz}px;left:${cx}px;top:${cy}px;background:${color};--dx:${dx};--dy:${dy};animation:particleFly ${dur}ms cubic-bezier(.2,.8,.4,1) ${delay}ms forwards;box-shadow:0 0 ${sz*1.5}px ${color}44`;
     particlesEl.appendChild(p);
   }
 }
 
 function buildScoreBars(code,score){
-  scoreBars.innerHTML='';
-  shareData.bars=[];
+  scoreBars.innerHTML='';shareData.bars=[];
   DIMS.forEach((d,di)=>{
     const total=(score[d.a]||0)+(score[d.b]||0)||1;
     const chosen=code[di]===d.aChar?d.a:d.b;
@@ -535,7 +606,7 @@ function buildScoreBars(code,score){
     scoreBars.appendChild(row);
     shareData.bars.push({label:d.label,pct});
   });
-  setTimeout(()=>scoreBars.querySelectorAll('.score-bar-fill').forEach(el=>el.style.width=el.dataset.pct+'%'),650);
+  setTimeout(()=>scoreBars.querySelectorAll('.score-bar-fill').forEach(el=>el.style.width=el.dataset.pct+'%'),700);
 }
 
 const CHARS='ABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -545,7 +616,11 @@ function runSlotMachine(code){
   const slots=chars.map(()=>{
     const wrap=document.createElement('span');wrap.className='slot-char';
     const inner=document.createElement('div');inner.className='slot-inner';
-    for(let i=0;i<20;i++){const s=document.createElement('span');s.textContent=CHARS[Math.floor(Math.random()*CHARS.length)];inner.appendChild(s);}
+    for(let i=0;i<20;i++){
+      const s=document.createElement('span');
+      s.textContent=CHARS[Math.floor(Math.random()*CHARS.length)];
+      inner.appendChild(s);
+    }
     const tgt=document.createElement('span');tgt.textContent='?';
     inner.appendChild(tgt);wrap.appendChild(inner);resultCodeEl.appendChild(wrap);
     return{wrap,inner,tgt};
@@ -553,15 +628,26 @@ function runSlotMachine(code){
   chars.forEach((ch,ci)=>{
     const{inner,tgt,wrap}=slots[ci];
     const delay=ci*340+180,dur=540+ci*90;
-    setTimeout(()=>{inner.style.transition=`transform ${dur}ms cubic-bezier(.22,.68,0,1.2)`;inner.style.transform=`translateY(-${(inner.children.length-1)*1.1}em)`;},delay);
-    setTimeout(()=>{tgt.textContent=ch;inner.style.transition='none';wrap.style.animation='slotLock .34s cubic-bezier(.36,.07,.19,.97)';setTimeout(()=>wrap.style.animation='',400);},delay+dur+40);
+    setTimeout(()=>{
+      inner.style.transition=`transform ${dur}ms cubic-bezier(.22,.68,0,1.2)`;
+      inner.style.transform=`translateY(-${(inner.children.length-1)*1.1}em)`;
+    },delay);
+    setTimeout(()=>{
+      tgt.textContent=ch;
+      inner.style.transition='none';
+      wrap.style.animation='slotLock .34s cubic-bezier(.36,.07,.19,.97)';
+      setTimeout(()=>wrap.style.animation='',400);
+    },delay+dur+40);
   });
   const totalDelay=chars.length*340+180+720;
   setTimeout(()=>{
     resultCodeEl.innerHTML='';
-    chars.forEach(ch=>{const s=document.createElement('span');s.textContent=ch;resultCodeEl.appendChild(s);});
+    chars.forEach(ch=>{
+      const s=document.createElement('span');s.textContent=ch;resultCodeEl.appendChild(s);
+    });
     resultCodeEl.classList.add('revealed');
-    resultName.classList.add('show');setTimeout(()=>resultName.classList.add('revealed'),100);
+    resultName.classList.add('show');
+    setTimeout(()=>resultName.classList.add('revealed'),120);
     resultTag.classList.add('show');
   },totalDelay);
 }
@@ -570,7 +656,8 @@ const showResult=()=>{
   const code=computeResult(),r=results[code]||results.MIRC,isE=code.startsWith('E');
   root.setAttribute('data-result-theme',isE?'E':'M');
   revealBurst.classList.remove('fire');void revealBurst.offsetWidth;revealBurst.classList.add('fire');
-  setTimeout(()=>fireParticles(),180);
+  setTimeout(()=>fireParticles(),200);
+
   resultName.textContent=r.name;resultName.classList.remove('show','revealed');
   resultTag.textContent=r.tag;resultTag.classList.remove('show');
   resultDesc.textContent=r.desc;
@@ -580,11 +667,21 @@ const showResult=()=>{
   resultMood.textContent=code[2]==='R'?'情感導向':'感官導向';
   resultPace.textContent=code.startsWith('M')?'節奏：氛圍':'節奏：直接';
   resultDrive.textContent=code[3]==='C'?'步調：探索':'步調：熱烈';
+
+  const mCode=r.match||'';
+  matchCode.textContent=mCode;
+  const mName=results[mCode]?.name||'';
+  if(mName)matchBadge.title=mName;
+
   resultPills.innerHTML='';
-  r.pills.forEach(t=>{const s=document.createElement('span');s.className='pill';s.textContent=t;resultPills.appendChild(s);});
-  // 存入分享資料
-  shareData.code=code;shareData.name=r.name;shareData.tag=r.tag;shareData.desc=r.desc;
-  shareData.pills=[...r.pills];shareData.isE=isE;
+  r.pills.forEach(t=>{
+    const s=document.createElement('span');s.className='pill';s.textContent=t;resultPills.appendChild(s);
+  });
+
+  shareData.code=code;shareData.name=r.name;shareData.tag=r.tag;
+  shareData.desc=r.desc;shareData.pills=[...r.pills];
+  shareData.isE=isE;shareData.match=mCode;
+
   buildScoreBars(code,state.score);
   setScreen(resultScreen);
   setTimeout(()=>runSlotMachine(code),500);
@@ -594,12 +691,14 @@ const restartToStart=()=>{
   root.removeAttribute('data-result-theme');
   state.index=0;state.sliding=false;
   state.answers=Array(questions.length).fill(null);
-  progressFill.style.width='0%';nextBtn.disabled=true;revealHint.classList.remove('show');
+  progressFill.style.width='0%';
+  nextBtn.disabled=true;
+  revealHint.classList.remove('show');
   setScreen(introScreen);
 };
 
-// ── 工具：圓角矩形路徑
 function roundRect(ctx,x,y,w,h,r){
+  if(w<=0)return;
   ctx.beginPath();
   ctx.moveTo(x+r,y);ctx.lineTo(x+w-r,y);ctx.quadraticCurveTo(x+w,y,x+w,y+r);
   ctx.lineTo(x+w,y+h-r);ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);
@@ -608,9 +707,8 @@ function roundRect(ctx,x,y,w,h,r){
   ctx.closePath();
 }
 
-// ── 分享圖：用 Canvas API 直接繪製，不依賴 html2canvas
 async function makeShareBlob(){
-  const{code,name,tag,desc,pills,bars,isE}=shareData;
+  const{code,name,tag,desc,pills,bars,isE,match}=shareData;
   const W=1080,H=1920,DPR=2;
   const cv=document.createElement('canvas');
   cv.width=W*DPR;cv.height=H*DPR;
@@ -619,93 +717,97 @@ async function makeShareBlob(){
 
   // 背景
   const bg=ctx.createLinearGradient(0,0,W,H);
-  bg.addColorStop(0,'#07101e');bg.addColorStop(.4,'#0d1b30');
-  bg.addColorStop(.7,'#111f3a');bg.addColorStop(1,'#09131f');
+  bg.addColorStop(0,'#07101e');bg.addColorStop(.38,'#0c1a2e');
+  bg.addColorStop(.65,'#111f3a');bg.addColorStop(1,'#090f1c');
   ctx.fillStyle=bg;ctx.fillRect(0,0,W,H);
 
   // 光暈
-  function glow(x,y,r,c1,c2){
+  function radialGlow(x,y,r,c1,c2){
     const g=ctx.createRadialGradient(x,y,0,x,y,r);
     g.addColorStop(0,c1);g.addColorStop(1,c2);
     ctx.save();ctx.globalCompositeOperation='screen';
     ctx.fillStyle=g;ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fill();ctx.restore();
   }
-  glow(-100,-150,700,'rgba(33,57,90,.6)','rgba(33,57,90,0)');
-  glow(W+100,H+80,600,'rgba(86,101,115,.38)','rgba(86,101,115,0)');
-  glow(W*.5,H*.5,420,'rgba(152,170,184,.11)','rgba(152,170,184,0)');
+  radialGlow(-80,-120,750,'rgba(33,57,90,.65)','rgba(33,57,90,0)');
+  radialGlow(W+80,H+60,640,'rgba(86,101,115,.42)','rgba(86,101,115,0)');
+  radialGlow(W*.5,H*.48,460,'rgba(152,170,184,.13)','rgba(152,170,184,0)');
+  if(isE)radialGlow(W*.8,H*.15,400,'rgba(120,135,150,.18)','rgba(120,135,150,0)');
+
+  // 星星
+  ctx.save();
+  const starSeed=code.charCodeAt(0)||42;
+  for(let i=0;i<55;i++){
+    const sx=((starSeed*i*137.5+i*431)%1000)/10*W/100;
+    const sy=((starSeed*i*97.3+i*317)%1000)/10*H/100;
+    const sr=.4+((i*73)%10)/10*2.2;
+    const sa=.04+((i*53)%10)/10*.28;
+    ctx.globalAlpha=sa;ctx.fillStyle='#d7dbe2';
+    ctx.beginPath();ctx.arc(sx,sy,sr,0,Math.PI*2);ctx.fill();
+  }
+  ctx.globalAlpha=1;ctx.restore();
 
   // 細格紋
-  ctx.save();
-  for(let x=0;x<W+H;x+=34){
-    ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x-H,H);
-    ctx.strokeStyle='rgba(215,219,226,.016)';ctx.lineWidth=1;ctx.stroke();
+  ctx.save();ctx.globalAlpha=.018;ctx.strokeStyle='#d7dbe2';ctx.lineWidth=1;
+  for(let x=-H;x<W+H;x+=34){
+    ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x+H,H);ctx.stroke();
   }
-  ctx.restore();
+  ctx.globalAlpha=1;ctx.restore();
 
   // 頂部光線
   const tl=ctx.createLinearGradient(88,0,W-88,0);
-  tl.addColorStop(0,'rgba(152,170,184,0)');tl.addColorStop(.3,'rgba(152,170,184,.5)');
-  tl.addColorStop(.5,'rgba(215,219,226,.28)');tl.addColorStop(.7,'rgba(152,170,184,.5)');
+  tl.addColorStop(0,'rgba(152,170,184,0)');tl.addColorStop(.28,'rgba(152,170,184,.52)');
+  tl.addColorStop(.5,'rgba(215,219,226,.3)');tl.addColorStop(.72,'rgba(152,170,184,.52)');
   tl.addColorStop(1,'rgba(152,170,184,0)');
   ctx.save();ctx.strokeStyle=tl;ctx.lineWidth=1;
   ctx.beginPath();ctx.moveTo(88,0);ctx.lineTo(W-88,0);ctx.stroke();ctx.restore();
 
-  // Header 品牌
+  // Header
   ctx.save();
-  ctx.font='600 21px Inter,Arial,sans-serif';
-  ctx.fillStyle='rgba(152,170,184,.42)';
-  ctx.textAlign='right';ctx.textBaseline='top';
-  ctx.fillText('MBTI RESULT',W-88,96);
+  ctx.font='600 20px Inter,Arial,sans-serif';
+  ctx.fillStyle='rgba(152,170,184,.4)';ctx.textBaseline='top';
+  ctx.textAlign='left';ctx.fillText('U&ME',88,92);
+  ctx.textAlign='right';ctx.fillText('MBTI RESULT',W-88,92);
   ctx.restore();
 
-  // U&ME 品牌小字（左）
+  // MBTI 大字
   ctx.save();
-  ctx.font='600 21px Inter,Arial,sans-serif';
-  ctx.fillStyle='rgba(152,170,184,.42)';
-  ctx.textAlign='left';ctx.textBaseline='top';
-  ctx.fillText('U&ME',88,96);
-  ctx.restore();
-
-  // MBTI 超大字
-  const codeGrad=ctx.createLinearGradient(80,300,W-80,560);
-  codeGrad.addColorStop(0,'rgba(255,255,255,.96)');
-  codeGrad.addColorStop(.22,'#e8ecf0');
-  codeGrad.addColorStop(.55,'#98aab8');
-  codeGrad.addColorStop(1,'#566573');
-  ctx.save();
-  ctx.font='400 196px Georgia,serif';
+  ctx.shadowColor='rgba(152,170,184,.22)';ctx.shadowBlur=60;
+  const codeGrad=ctx.createLinearGradient(80,280,W-80,540);
+  codeGrad.addColorStop(0,'rgba(255,255,255,.97)');
+  codeGrad.addColorStop(.2,'#edf0f3');
+  codeGrad.addColorStop(.5,'#98aab8');
+  codeGrad.addColorStop(1,isE?'#7a8c9a':'#566573');
+  ctx.font='400 200px Georgia,serif';
   ctx.fillStyle=codeGrad;
   ctx.textAlign='left';ctx.textBaseline='alphabetic';
   ctx.fillText(code,80,530);
-  ctx.restore();
+  ctx.shadowBlur=0;ctx.restore();
 
   // 分隔線
   ctx.save();
   const dl=ctx.createLinearGradient(88,575,200,575);
-  dl.addColorStop(0,'rgba(152,170,184,.55)');dl.addColorStop(1,'rgba(86,101,115,.15)');
+  dl.addColorStop(0,'rgba(152,170,184,.58)');dl.addColorStop(1,'rgba(86,101,115,.1)');
   ctx.strokeStyle=dl;ctx.lineWidth=2;
-  ctx.beginPath();ctx.moveTo(88,578);ctx.lineTo(156,578);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(88,580);ctx.lineTo(160,580);ctx.stroke();
   ctx.restore();
 
   // 名稱
   ctx.save();
-  ctx.font='400 60px Georgia,serif';
+  ctx.font='400 62px Georgia,serif';
   ctx.fillStyle='#d7dbe2';ctx.textAlign='left';ctx.textBaseline='alphabetic';
-  ctx.fillText(name,88,668);
-  ctx.restore();
+  ctx.fillText(name,88,668);ctx.restore();
 
   // Tag
   ctx.save();
   ctx.font='400 20px Inter,Arial,sans-serif';
   ctx.fillStyle='rgba(152,170,184,.6)';ctx.textAlign='left';ctx.textBaseline='alphabetic';
-  ctx.fillText(tag.toUpperCase(),88,716);
-  ctx.restore();
+  ctx.fillText(tag.toUpperCase(),88,716);ctx.restore();
 
-  // 描述（自動換行，中文逐字）
+  // 描述自動換行
   ctx.save();
   ctx.font='400 25px Inter,Arial,sans-serif';
   ctx.fillStyle='rgba(152,170,184,.72)';ctx.textAlign='left';ctx.textBaseline='alphabetic';
-  const maxTW=W-176,lineH=44;
+  const maxTW=W-196,lineH=46;
   let line='',ly=810;
   for(const ch of desc){
     const test=line+ch;
@@ -717,15 +819,14 @@ async function makeShareBlob(){
   ctx.restore();
 
   // Pills
-  ctx.save();
-  ctx.font='400 19px Inter,Arial,sans-serif';
+  ctx.save();ctx.font='400 19px Inter,Arial,sans-serif';
   let px=88,py=ly+72;
   pills.forEach(txt=>{
     const tw=ctx.measureText(txt).width+52;
     roundRect(ctx,px,py-26,tw,42,21);
-    ctx.fillStyle='rgba(33,57,90,.42)';ctx.fill();
-    ctx.strokeStyle='rgba(152,170,184,.18)';ctx.lineWidth=1;ctx.stroke();
-    ctx.fillStyle='rgba(215,219,226,.78)';
+    ctx.fillStyle='rgba(33,57,90,.45)';ctx.fill();
+    ctx.strokeStyle='rgba(152,170,184,.2)';ctx.lineWidth=1;ctx.stroke();
+    ctx.fillStyle='rgba(215,219,226,.8)';
     ctx.fillText(txt,px+26,py+7);
     px+=tw+14;
   });
@@ -738,19 +839,16 @@ async function makeShareBlob(){
     ctx.font='400 18px Inter,Arial,sans-serif';
     ctx.fillStyle='rgba(152,170,184,.52)';ctx.textAlign='left';ctx.textBaseline='middle';
     ctx.fillText(b.label,88,by);
-    // track
     roundRect(ctx,192,by-5,650,4,2);
     ctx.fillStyle='rgba(152,170,184,.1)';ctx.fill();
-    // fill bar
-    const bw=650*(b.pct/100);
+    const bw=Math.max(0,650*(b.pct/100));
     if(bw>0){
       roundRect(ctx,192,by-5,bw,4,2);
       const bg2=ctx.createLinearGradient(192,0,192+650,0);
-      if(isE){bg2.addColorStop(0,'#566573');bg2.addColorStop(1,'#d7dbe2');}
-      else{bg2.addColorStop(0,'#21395a');bg2.addColorStop(1,'#98aab8');}
+      isE?(bg2.addColorStop(0,'#566573'),bg2.addColorStop(1,'#d7dbe2'))
+         :(bg2.addColorStop(0,'#21395a'),bg2.addColorStop(1,'#98aab8'));
       ctx.fillStyle=bg2;ctx.fill();
     }
-    // pct
     ctx.font='700 16px Inter,Arial,sans-serif';
     ctx.fillStyle='rgba(152,170,184,.62)';ctx.textAlign='right';ctx.textBaseline='middle';
     ctx.fillText(b.pct+'%',W-88,by);
@@ -758,33 +856,46 @@ async function makeShareBlob(){
     by+=50;
   });
 
+  // 配對提示
+  if(match){
+    ctx.save();
+    ctx.font='400 18px Inter,Arial,sans-serif';
+    const mName=results[match]?.name||match;
+    const mTxt=`✦ 最合拍類型：${match} ${mName}`;
+    const mW=ctx.measureText(mTxt).width+52;
+    roundRect(ctx,88,by+20,mW,40,20);
+    ctx.fillStyle='rgba(33,57,90,.4)';ctx.fill();
+    ctx.strokeStyle='rgba(152,170,184,.16)';ctx.lineWidth=1;ctx.stroke();
+    ctx.fillStyle='rgba(152,170,184,.65)';ctx.textAlign='left';ctx.textBaseline='middle';
+    ctx.fillText(mTxt,88+26,by+40);
+    ctx.restore();
+    by+=76;
+  }
+
   // 底部分隔線
-  ctx.save();
-  ctx.strokeStyle='rgba(152,170,184,.1)';ctx.lineWidth=1;
-  ctx.beginPath();ctx.moveTo(88,H-130);ctx.lineTo(W-88,H-130);ctx.stroke();
-  ctx.restore();
+  ctx.save();ctx.strokeStyle='rgba(152,170,184,.1)';ctx.lineWidth=1;
+  ctx.beginPath();ctx.moveTo(88,H-128);ctx.lineTo(W-88,H-128);ctx.stroke();ctx.restore();
 
   // Footer
   ctx.save();
   ctx.font='400 17px Inter,Arial,sans-serif';
   ctx.fillStyle='rgba(86,101,115,.62)';
   ctx.textAlign='left';ctx.textBaseline='middle';
-  ctx.fillText('U&ME · YOUR INNER TEMPO',88,H-80);
+  ctx.fillText('U&ME · YOUR INNER TEMPO',88,H-78);
   ctx.textAlign='right';ctx.fillStyle='rgba(86,101,115,.45)';
-  ctx.fillText('測測你是哪種類型',W-88,H-80);
+  ctx.fillText('測測你是哪種類型',W-88,H-78);
   ctx.restore();
 
   return new Promise(r=>cv.toBlob(b=>r(b),'image/png',1));
 }
 
-async function dlBlob(blob,name){
+async function dlBlob(blob,fname){
   const u=URL.createObjectURL(blob),a=document.createElement('a');
-  a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(u);
+  a.href=u;a.download=fname;document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(u);
 }
 
 async function handleShare(){
-  const orig=shareBtn.innerHTML;
-  const svgEl=shareBtn.querySelector('svg');
+  const orig=shareBtn.innerHTML,svgEl=shareBtn.querySelector('svg');
   shareBtn.classList.add('loading');if(svgEl)svgEl.style.display='none';
   try{
     const blob=await makeShareBlob();
@@ -798,12 +909,15 @@ async function handleShare(){
     if(navigator.canShare&&navigator.canShare(data))await navigator.share(data);
     else{await dlBlob(blob,fname);alert('已下載圖片，請手動上傳到你想分享的平台 🙌');}
   }catch(e){if(e.name!=='AbortError')console.warn(e);}
-  finally{shareBtn.classList.remove('loading');if(svgEl)svgEl.style.display='';shareBtn.innerHTML=orig;}
+  finally{
+    shareBtn.classList.remove('loading');
+    if(svgEl)svgEl.style.display='';
+    shareBtn.innerHTML=orig;
+  }
 }
 
 async function handleSave(){
-  const orig=saveBtn.innerHTML;
-  const svgEl=saveBtn.querySelector('svg');
+  const orig=saveBtn.innerHTML,svgEl=saveBtn.querySelector('svg');
   saveBtn.classList.add('loading');if(svgEl)svgEl.style.display='none';
   try{
     const blob=await makeShareBlob();
@@ -812,10 +926,14 @@ async function handleSave(){
     saveBtn.classList.remove('loading');if(svgEl)svgEl.style.display='';
     saveBtn.innerHTML='<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> 已儲存';
     setTimeout(()=>{saveBtn.innerHTML=orig;},1800);
-  }catch(e){saveBtn.classList.remove('loading');if(svgEl)svgEl.style.display='';saveBtn.innerHTML=orig;}
+  }catch(e){
+    saveBtn.classList.remove('loading');
+    if(svgEl)svgEl.style.display='';
+    saveBtn.innerHTML=orig;
+  }
 }
 
-// ── 事件
+// ── 事件綁定
 startBtn.addEventListener('click',startQuiz);
 nextBtn.addEventListener('click',()=>goNext('forward'));
 backBtn.addEventListener('click',goPrev);
@@ -823,12 +941,15 @@ restartBtn.addEventListener('click',restartToStart);
 shareBtn.addEventListener('click',handleShare);
 saveBtn.addEventListener('click',handleSave);
 
+// 點擊漣漪效果
 stage.addEventListener('pointerdown',e=>{
   const r=document.createElement('span');
   r.style.cssText='position:absolute;border-radius:50%;pointer-events:none;transform:translate(-50%,-50%);background:radial-gradient(circle,rgba(152,170,184,.18) 0%,transparent 68%);animation:rip .8s ease-out forwards;mix-blend-mode:screen;z-index:4';
   const rc=stage.getBoundingClientRect();
-  r.style.left=(e.clientX-rc.left)+'px';r.style.top=(e.clientY-rc.top)+'px';
-  stage.appendChild(r);r.addEventListener('animationend',()=>r.remove());
+  r.style.left=(e.clientX-rc.left)+'px';
+  r.style.top=(e.clientY-rc.top)+'px';
+  stage.appendChild(r);
+  r.addEventListener('animationend',()=>r.remove());
 });
 </script>
 </body>
