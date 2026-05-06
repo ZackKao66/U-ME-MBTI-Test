@@ -171,9 +171,7 @@
     .share-btn.primary{background:linear-gradient(135deg,#21395a,#566573);border-color:rgba(152,170,184,.18);color:#d7dbe2;box-shadow:0 6px 22px rgba(12,23,48,.45)}
     .share-btn:hover{transform:translateY(-2px)}
     .share-btn:active{transform:scale(.96)}
-    .platform-icons{grid-column:1/-1;display:flex;justify-content:center;gap:12px;padding:3px 0 0}
-    .platform-icons span{width:30px;height:30px;border-radius:50%;border:1px solid var(--border);background:rgba(33,57,90,.35);display:grid;place-items:center;font-size:13px}
-    .share-hint{grid-column:1/-1;text-align:center;font-size:10.5px;color:var(--muted);line-height:1.5;padding:2px 0 0;opacity:.8}
+    .share-hint{grid-column:1/-1;text-align:center;font-size:10.5px;color:var(--muted);line-height:1.5;padding:2px 0 0;opacity:.7}
     .restart-btn{width:100%;min-height:44px;font-size:14px}
     .share-btn.loading{opacity:.65;pointer-events:none}
     .share-btn.loading::after{content:'';display:inline-block;width:13px;height:13px;border:2px solid currentColor;border-top-color:transparent;border-radius:50%;animation:spin .7s linear infinite;margin-left:5px}
@@ -323,10 +321,7 @@
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
             儲存圖片
           </button>
-          <div class="platform-icons">
-            <span title="LINE">💬</span><span title="Instagram">📸</span><span title="Facebook">🔵</span><span title="Threads">🧵</span>
-          </div>
-          <p class="share-hint">點「分享結果」可選擇 LINE・IG・FB・Threads 等平台</p>
+          <p class="share-hint">分享後可選擇 LINE・IG・FB・Threads</p>
         </div>
         <div class="result-cta">
           <button class="restart-btn" id="restartBtn" type="button">重新測驗</button>
@@ -670,8 +665,7 @@ const showResult=()=>{
 
   const mCode=r.match||'';
   matchCode.textContent=mCode;
-  const mName=results[mCode]?.name||'';
-  if(mName)matchBadge.title=mName;
+  if(results[mCode])matchBadge.title=results[mCode].name;
 
   resultPills.innerHTML='';
   r.pills.forEach(t=>{
@@ -715,13 +709,11 @@ async function makeShareBlob(){
   const ctx=cv.getContext('2d');
   ctx.scale(DPR,DPR);
 
-  // 背景
   const bg=ctx.createLinearGradient(0,0,W,H);
   bg.addColorStop(0,'#07101e');bg.addColorStop(.38,'#0c1a2e');
   bg.addColorStop(.65,'#111f3a');bg.addColorStop(1,'#090f1c');
   ctx.fillStyle=bg;ctx.fillRect(0,0,W,H);
 
-  // 光暈
   function radialGlow(x,y,r,c1,c2){
     const g=ctx.createRadialGradient(x,y,0,x,y,r);
     g.addColorStop(0,c1);g.addColorStop(1,c2);
@@ -733,7 +725,6 @@ async function makeShareBlob(){
   radialGlow(W*.5,H*.48,460,'rgba(152,170,184,.13)','rgba(152,170,184,0)');
   if(isE)radialGlow(W*.8,H*.15,400,'rgba(120,135,150,.18)','rgba(120,135,150,0)');
 
-  // 星星
   ctx.save();
   const starSeed=code.charCodeAt(0)||42;
   for(let i=0;i<55;i++){
@@ -746,14 +737,10 @@ async function makeShareBlob(){
   }
   ctx.globalAlpha=1;ctx.restore();
 
-  // 細格紋
   ctx.save();ctx.globalAlpha=.018;ctx.strokeStyle='#d7dbe2';ctx.lineWidth=1;
-  for(let x=-H;x<W+H;x+=34){
-    ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x+H,H);ctx.stroke();
-  }
+  for(let x=-H;x<W+H;x+=34){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x+H,H);ctx.stroke();}
   ctx.globalAlpha=1;ctx.restore();
 
-  // 頂部光線
   const tl=ctx.createLinearGradient(88,0,W-88,0);
   tl.addColorStop(0,'rgba(152,170,184,0)');tl.addColorStop(.28,'rgba(152,170,184,.52)');
   tl.addColorStop(.5,'rgba(215,219,226,.3)');tl.addColorStop(.72,'rgba(152,170,184,.52)');
@@ -761,7 +748,6 @@ async function makeShareBlob(){
   ctx.save();ctx.strokeStyle=tl;ctx.lineWidth=1;
   ctx.beginPath();ctx.moveTo(88,0);ctx.lineTo(W-88,0);ctx.stroke();ctx.restore();
 
-  // Header
   ctx.save();
   ctx.font='600 20px Inter,Arial,sans-serif';
   ctx.fillStyle='rgba(152,170,184,.4)';ctx.textBaseline='top';
@@ -769,7 +755,6 @@ async function makeShareBlob(){
   ctx.textAlign='right';ctx.fillText('MBTI RESULT',W-88,92);
   ctx.restore();
 
-  // MBTI 大字
   ctx.save();
   ctx.shadowColor='rgba(152,170,184,.22)';ctx.shadowBlur=60;
   const codeGrad=ctx.createLinearGradient(80,280,W-80,540);
@@ -783,7 +768,6 @@ async function makeShareBlob(){
   ctx.fillText(code,80,530);
   ctx.shadowBlur=0;ctx.restore();
 
-  // 分隔線
   ctx.save();
   const dl=ctx.createLinearGradient(88,575,200,575);
   dl.addColorStop(0,'rgba(152,170,184,.58)');dl.addColorStop(1,'rgba(86,101,115,.1)');
@@ -791,19 +775,16 @@ async function makeShareBlob(){
   ctx.beginPath();ctx.moveTo(88,580);ctx.lineTo(160,580);ctx.stroke();
   ctx.restore();
 
-  // 名稱
   ctx.save();
   ctx.font='400 62px Georgia,serif';
   ctx.fillStyle='#d7dbe2';ctx.textAlign='left';ctx.textBaseline='alphabetic';
   ctx.fillText(name,88,668);ctx.restore();
 
-  // Tag
   ctx.save();
   ctx.font='400 20px Inter,Arial,sans-serif';
   ctx.fillStyle='rgba(152,170,184,.6)';ctx.textAlign='left';ctx.textBaseline='alphabetic';
   ctx.fillText(tag.toUpperCase(),88,716);ctx.restore();
 
-  // 描述自動換行
   ctx.save();
   ctx.font='400 25px Inter,Arial,sans-serif';
   ctx.fillStyle='rgba(152,170,184,.72)';ctx.textAlign='left';ctx.textBaseline='alphabetic';
@@ -811,14 +792,12 @@ async function makeShareBlob(){
   let line='',ly=810;
   for(const ch of desc){
     const test=line+ch;
-    if(ctx.measureText(test).width>maxTW&&line.length){
-      ctx.fillText(line,88,ly);line=ch;ly+=lineH;
-    }else{line=test;}
+    if(ctx.measureText(test).width>maxTW&&line.length){ctx.fillText(line,88,ly);line=ch;ly+=lineH;}
+    else{line=test;}
   }
   if(line)ctx.fillText(line,88,ly);
   ctx.restore();
 
-  // Pills
   ctx.save();ctx.font='400 19px Inter,Arial,sans-serif';
   let px=88,py=ly+72;
   pills.forEach(txt=>{
@@ -826,21 +805,18 @@ async function makeShareBlob(){
     roundRect(ctx,px,py-26,tw,42,21);
     ctx.fillStyle='rgba(33,57,90,.45)';ctx.fill();
     ctx.strokeStyle='rgba(152,170,184,.2)';ctx.lineWidth=1;ctx.stroke();
-    ctx.fillStyle='rgba(215,219,226,.8)';
-    ctx.fillText(txt,px+26,py+7);
+    ctx.fillStyle='rgba(215,219,226,.8)';ctx.fillText(txt,px+26,py+7);
     px+=tw+14;
   });
   ctx.restore();
 
-  // 分數條
   let by=py+90;
   bars.forEach(b=>{
     ctx.save();
     ctx.font='400 18px Inter,Arial,sans-serif';
     ctx.fillStyle='rgba(152,170,184,.52)';ctx.textAlign='left';ctx.textBaseline='middle';
     ctx.fillText(b.label,88,by);
-    roundRect(ctx,192,by-5,650,4,2);
-    ctx.fillStyle='rgba(152,170,184,.1)';ctx.fill();
+    roundRect(ctx,192,by-5,650,4,2);ctx.fillStyle='rgba(152,170,184,.1)';ctx.fill();
     const bw=Math.max(0,650*(b.pct/100));
     if(bw>0){
       roundRect(ctx,192,by-5,bw,4,2);
@@ -852,11 +828,9 @@ async function makeShareBlob(){
     ctx.font='700 16px Inter,Arial,sans-serif';
     ctx.fillStyle='rgba(152,170,184,.62)';ctx.textAlign='right';ctx.textBaseline='middle';
     ctx.fillText(b.pct+'%',W-88,by);
-    ctx.restore();
-    by+=50;
+    ctx.restore();by+=50;
   });
 
-  // 配對提示
   if(match){
     ctx.save();
     ctx.font='400 18px Inter,Arial,sans-serif';
@@ -868,22 +842,17 @@ async function makeShareBlob(){
     ctx.strokeStyle='rgba(152,170,184,.16)';ctx.lineWidth=1;ctx.stroke();
     ctx.fillStyle='rgba(152,170,184,.65)';ctx.textAlign='left';ctx.textBaseline='middle';
     ctx.fillText(mTxt,88+26,by+40);
-    ctx.restore();
-    by+=76;
+    ctx.restore();by+=76;
   }
 
-  // 底部分隔線
   ctx.save();ctx.strokeStyle='rgba(152,170,184,.1)';ctx.lineWidth=1;
   ctx.beginPath();ctx.moveTo(88,H-128);ctx.lineTo(W-88,H-128);ctx.stroke();ctx.restore();
 
-  // Footer
   ctx.save();
   ctx.font='400 17px Inter,Arial,sans-serif';
   ctx.fillStyle='rgba(86,101,115,.62)';
-  ctx.textAlign='left';ctx.textBaseline='middle';
-  ctx.fillText('U&ME · YOUR INNER TEMPO',88,H-78);
-  ctx.textAlign='right';ctx.fillStyle='rgba(86,101,115,.45)';
-  ctx.fillText('測測你是哪種類型',W-88,H-78);
+  ctx.textAlign='left';ctx.textBaseline='middle';ctx.fillText('U&ME · YOUR INNER TEMPO',88,H-78);
+  ctx.textAlign='right';ctx.fillStyle='rgba(86,101,115,.45)';ctx.fillText('測測你是哪種類型',W-88,H-78);
   ctx.restore();
 
   return new Promise(r=>cv.toBlob(b=>r(b),'image/png',1));
@@ -909,11 +878,7 @@ async function handleShare(){
     if(navigator.canShare&&navigator.canShare(data))await navigator.share(data);
     else{await dlBlob(blob,fname);alert('已下載圖片，請手動上傳到你想分享的平台 🙌');}
   }catch(e){if(e.name!=='AbortError')console.warn(e);}
-  finally{
-    shareBtn.classList.remove('loading');
-    if(svgEl)svgEl.style.display='';
-    shareBtn.innerHTML=orig;
-  }
+  finally{shareBtn.classList.remove('loading');if(svgEl)svgEl.style.display='';shareBtn.innerHTML=orig;}
 }
 
 async function handleSave(){
@@ -933,7 +898,6 @@ async function handleSave(){
   }
 }
 
-// ── 事件綁定
 startBtn.addEventListener('click',startQuiz);
 nextBtn.addEventListener('click',()=>goNext('forward'));
 backBtn.addEventListener('click',goPrev);
@@ -941,7 +905,6 @@ restartBtn.addEventListener('click',restartToStart);
 shareBtn.addEventListener('click',handleShare);
 saveBtn.addEventListener('click',handleSave);
 
-// 點擊漣漪效果
 stage.addEventListener('pointerdown',e=>{
   const r=document.createElement('span');
   r.style.cssText='position:absolute;border-radius:50%;pointer-events:none;transform:translate(-50%,-50%);background:radial-gradient(circle,rgba(152,170,184,.18) 0%,transparent 68%);animation:rip .8s ease-out forwards;mix-blend-mode:screen;z-index:4';
