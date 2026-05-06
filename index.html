@@ -64,7 +64,6 @@
     .start:hover{transform:scale(1.08)}
     .start:active{transform:scale(.95)}
     .start-label{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
-    /* 恢復進度 banner */
     .resume-banner{display:none;align-items:center;justify-content:space-between;gap:10px;padding:10px 14px;border-radius:14px;border:1px solid rgba(152,170,184,.2);background:rgba(33,57,90,.45);backdrop-filter:blur(10px);font-size:12px;color:var(--muted);width:100%;}
     .resume-banner.show{display:flex}
     .resume-banner b{color:var(--text)}
@@ -221,7 +220,6 @@
         <div class="count-badge">✦ 已有 2,847 人完成測驗</div>
       </div>
       <div class="brand-bot">
-        <!-- 恢復進度 banner -->
         <div class="resume-banner" id="resumeBanner">
           <span>找到上次紀錄，繼續作答？<b id="resumeInfo"></b></span>
           <div class="resume-actions">
@@ -314,9 +312,7 @@
 <p class="copyright">© U&amp;ME ® 商標已於中華民國註冊，保留一切權利</p>
 
 <script>
-/* ═══════════════════════════════════════════
-   ① 星星背景
-═══════════════════════════════════════════ */
+/* ── 星星 ── */
 (()=>{
   const el=document.getElementById('starsEl');
   for(let i=0;i<65;i++){
@@ -328,9 +324,7 @@
 })();
 document.getElementById('curtain').addEventListener('animationend',function(){this.remove()},{once:true});
 
-/* ═══════════════════════════════════════════
-   ② DOM refs
-═══════════════════════════════════════════ */
+/* ── DOM refs ── */
 const root=document.documentElement,
   introScreen=document.getElementById('introScreen'),
   quizScreen=document.getElementById('quizScreen'),
@@ -371,9 +365,7 @@ const root=document.documentElement,
 
 const shareData={code:'',name:'',tag:'',desc:'',pills:[],bars:[],isE:false,match:''};
 
-/* ═══════════════════════════════════════════
-   ③ 題目資料
-═══════════════════════════════════════════ */
+/* ── 題目資料 ── */
 const questions=[
   {q:'第一次靠近時，你更在意什麼？',a:['A. 氛圍有沒有對，感覺要先到位。','B. 反應夠不夠快，張力要立刻出現。','C. 感覺有沒有慢慢升起來。','D. 能不能直接進入狀態。']},
   {q:'你比較容易被哪種方式打動？',a:['A. 溫柔、慢慢、一步一步。','B. 直接、明確、很到位。','C. 有情感、帶曖昧、會想多看一眼。','D. 觸感明顯、身體立刻有感。']},
@@ -430,61 +422,22 @@ const DIMS=[
   {label:'慾望',a:'Curious',b:'Lust',aChar:'C'},
 ];
 
-/* ═══════════════════════════════════════════
-   ④ Haptic 震動（優化①）
-═══════════════════════════════════════════ */
-function haptic(ms=8){
-  try{if(navigator.vibrate)navigator.vibrate(ms);}catch(e){}
-}
+/* ── Haptic ── */
+function haptic(ms=8){try{if(navigator.vibrate)navigator.vibrate(ms);}catch(e){}}
 
-/* ═══════════════════════════════════════════
-   ⑤ LocalStorage 進度存取（優化②）
-═══════════════════════════════════════════ */
+/* ── LocalStorage ── */
 const LS_KEY='ume_mbti_progress';
+function saveProgress(){try{localStorage.setItem(LS_KEY,JSON.stringify({index:state.index,answers:state.answers,ts:Date.now()}));}catch(e){}}
+function loadProgress(){try{const raw=localStorage.getItem(LS_KEY);if(!raw)return null;const d=JSON.parse(raw);if(Date.now()-d.ts>86400000){localStorage.removeItem(LS_KEY);return null;}return d;}catch(e){return null;}}
+function clearProgress(){try{localStorage.removeItem(LS_KEY);}catch(e){}}
 
-function saveProgress(){
-  try{
-    localStorage.setItem(LS_KEY,JSON.stringify({
-      index:state.index,
-      answers:state.answers,
-      ts:Date.now()
-    }));
-  }catch(e){}
-}
+/* ── 狀態 ── */
+const state={index:0,answers:Array(questions.length).fill(null),score:{Mood:0,Energy:0,Intimacy:0,Direct:0,Romance:0,Touch:0,Curious:0,Lust:0},sliding:false};
 
-function loadProgress(){
-  try{
-    const raw=localStorage.getItem(LS_KEY);
-    if(!raw)return null;
-    const d=JSON.parse(raw);
-    // 超過 24 小時自動失效
-    if(Date.now()-d.ts>86400000){localStorage.removeItem(LS_KEY);return null;}
-    return d;
-  }catch(e){return null;}
-}
-
-function clearProgress(){
-  try{localStorage.removeItem(LS_KEY);}catch(e){}
-}
-
-/* ═══════════════════════════════════════════
-   ⑥ 狀態
-═══════════════════════════════════════════ */
-const state={
-  index:0,
-  answers:Array(questions.length).fill(null),
-  score:{Mood:0,Energy:0,Intimacy:0,Direct:0,Romance:0,Touch:0,Curious:0,Lust:0},
-  sliding:false
-};
-
-/* ═══════════════════════════════════════════
-   ⑦ Canvas 字型預載（優化⑤）
-   使用 Google Fonts Noto Sans TC 確保中文正確渲染
-═══════════════════════════════════════════ */
+/* ── Canvas 字型預載 ── */
 let canvasFontsReady=false;
 const CANVAS_FONT_BODY='Noto Sans TC';
 const CANVAS_FONT_DISPLAY='Noto Serif TC';
-
 async function preloadCanvasFonts(){
   if(canvasFontsReady)return;
   try{
@@ -493,23 +446,13 @@ async function preloadCanvasFonts(){
       new FontFace(CANVAS_FONT_BODY,'url(https://fonts.gstatic.com/s/notosanstc/v35/nKKF-GM_FYFRJvXzVXaAPe9hMnZ3Mnp_nw.woff2)',{weight:'700'}),
       new FontFace(CANVAS_FONT_DISPLAY,'url(https://fonts.gstatic.com/s/notoserifc/v22/vEFM2-VJISZe3O_rc3ZVYh4aTwNOyra_j6WrMQ.woff2)',{weight:'400'}),
     ];
-    await Promise.all(fonts.map(async f=>{
-      await f.load();
-      document.fonts.add(f);
-    }));
+    await Promise.all(fonts.map(async f=>{await f.load();document.fonts.add(f);}));
     canvasFontsReady=true;
-  }catch(e){
-    // 字型載入失敗時 fallback 到系統字，不擋流程
-    canvasFontsReady=true;
-  }
+  }catch(e){canvasFontsReady=true;}
 }
-
-// 頁面載入時就開始預載，不等使用者點分享
 preloadCanvasFonts();
 
-/* ═══════════════════════════════════════════
-   ⑧ Logo 圖預載（優化④）
-═══════════════════════════════════════════ */
+/* ── Logo 預載 ── */
 let logoImg=null;
 function preloadLogo(){
   return new Promise(resolve=>{
@@ -521,18 +464,25 @@ function preloadLogo(){
 }
 preloadLogo();
 
-/* ═══════════════════════════════════════════
-   ⑨ 畫面切換
-═══════════════════════════════════════════ */
+/* ── 角色圖預載（未來使用）── */
+let characterImg=null;
+function preloadCharacter(code){
+  return new Promise(resolve=>{
+    const img=new Image();
+    img.onload=()=>{characterImg=img;resolve(img);};
+    img.onerror=()=>{characterImg=null;resolve(null);};
+    img.src=`assets/characters/${code}.png`;
+  });
+}
+
+/* ── 畫面切換 ── */
 const setScreen=s=>{
   [introScreen,quizScreen,resultScreen].forEach(el=>{el.hidden=el!==s;el.classList.remove('active');});
   s.hidden=false;s.scrollTop=0;
   requestAnimationFrame(()=>s.classList.add('active'));
 };
 
-/* ═══════════════════════════════════════════
-   ⑩ 進度條
-═══════════════════════════════════════════ */
+/* ── 進度條 ── */
 function progressLabelText(i,total){
   if(i===0)return'開始囉 ✦';
   if(i===total-1)return'最後一題 ✦';
@@ -540,7 +490,6 @@ function progressLabelText(i,total){
   if(i>=Math.floor(total*.3))return'繼續深入 ✦';
   return'';
 }
-
 const updateProgress=()=>{
   const pct=Math.max(0,Math.min(100,(state.index/(questions.length-1))*100));
   progressFill.style.width=`${pct}%`;
@@ -550,9 +499,7 @@ const updateProgress=()=>{
   else if(!txt){cur.textContent='';}
 };
 
-/* ═══════════════════════════════════════════
-   ⑪ 卡片過場動畫
-═══════════════════════════════════════════ */
+/* ── 卡片動畫 ── */
 function slideCard(dir,cb){
   if(state.sliding)return;
   state.sliding=true;
@@ -566,15 +513,12 @@ function slideCard(dir,cb){
     quizCard.classList.add(nc);
     quizCard.addEventListener('animationend',function onN(){
       quizCard.removeEventListener('animationend',onN);
-      quizCard.classList.remove(nc);
-      state.sliding=false;
+      quizCard.classList.remove(nc);state.sliding=false;
     });
   });
 }
 
-/* ═══════════════════════════════════════════
-   ⑫ 題目渲染
-═══════════════════════════════════════════ */
+/* ── 題目渲染 ── */
 function animateQuestion(text){
   questionText.innerHTML='';
   [...text].forEach((ch,i)=>{
@@ -596,21 +540,18 @@ const renderQuestion=()=>{
   revealHint.classList.toggle('show',isLast&&state.answers[i]!==null);
   questions[i].a.forEach((txt,idx)=>{
     const key=['A','B','C','D'][idx];
-    const b=document.createElement('button');
-    b.className='option';b.type='button';
+    const b=document.createElement('button');b.className='option';b.type='button';
     b.style.setProperty('--od',`${0.12+idx*0.07}s`);
     b.innerHTML=`${txt}<span class="opt-check">✓</span>`;
     if(state.answers[i]===key)b.classList.add('selected');
     b.addEventListener('click',()=>{
       if(state.sliding)return;
-      // ① Haptic 震動
       haptic(8);
       b.classList.add('tap-bounce');
       b.addEventListener('animationend',()=>b.classList.remove('tap-bounce'),{once:true});
       optionsEl.style.pointerEvents='none';
       setTimeout(()=>optionsEl.style.pointerEvents='',320);
       state.answers[i]=key;
-      // ② 每次選答案立即存進度
       saveProgress();
       renderQuestion();
       if(i<questions.length-1)setTimeout(()=>goNext('forward'),300);
@@ -623,9 +564,7 @@ const renderQuestion=()=>{
   nextBtn.disabled=state.answers[i]==null;
 };
 
-/* ═══════════════════════════════════════════
-   ⑬ 前進 / 後退
-═══════════════════════════════════════════ */
+/* ── 前進 / 後退 ── */
 function goNext(dir='forward'){
   if(state.answers[state.index]==null||state.sliding)return;
   if(state.index<questions.length-1)slideCard(dir,()=>{state.index+=1;renderQuestion();});
@@ -635,56 +574,28 @@ function goPrev(){
   if(state.index>0&&!state.sliding)slideCard('back',()=>{state.index-=1;renderQuestion();});
 }
 
-/* ═══════════════════════════════════════════
-   ⑭ 開始 / 重新
-═══════════════════════════════════════════ */
+/* ── 開始 / 重新 ── */
 const startQuiz=(fromSaved=false)=>{
-  if(!fromSaved){
-    state.index=0;
-    state.answers=Array(questions.length).fill(null);
-  }
-  state.sliding=false;
-  progressFill.style.width='0%';
-  revealHint.classList.remove('show');
-  setScreen(quizScreen);
-  renderQuestion();
+  if(!fromSaved){state.index=0;state.answers=Array(questions.length).fill(null);}
+  state.sliding=false;progressFill.style.width='0%';revealHint.classList.remove('show');
+  setScreen(quizScreen);renderQuestion();
 };
-
 const restartToStart=()=>{
   root.removeAttribute('data-result-theme');
-  state.index=0;state.sliding=false;
-  state.answers=Array(questions.length).fill(null);
-  clearProgress();
-  progressFill.style.width='0%';
-  nextBtn.disabled=true;
-  revealHint.classList.remove('show');
-  setScreen(introScreen);
-  resumeBanner.classList.remove('show');
+  state.index=0;state.sliding=false;state.answers=Array(questions.length).fill(null);
+  clearProgress();progressFill.style.width='0%';nextBtn.disabled=true;revealHint.classList.remove('show');
+  setScreen(introScreen);resumeBanner.classList.remove('show');
 };
 
-/* ═══════════════════════════════════════════
-   ⑮ 計分（優化③：全量重新計算，不累加）
-═══════════════════════════════════════════ */
+/* ── 計分（全量，防重複）── */
 const computeResult=()=>{
-  // 每次從零開始，防止重複累加
   const fresh={Mood:0,Energy:0,Intimacy:0,Direct:0,Romance:0,Touch:0,Curious:0,Lust:0};
-  state.answers.forEach((ans,i)=>{
-    if(!ans)return;
-    const[k,v]=scoreMap[i][ans];
-    fresh[k]+=v;
-  });
+  state.answers.forEach((ans,i)=>{if(!ans)return;const[k,v]=scoreMap[i][ans];fresh[k]+=v;});
   state.score=fresh;
-  return[
-    fresh.Mood>=fresh.Energy?'M':'E',
-    fresh.Intimacy>=fresh.Direct?'I':'D',
-    fresh.Romance>=fresh.Touch?'R':'T',
-    fresh.Curious>=fresh.Lust?'C':'L'
-  ].join('');
+  return[fresh.Mood>=fresh.Energy?'M':'E',fresh.Intimacy>=fresh.Direct?'I':'D',fresh.Romance>=fresh.Touch?'R':'T',fresh.Curious>=fresh.Lust?'C':'L'].join('');
 };
 
-/* ═══════════════════════════════════════════
-   ⑯ 粒子爆炸
-═══════════════════════════════════════════ */
+/* ── 粒子 ── */
 function fireParticles(){
   particlesEl.innerHTML='';
   const colors=['#98aab8','#d7dbe2','#566573','#21395a','#b8c9d8','#e2e6ec'];
@@ -700,9 +611,7 @@ function fireParticles(){
   }
 }
 
-/* ═══════════════════════════════════════════
-   ⑰ 分數條
-═══════════════════════════════════════════ */
+/* ── 分數條 ── */
 function buildScoreBars(code,score){
   scoreBars.innerHTML='';shareData.bars=[];
   DIMS.forEach((d,di)=>{
@@ -711,15 +620,12 @@ function buildScoreBars(code,score){
     const pct=Math.round((score[chosen]||0)/total*100);
     const row=document.createElement('div');row.className='score-bar-row';
     row.innerHTML=`<span>${d.label}</span><div class="score-bar-track"><div class="score-bar-fill" data-pct="${pct}"></div></div><span class="score-pct">${pct}%</span>`;
-    scoreBars.appendChild(row);
-    shareData.bars.push({label:d.label,pct});
+    scoreBars.appendChild(row);shareData.bars.push({label:d.label,pct});
   });
   setTimeout(()=>scoreBars.querySelectorAll('.score-bar-fill').forEach(el=>el.style.width=el.dataset.pct+'%'),700);
 }
 
-/* ═══════════════════════════════════════════
-   ⑱ Slot machine 動畫
-═══════════════════════════════════════════ */
+/* ── Slot machine ── */
 const CHARS='ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 function runSlotMachine(code){
   resultCodeEl.innerHTML='';resultCodeEl.classList.remove('revealed');
@@ -740,18 +646,13 @@ function runSlotMachine(code){
   });
   const totalDelay=chars.length*340+180+720;
   setTimeout(()=>{
-    resultCodeEl.innerHTML='';
-    chars.forEach(ch=>{const s=document.createElement('span');s.textContent=ch;resultCodeEl.appendChild(s);});
-    resultCodeEl.classList.add('revealed');
-    resultName.classList.add('show');
-    setTimeout(()=>resultName.classList.add('revealed'),120);
-    resultTag.classList.add('show');
+    resultCodeEl.innerHTML='';chars.forEach(ch=>{const s=document.createElement('span');s.textContent=ch;resultCodeEl.appendChild(s);});
+    resultCodeEl.classList.add('revealed');resultName.classList.add('show');
+    setTimeout(()=>resultName.classList.add('revealed'),120);resultTag.classList.add('show');
   },totalDelay);
 }
 
-/* ═══════════════════════════════════════════
-   ⑲ 顯示結果
-═══════════════════════════════════════════ */
+/* ── 顯示結果 ── */
 const showResult=()=>{
   const code=computeResult(),r=results[code]||results.MIRC,isE=code.startsWith('E');
   root.setAttribute('data-result-theme',isE?'E':'M');
@@ -773,15 +674,14 @@ const showResult=()=>{
   shareData.code=code;shareData.name=r.name;shareData.tag=r.tag;
   shareData.desc=r.desc;shareData.pills=[...r.pills];shareData.isE=isE;shareData.match=mCode;
   buildScoreBars(code,state.score);
-  // 完成後清除暫存進度
   clearProgress();
+  // 預載對應角色圖
+  preloadCharacter(code);
   setScreen(resultScreen);
   setTimeout(()=>runSlotMachine(code),500);
 };
 
-/* ═══════════════════════════════════════════
-   ⑳ Canvas 分享圖（優化④⑤：Logo + 中文字型）
-═══════════════════════════════════════════ */
+/* ── Canvas helpers ── */
 function roundRect(ctx,x,y,w,h,r){
   if(w<=0)return;
   ctx.beginPath();
@@ -792,160 +692,208 @@ function roundRect(ctx,x,y,w,h,r){
   ctx.closePath();
 }
 
+/* ── makeShareBlob（質感新版模板）── */
 async function makeShareBlob(){
-  // 確保字型已載入
   await preloadCanvasFonts();
-  // 確保 logo 已載入
   if(!logoImg)await preloadLogo();
-
   const{code,name,tag,desc,pills,bars,isE,match}=shareData;
   const W=1080,H=1920,DPR=2;
   const cv=document.createElement('canvas');cv.width=W*DPR;cv.height=H*DPR;
   const ctx=cv.getContext('2d');ctx.scale(DPR,DPR);
-
-  // 字型名稱（有預載就用 Noto，否則 fallback）
   const FB=canvasFontsReady?`${CANVAS_FONT_BODY},Arial,sans-serif`:'Arial,sans-serif';
   const FD=canvasFontsReady?`${CANVAS_FONT_DISPLAY},Georgia,serif`:'Georgia,serif';
 
-  // 背景
-  const bg=ctx.createLinearGradient(0,0,W,H);
-  bg.addColorStop(0,'#07101e');bg.addColorStop(.38,'#0c1a2e');bg.addColorStop(.65,'#111f3a');bg.addColorStop(1,'#090f1c');
-  ctx.fillStyle=bg;ctx.fillRect(0,0,W,H);
+  /* 1. 背景 */
+  const bgGrad=ctx.createLinearGradient(0,0,W,H);
+  bgGrad.addColorStop(0,'#060d1a');bgGrad.addColorStop(.35,'#0a1526');
+  bgGrad.addColorStop(.7,'#0f1c35');bgGrad.addColorStop(1,'#070d1c');
+  ctx.fillStyle=bgGrad;ctx.fillRect(0,0,W,H);
 
-  function radialGlow(x,y,r,c1,c2){
+  function radialGlow(x,y,r,c1,c2,blend='screen'){
     const g=ctx.createRadialGradient(x,y,0,x,y,r);g.addColorStop(0,c1);g.addColorStop(1,c2);
-    ctx.save();ctx.globalCompositeOperation='screen';ctx.fillStyle=g;ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fill();ctx.restore();
+    ctx.save();ctx.globalCompositeOperation=blend;ctx.fillStyle=g;ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fill();ctx.restore();
   }
-  radialGlow(-80,-120,750,'rgba(33,57,90,.65)','rgba(33,57,90,0)');
-  radialGlow(W+80,H+60,640,'rgba(86,101,115,.42)','rgba(86,101,115,0)');
-  radialGlow(W*.5,H*.48,460,'rgba(152,170,184,.13)','rgba(152,170,184,0)');
-  if(isE)radialGlow(W*.8,H*.15,400,'rgba(120,135,150,.18)','rgba(120,135,150,0)');
 
-  // 星星
+  /* 2. 環境光 */
+  radialGlow(W*.5,-80,820,'rgba(25,50,90,.72)','rgba(25,50,90,0)');
+  radialGlow(W*.85,H*.22,520,isE?'rgba(90,110,130,.38)':'rgba(30,58,100,.42)','rgba(30,58,100,0)');
+  radialGlow(-60,H*.6,600,'rgba(15,35,70,.5)','rgba(15,35,70,0)');
+  radialGlow(W*.5,H*.55,700,'rgba(152,170,184,.055)','rgba(152,170,184,0)');
+
+  /* 3. 斜線紋理 */
+  ctx.save();ctx.globalAlpha=.022;ctx.strokeStyle='#c8d4e0';ctx.lineWidth=1;
+  for(let x=-H;x<W+H;x+=38){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x+H,H);ctx.stroke();}
+  ctx.globalAlpha=1;ctx.restore();
+
+  /* 4. 星星 */
   ctx.save();
-  const starSeed=code.charCodeAt(0)||42;
-  for(let i=0;i<55;i++){
-    const sx=((starSeed*i*137.5+i*431)%1000)/10*W/100;
-    const sy=((starSeed*i*97.3+i*317)%1000)/10*H/100;
-    const sr=.4+((i*73)%10)/10*2.2,sa=.04+((i*53)%10)/10*.28;
+  const ss=code.charCodeAt(0)*31+code.charCodeAt(1)*17;
+  for(let i=0;i<70;i++){
+    const sx=((ss*i*137.5+i*431)%997)/997*W;
+    const sy=((ss*i*97.3+i*317)%991)/991*H;
+    const sr=.3+((i*73)%10)/10*2.6,sa=.03+((i*53)%10)/10*.32;
     ctx.globalAlpha=sa;ctx.fillStyle='#d7dbe2';ctx.beginPath();ctx.arc(sx,sy,sr,0,Math.PI*2);ctx.fill();
   }
   ctx.globalAlpha=1;ctx.restore();
 
-  // 斜線紋理
-  ctx.save();ctx.globalAlpha=.018;ctx.strokeStyle='#d7dbe2';ctx.lineWidth=1;
-  for(let x=-H;x<W+H;x+=34){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x+H,H);ctx.stroke();}
-  ctx.globalAlpha=1;ctx.restore();
-
-  // 頂部光線
-  const tl=ctx.createLinearGradient(88,0,W-88,0);
-  tl.addColorStop(0,'rgba(152,170,184,0)');tl.addColorStop(.28,'rgba(152,170,184,.52)');tl.addColorStop(.5,'rgba(215,219,226,.3)');tl.addColorStop(.72,'rgba(152,170,184,.52)');tl.addColorStop(1,'rgba(152,170,184,0)');
-  ctx.save();ctx.strokeStyle=tl;ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(88,0);ctx.lineTo(W-88,0);ctx.stroke();ctx.restore();
-
-  // ④ Logo 圖片（右上角）
-  if(logoImg){
-    const lh=72,lw=logoImg.naturalWidth*(lh/logoImg.naturalHeight);
+  /* 5. 角色圖預留區 */
+  const CHAR_X=W*0.38,CHAR_Y=H*0.06,CHAR_W=W*0.62,CHAR_H=H*0.52;
+  radialGlow(CHAR_X+CHAR_W*.5,CHAR_Y+CHAR_H*.45,CHAR_W*.72,
+    isE?'rgba(80,105,130,.28)':'rgba(30,60,100,.32)','rgba(30,60,100,0)');
+  if(characterImg){
+    /* 角色圖已載入：直接繪製（物件適合含 bottom-aligned PNG）*/
+    const aspect=characterImg.naturalWidth/characterImg.naturalHeight;
+    const dh=CHAR_H,dw=dh*aspect;
+    const dx=CHAR_X+(CHAR_W-dw)/2,dy=CHAR_Y;
+    ctx.save();ctx.drawImage(characterImg,dx,dy,dw,dh);ctx.restore();
+  } else {
+    /* 佔位框（正式上線前可移除）*/
     ctx.save();
-    ctx.globalAlpha=.85;
-    // 白色 logo 效果
-    ctx.filter='brightness(0) saturate(100%) invert(1)';
-    ctx.drawImage(logoImg,W-88-lw,72,lw,lh);
-    ctx.filter='none';
-    ctx.restore();
+    ctx.strokeStyle='rgba(152,170,184,.1)';ctx.lineWidth=1;ctx.setLineDash([8,8]);
+    roundRect(ctx,CHAR_X+20,CHAR_Y+20,CHAR_W-40,CHAR_H-40,24);ctx.stroke();
+    ctx.fillStyle='rgba(152,170,184,.03)';ctx.fill();
+    ctx.font=`400 20px ${FB}`;ctx.fillStyle='rgba(152,170,184,.15)';
+    ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.fillText('角色圖預留區',CHAR_X+CHAR_W/2,CHAR_Y+CHAR_H/2);
+    ctx.setLineDash([]);ctx.restore();
   }
 
-  // 品牌標題（左上）
-  ctx.save();ctx.font=`600 20px ${FB}`;ctx.fillStyle='rgba(152,170,184,.4)';ctx.textBaseline='top';
-  ctx.textAlign='left';ctx.fillText('U&ME',88,92);ctx.restore();
+  /* 6. 頂部細線 */
+  const topLine=ctx.createLinearGradient(0,0,W,0);
+  topLine.addColorStop(0,'rgba(152,170,184,0)');topLine.addColorStop(.2,'rgba(152,170,184,.35)');
+  topLine.addColorStop(.5,'rgba(215,219,226,.55)');topLine.addColorStop(.8,'rgba(152,170,184,.35)');
+  topLine.addColorStop(1,'rgba(152,170,184,0)');
+  ctx.save();ctx.strokeStyle=topLine;ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(0,1);ctx.lineTo(W,1);ctx.stroke();ctx.restore();
 
-  // MBTI CODE
-  ctx.save();ctx.shadowColor='rgba(152,170,184,.22)';ctx.shadowBlur=60;
-  const codeGrad=ctx.createLinearGradient(80,280,W-80,540);
-  codeGrad.addColorStop(0,'rgba(255,255,255,.97)');codeGrad.addColorStop(.2,'#edf0f3');codeGrad.addColorStop(.5,'#98aab8');codeGrad.addColorStop(1,isE?'#7a8c9a':'#566573');
-  ctx.font=`400 200px ${FD}`;ctx.fillStyle=codeGrad;ctx.textAlign='left';ctx.textBaseline='alphabetic';ctx.fillText(code,80,530);ctx.shadowBlur=0;ctx.restore();
+  /* 7. Logo */
+  if(logoImg){
+    const lh=52,lw=logoImg.naturalWidth*(lh/logoImg.naturalHeight);
+    ctx.save();ctx.globalAlpha=.9;ctx.filter='brightness(0) invert(1)';
+    ctx.drawImage(logoImg,68,68,lw,lh);ctx.filter='none';ctx.restore();
+  }
+  ctx.save();ctx.font=`700 13px ${FB}`;ctx.fillStyle='rgba(152,170,184,.38)';
+  ctx.textAlign='right';ctx.textBaseline='middle';ctx.fillText('MBTI RESULT',W-68,94);ctx.restore();
 
-  // 分隔線
+  /* 8. 內容區（左下）*/
+  const CX=68,CT=H*0.52;
+
+  /* 分隔線 */
+  const sepLine=ctx.createLinearGradient(CX,0,CX+320,0);
+  sepLine.addColorStop(0,'rgba(152,170,184,.55)');sepLine.addColorStop(1,'rgba(152,170,184,0)');
+  ctx.save();ctx.strokeStyle=sepLine;ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(CX,CT-28);ctx.lineTo(CX+300,CT-28);ctx.stroke();ctx.restore();
+
+  /* YOUR TYPE 小標 */
+  ctx.save();ctx.font=`400 16px ${FB}`;ctx.fillStyle='rgba(152,170,184,.48)';
+  ctx.textAlign='left';ctx.textBaseline='alphabetic';ctx.fillText('YOUR TYPE',CX,CT);ctx.restore();
+
+  /* 9. MBTI CODE 大字 */
   ctx.save();
-  const dl=ctx.createLinearGradient(88,575,200,575);dl.addColorStop(0,'rgba(152,170,184,.58)');dl.addColorStop(1,'rgba(86,101,115,.1)');
-  ctx.strokeStyle=dl;ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(88,580);ctx.lineTo(160,580);ctx.stroke();ctx.restore();
+  ctx.shadowColor=isE?'rgba(140,165,185,.35)':'rgba(50,90,150,.35)';
+  ctx.shadowBlur=55;
+  const codeGrad=ctx.createLinearGradient(CX,0,CX+580,0);
+  codeGrad.addColorStop(0,'#ffffff');codeGrad.addColorStop(.25,'#e8edf2');
+  codeGrad.addColorStop(.6,'#98aab8');codeGrad.addColorStop(1,isE?'#7a9ab0':'#4a6580');
+  ctx.font=`400 178px ${FD}`;ctx.fillStyle=codeGrad;
+  ctx.textAlign='left';ctx.textBaseline='alphabetic';
+  ctx.fillText(code,CX-6,CT+192);
+  ctx.shadowBlur=0;ctx.restore();
 
-  // 名稱
-  ctx.save();ctx.font=`400 62px ${FD}`;ctx.fillStyle='#d7dbe2';ctx.textAlign='left';ctx.textBaseline='alphabetic';ctx.fillText(name,88,668);ctx.restore();
+  /* 10. 名稱 & 標籤 */
+  const NAME_Y=CT+236;
+  ctx.save();ctx.font=`400 52px ${FD}`;ctx.fillStyle='#d7dbe2';
+  ctx.textAlign='left';ctx.textBaseline='alphabetic';ctx.fillText(name,CX,NAME_Y);ctx.restore();
 
-  // 標籤
-  ctx.save();ctx.font=`400 20px ${FB}`;ctx.fillStyle='rgba(152,170,184,.6)';ctx.textAlign='left';ctx.textBaseline='alphabetic';ctx.fillText(tag.toUpperCase(),88,716);ctx.restore();
+  ctx.save();ctx.font=`400 17px ${FB}`;ctx.fillStyle='rgba(152,170,184,.55)';
+  ctx.textAlign='left';ctx.textBaseline='alphabetic';ctx.fillText(tag.toUpperCase(),CX,NAME_Y+38);ctx.restore();
 
-  // 描述（自動換行）
-  ctx.save();ctx.font=`400 25px ${FB}`;ctx.fillStyle='rgba(152,170,184,.72)';ctx.textAlign='left';ctx.textBaseline='alphabetic';
-  const maxTW=W-196,lineH=46;let line='',ly=810;
+  /* 11. 描述文字（自動換行）*/
+  const DESC_Y=NAME_Y+86;
+  ctx.save();ctx.font=`400 22px ${FB}`;ctx.fillStyle='rgba(180,192,202,.68)';
+  ctx.textAlign='left';ctx.textBaseline='alphabetic';
+  const maxTW=W-CX-68,lineH=40;let line='',ly=DESC_Y;
   for(const ch of desc){
     const test=line+ch;
-    if(ctx.measureText(test).width>maxTW&&line.length){ctx.fillText(line,88,ly);line=ch;ly+=lineH;}
+    if(ctx.measureText(test).width>maxTW&&line.length){ctx.fillText(line,CX,ly);line=ch;ly+=lineH;}
     else line=test;
   }
-  if(line)ctx.fillText(line,88,ly);ctx.restore();
+  if(line)ctx.fillText(line,CX,ly);
+  ctx.restore();
 
-  // Pills
-  ctx.save();ctx.font=`400 19px ${FB}`;
-  let px=88,py=ly+72;
+  /* 12. Pills */
+  const PILL_Y=ly+56;
+  ctx.save();ctx.font=`400 17px ${FB}`;
+  let px=CX;
   pills.forEach(txt=>{
-    const tw=ctx.measureText(txt).width+52;
-    roundRect(ctx,px,py-26,tw,42,21);ctx.fillStyle='rgba(33,57,90,.45)';ctx.fill();
-    ctx.strokeStyle='rgba(152,170,184,.2)';ctx.lineWidth=1;ctx.stroke();
-    ctx.fillStyle='rgba(215,219,226,.8)';ctx.fillText(txt,px+26,py+7);px+=tw+14;
+    const tw=ctx.measureText(txt).width+44;
+    roundRect(ctx,px,PILL_Y-24,tw,38,19);
+    const pillBg=ctx.createLinearGradient(px,PILL_Y-24,px,PILL_Y+14);
+    pillBg.addColorStop(0,'rgba(40,65,100,.55)');pillBg.addColorStop(1,'rgba(25,45,75,.35)');
+    ctx.fillStyle=pillBg;ctx.fill();
+    ctx.strokeStyle='rgba(152,170,184,.22)';ctx.lineWidth=1;ctx.stroke();
+    ctx.fillStyle='rgba(200,212,222,.82)';ctx.fillText(txt,px+22,PILL_Y+6);
+    px+=tw+10;
   });ctx.restore();
 
-  // 分數條
-  let by=py+90;
+  /* 13. 分數條 */
+  let by=PILL_Y+62;
   bars.forEach(b=>{
-    ctx.save();ctx.font=`400 18px ${FB}`;ctx.fillStyle='rgba(152,170,184,.52)';ctx.textAlign='left';ctx.textBaseline='middle';ctx.fillText(b.label,88,by);
-    roundRect(ctx,192,by-5,650,4,2);ctx.fillStyle='rgba(152,170,184,.1)';ctx.fill();
-    const bw=Math.max(0,650*(b.pct/100));
+    ctx.save();
+    ctx.font=`400 16px ${FB}`;ctx.fillStyle='rgba(152,170,184,.5)';
+    ctx.textAlign='left';ctx.textBaseline='middle';ctx.fillText(b.label,CX,by);
+    const barX=CX+56,barW=W-CX-56-68;
+    roundRect(ctx,barX,by-3,barW,4,2);ctx.fillStyle='rgba(152,170,184,.1)';ctx.fill();
+    const bw=Math.max(0,barW*(b.pct/100));
     if(bw>0){
-      roundRect(ctx,192,by-5,bw,4,2);
-      const bg2=ctx.createLinearGradient(192,0,192+650,0);
-      isE?(bg2.addColorStop(0,'#566573'),bg2.addColorStop(1,'#d7dbe2')):(bg2.addColorStop(0,'#21395a'),bg2.addColorStop(1,'#98aab8'));
-      ctx.fillStyle=bg2;ctx.fill();
+      roundRect(ctx,barX,by-3,bw,4,2);
+      const barFill=ctx.createLinearGradient(barX,0,barX+barW,0);
+      isE?(barFill.addColorStop(0,'#4a6a88'),barFill.addColorStop(1,'#b8ccd8'))
+         :(barFill.addColorStop(0,'#1e3a5f'),barFill.addColorStop(1,'#7a9ab5'));
+      ctx.fillStyle=barFill;ctx.fill();
+      radialGlow(barX+bw,by,12,'rgba(152,170,184,.4)','rgba(152,170,184,0)');
     }
-    ctx.font=`700 16px ${FB}`;ctx.fillStyle='rgba(152,170,184,.62)';ctx.textAlign='right';ctx.textBaseline='middle';ctx.fillText(b.pct+'%',W-88,by);
-    ctx.restore();by+=50;
+    ctx.font=`700 14px ${FB}`;ctx.fillStyle='rgba(152,170,184,.58)';
+    ctx.textAlign='right';ctx.textBaseline='middle';ctx.fillText(b.pct+'%',W-68,by);
+    ctx.restore();by+=48;
   });
 
-  // 最合拍 badge
+  /* 14. 最合拍 badge */
   if(match){
-    ctx.save();ctx.font=`400 18px ${FB}`;
     const mName=results[match]?.name||match;
-    const mTxt=`✦ 最合拍類型：${match} ${mName}`;
-    const mW=ctx.measureText(mTxt).width+52;
-    roundRect(ctx,88,by+20,mW,40,20);ctx.fillStyle='rgba(33,57,90,.4)';ctx.fill();
-    ctx.strokeStyle='rgba(152,170,184,.16)';ctx.lineWidth=1;ctx.stroke();
-    ctx.fillStyle='rgba(152,170,184,.65)';ctx.textAlign='left';ctx.textBaseline='middle';ctx.fillText(mTxt,88+26,by+40);
-    ctx.restore();by+=76;
+    const mTxt=`✦  最合拍：${match}  ${mName}`;
+    ctx.save();ctx.font=`400 16px ${FB}`;
+    const mW=ctx.measureText(mTxt).width+44;
+    roundRect(ctx,CX,by+16,mW,36,18);
+    ctx.fillStyle='rgba(30,55,90,.5)';ctx.fill();
+    ctx.strokeStyle='rgba(152,170,184,.18)';ctx.lineWidth=1;ctx.stroke();
+    ctx.fillStyle='rgba(152,170,184,.62)';
+    ctx.textAlign='left';ctx.textBaseline='middle';ctx.fillText(mTxt,CX+22,by+34);
+    ctx.restore();by+=68;
   }
 
-  // 底部分隔線
-  ctx.save();ctx.strokeStyle='rgba(152,170,184,.1)';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(88,H-128);ctx.lineTo(W-88,H-128);ctx.stroke();ctx.restore();
+  /* 15. 底部細線 */
+  const FOOTER_Y=H-88;
+  const footLine=ctx.createLinearGradient(0,0,W,0);
+  footLine.addColorStop(0,'rgba(152,170,184,0)');footLine.addColorStop(.15,'rgba(152,170,184,.2)');
+  footLine.addColorStop(.85,'rgba(152,170,184,.2)');footLine.addColorStop(1,'rgba(152,170,184,0)');
+  ctx.save();ctx.strokeStyle=footLine;ctx.lineWidth=1;
+  ctx.beginPath();ctx.moveTo(0,FOOTER_Y-20);ctx.lineTo(W,FOOTER_Y-20);ctx.stroke();ctx.restore();
 
-  // 底部版權文字
-  ctx.save();ctx.font=`400 17px ${FB}`;ctx.fillStyle='rgba(86,101,115,.62)';
-  ctx.textAlign='left';ctx.textBaseline='middle';ctx.fillText('U&ME · YOUR INNER TEMPO',88,H-78);
-  ctx.textAlign='right';ctx.fillStyle='rgba(86,101,115,.45)';ctx.fillText('測測你是哪種類型',W-88,H-78);
+  /* 16. 底部品牌文字 */
+  ctx.save();ctx.font=`400 15px ${FB}`;ctx.fillStyle='rgba(86,101,115,.55)';
+  ctx.textAlign='left';ctx.textBaseline='middle';ctx.fillText('U&ME · YOUR INNER TEMPO',68,FOOTER_Y+14);
+  ctx.textAlign='right';ctx.fillStyle='rgba(86,101,115,.4)';ctx.fillText('測測你是哪種類型',W-68,FOOTER_Y+14);
   ctx.restore();
 
   return new Promise(r=>cv.toBlob(b=>r(b),'image/png',1));
 }
 
-/* ═══════════════════════════════════════════
-   ㉑ 下載 blob
-═══════════════════════════════════════════ */
+/* ── 下載 blob ── */
 async function dlBlob(blob,fname){
   const u=URL.createObjectURL(blob),a=document.createElement('a');
   a.href=u;a.download=fname;document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(u);
 }
 
-/* ═══════════════════════════════════════════
-   ㉒ 分享 / 儲存
-═══════════════════════════════════════════ */
+/* ── 分享 ── */
 async function handleShare(){
   const orig=shareBtn.innerHTML,svgEl=shareBtn.querySelector('svg');
   shareBtn.classList.add('loading');if(svgEl)svgEl.style.display='none';
@@ -960,6 +908,7 @@ async function handleShare(){
   finally{shareBtn.classList.remove('loading');if(svgEl)svgEl.style.display='';shareBtn.innerHTML=orig;}
 }
 
+/* ── 儲存 ── */
 async function handleSave(){
   const orig=saveBtn.innerHTML,svgEl=saveBtn.querySelector('svg');
   saveBtn.classList.add('loading');if(svgEl)svgEl.style.display='none';
@@ -975,9 +924,7 @@ async function handleSave(){
   }
 }
 
-/* ═══════════════════════════════════════════
-   ㉓ 恢復進度 banner（優化②）
-═══════════════════════════════════════════ */
+/* ── 恢復進度 banner ── */
 (()=>{
   const saved=loadProgress();
   if(saved&&saved.answers&&saved.answers.some(a=>a!==null)){
@@ -985,21 +932,16 @@ async function handleSave(){
     resumeInfo.textContent=`（已完成 ${answered} / ${questions.length} 題）`;
     resumeBanner.classList.add('show');
     resumeContinue.addEventListener('click',()=>{
-      state.index=saved.index||0;
-      state.answers=saved.answers;
-      resumeBanner.classList.remove('show');
-      startQuiz(true);
+      state.index=saved.index||0;state.answers=saved.answers;
+      resumeBanner.classList.remove('show');startQuiz(true);
     });
     resumeDiscard.addEventListener('click',()=>{
-      clearProgress();
-      resumeBanner.classList.remove('show');
+      clearProgress();resumeBanner.classList.remove('show');
     });
   }
 })();
 
-/* ═══════════════════════════════════════════
-   ㉔ 事件綁定
-═══════════════════════════════════════════ */
+/* ── 事件綁定 ── */
 startBtn.addEventListener('click',()=>startQuiz(false));
 nextBtn.addEventListener('click',()=>goNext('forward'));
 backBtn.addEventListener('click',goPrev);
@@ -1007,15 +949,13 @@ restartBtn.addEventListener('click',restartToStart);
 shareBtn.addEventListener('click',handleShare);
 saveBtn.addEventListener('click',handleSave);
 
-// 漣漪點擊效果
+/* ── 漣漪效果 ── */
 stage.addEventListener('pointerdown',e=>{
   const r=document.createElement('span');
   r.style.cssText='position:absolute;border-radius:50%;pointer-events:none;transform:translate(-50%,-50%);background:radial-gradient(circle,rgba(152,170,184,.18) 0%,transparent 68%);animation:rip .8s ease-out forwards;mix-blend-mode:screen;z-index:4';
   const rc=stage.getBoundingClientRect();
-  r.style.left=(e.clientX-rc.left)+'px';
-  r.style.top=(e.clientY-rc.top)+'px';
-  stage.appendChild(r);
-  r.addEventListener('animationend',()=>r.remove());
+  r.style.left=(e.clientX-rc.left)+'px';r.style.top=(e.clientY-rc.top)+'px';
+  stage.appendChild(r);r.addEventListener('animationend',()=>r.remove());
 });
 </script>
 </body>
