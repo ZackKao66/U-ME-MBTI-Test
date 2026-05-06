@@ -227,7 +227,7 @@
             <button class="resume-btn primary" id="resumeContinue">繼續</button>
           </div>
         </div>
-        <div class="start-wrap" id="startWrap">
+        <div class="start-wrap">
           <button class="start" id="startBtn" type="button" aria-label="開始測驗">
             <svg viewBox="0 0 24 24" width="22" height="22"><polygon points="5,3 19,12 5,21" fill="#d7dbe2"/></svg>
           </button>
@@ -464,7 +464,7 @@ function preloadLogo(){
 }
 preloadLogo();
 
-/* ── 角色圖預載（未來使用）── */
+/* ── 角色圖預載 ── */
 let characterImg=null;
 function preloadCharacter(code){
   return new Promise(resolve=>{
@@ -527,7 +527,6 @@ function animateQuestion(text){
     questionText.appendChild(s);
   });
 }
-
 const renderQuestion=()=>{
   const i=state.index;
   quizTitle.textContent=`第 ${i+1} 題`;
@@ -587,7 +586,7 @@ const restartToStart=()=>{
   setScreen(introScreen);resumeBanner.classList.remove('show');
 };
 
-/* ── 計分（全量，防重複）── */
+/* ── 計分（全量防重複）── */
 const computeResult=()=>{
   const fresh={Mood:0,Energy:0,Intimacy:0,Direct:0,Romance:0,Touch:0,Curious:0,Lust:0};
   state.answers.forEach((ans,i)=>{if(!ans)return;const[k,v]=scoreMap[i][ans];fresh[k]+=v;});
@@ -675,7 +674,6 @@ const showResult=()=>{
   shareData.desc=r.desc;shareData.pills=[...r.pills];shareData.isE=isE;shareData.match=mCode;
   buildScoreBars(code,state.score);
   clearProgress();
-  // 預載對應角色圖
   preloadCharacter(code);
   setScreen(resultScreen);
   setTimeout(()=>runSlotMachine(code),500);
@@ -692,7 +690,7 @@ function roundRect(ctx,x,y,w,h,r){
   ctx.closePath();
 }
 
-/* ── makeShareBlob（質感新版模板）── */
+/* ── makeShareBlob（JPEG 0.92 + DPR=2 高畫質）── */
 async function makeShareBlob(){
   await preloadCanvasFonts();
   if(!logoImg)await preloadLogo();
@@ -736,18 +734,16 @@ async function makeShareBlob(){
   }
   ctx.globalAlpha=1;ctx.restore();
 
-  /* 5. 角色圖預留區 */
+  /* 5. 角色圖區 */
   const CHAR_X=W*0.38,CHAR_Y=H*0.06,CHAR_W=W*0.62,CHAR_H=H*0.52;
   radialGlow(CHAR_X+CHAR_W*.5,CHAR_Y+CHAR_H*.45,CHAR_W*.72,
     isE?'rgba(80,105,130,.28)':'rgba(30,60,100,.32)','rgba(30,60,100,0)');
   if(characterImg){
-    /* 角色圖已載入：直接繪製（物件適合含 bottom-aligned PNG）*/
     const aspect=characterImg.naturalWidth/characterImg.naturalHeight;
     const dh=CHAR_H,dw=dh*aspect;
     const dx=CHAR_X+(CHAR_W-dw)/2,dy=CHAR_Y;
     ctx.save();ctx.drawImage(characterImg,dx,dy,dw,dh);ctx.restore();
   } else {
-    /* 佔位框（正式上線前可移除）*/
     ctx.save();
     ctx.strokeStyle='rgba(152,170,184,.1)';ctx.lineWidth=1;ctx.setLineDash([8,8]);
     roundRect(ctx,CHAR_X+20,CHAR_Y+20,CHAR_W-40,CHAR_H-40,24);ctx.stroke();
@@ -774,25 +770,21 @@ async function makeShareBlob(){
   ctx.save();ctx.font=`700 13px ${FB}`;ctx.fillStyle='rgba(152,170,184,.38)';
   ctx.textAlign='right';ctx.textBaseline='middle';ctx.fillText('MBTI RESULT',W-68,94);ctx.restore();
 
-  /* 8. 內容區（左下）*/
+  /* 8. 內容區 */
   const CX=68,CT=H*0.52;
-
-  /* 分隔線 */
   const sepLine=ctx.createLinearGradient(CX,0,CX+320,0);
   sepLine.addColorStop(0,'rgba(152,170,184,.55)');sepLine.addColorStop(1,'rgba(152,170,184,0)');
   ctx.save();ctx.strokeStyle=sepLine;ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(CX,CT-28);ctx.lineTo(CX+300,CT-28);ctx.stroke();ctx.restore();
-
-  /* YOUR TYPE 小標 */
   ctx.save();ctx.font=`400 16px ${FB}`;ctx.fillStyle='rgba(152,170,184,.48)';
   ctx.textAlign='left';ctx.textBaseline='alphabetic';ctx.fillText('YOUR TYPE',CX,CT);ctx.restore();
 
   /* 9. MBTI CODE 大字 */
   ctx.save();
-  ctx.shadowColor=isE?'rgba(140,165,185,.35)':'rgba(50,90,150,.35)';
-  ctx.shadowBlur=55;
+  ctx.shadowColor=isE?'rgba(140,165,185,.35)':'rgba(50,90,150,.35)';ctx.shadowBlur=55;
   const codeGrad=ctx.createLinearGradient(CX,0,CX+580,0);
   codeGrad.addColorStop(0,'#ffffff');codeGrad.addColorStop(.25,'#e8edf2');
-  codeGrad.addColorStop(.6,'#98aab8');codeGrad.addColorStop(1,isE?'#7a9ab0':'#4a6580');
+  codeGrad.addColor
+    codeGrad.addColorStop(.6,'#98aab8');codeGrad.addColorStop(1,isE?'#7a9ab0':'#4a6580');
   ctx.font=`400 178px ${FD}`;ctx.fillStyle=codeGrad;
   ctx.textAlign='left';ctx.textBaseline='alphabetic';
   ctx.fillText(code,CX-6,CT+192);
@@ -884,7 +876,8 @@ async function makeShareBlob(){
   ctx.textAlign='right';ctx.fillStyle='rgba(86,101,115,.4)';ctx.fillText('測測你是哪種類型',W-68,FOOTER_Y+14);
   ctx.restore();
 
-  return new Promise(r=>cv.toBlob(b=>r(b),'image/png',1));
+  /* ✅ JPEG 0.92 輸出，DPR=2 解析度完全保留，檔案從 10MB 降至約 2MB */
+  return new Promise(r=>cv.toBlob(b=>r(b),'image/jpeg',0.92));
 }
 
 /* ── 下載 blob ── */
@@ -899,8 +892,8 @@ async function handleShare(){
   shareBtn.classList.add('loading');if(svgEl)svgEl.style.display='none';
   try{
     const blob=await makeShareBlob();
-    const fname=`ume-mbti-${shareData.code||'result'}.png`;
-    const file=new File([blob],fname,{type:'image/png',lastModified:Date.now()});
+    const fname=`ume-mbti-${shareData.code||'result'}.jpg`;
+    const file=new File([blob],fname,{type:'image/jpeg',lastModified:Date.now()});
     const data={files:[file],title:'U&ME MBTI 結果',text:`我在 U&ME MBTI 測到 ${shareData.code}｜${shareData.name}｜${shareData.tag}\n\n測測你是哪種類型 👇`};
     if(navigator.canShare&&navigator.canShare(data))await navigator.share(data);
     else{await dlBlob(blob,fname);alert('已下載圖片，請手動上傳到你想分享的平台 🙌');}
@@ -914,7 +907,7 @@ async function handleSave(){
   saveBtn.classList.add('loading');if(svgEl)svgEl.style.display='none';
   try{
     const blob=await makeShareBlob();
-    const fname=`ume-mbti-${shareData.code||'result'}.png`;
+    const fname=`ume-mbti-${shareData.code||'result'}.jpg`;
     await dlBlob(blob,fname);
     saveBtn.classList.remove('loading');if(svgEl)svgEl.style.display='';
     saveBtn.innerHTML='<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> 已儲存';
