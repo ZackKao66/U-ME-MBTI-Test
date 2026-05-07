@@ -12,7 +12,7 @@
       --bg:#0c1730;--surface:#111f3a;--surface-2:#1a2d4a;
       --border:rgba(152,170,184,.18);--text:#d7dbe2;--muted:#98aab8;
       --accent:#98aab8;--accent-2:#566573;--bar-bg:rgba(152,170,184,.12);
-      --font-display:'Georgia',serif;--font-body:'Inter',system-ui,sans-serif;
+      --font-display:'Noto Serif TC','Georgia',serif;--font-body:'Noto Sans TC',system-ui,sans-serif;
       --theme-glow:rgba(33,57,90,.55);--theme-grad-a:#21395a;--theme-grad-b:#98aab8;
       --topbar-h:62px;
     }
@@ -444,11 +444,27 @@ const DIMS=[
 /* ── Haptic ── */
 function haptic(ms=8){try{if(navigator.vibrate)navigator.vibrate(ms);}catch(e){}}
 
-/* ── LocalStorage ── */
+/* ── LocalStorage (with in-memory fallback) ── */
 const LS_KEY='ume_mbti_progress';
-function saveProgress(){try{localStorage.setItem(LS_KEY,JSON.stringify({index:state.index,answers:state.answers,ts:Date.now()}));}catch(e){}}
-function loadProgress(){try{const raw=localStorage.getItem(LS_KEY);if(!raw)return null;const d=JSON.parse(raw);if(Date.now()-d.ts>86400000){localStorage.removeItem(LS_KEY);return null;}return d;}catch(e){return null;}}
-function clearProgress(){try{localStorage.removeItem(LS_KEY);}catch(e){}}
+let _memStore=null;
+function saveProgress(){
+  const data={index:state.index,answers:state.answers,ts:Date.now()};
+  try{localStorage.setItem(LS_KEY,JSON.stringify(data));}
+  catch(e){_memStore=data;}
+}
+function loadProgress(){
+  try{
+    const raw=localStorage.getItem(LS_KEY);
+    if(!raw)return (_memStore&&(Date.now()-_memStore.ts<86400000))?_memStore:null;
+    const d=JSON.parse(raw);
+    if(Date.now()-d.ts>86400000){localStorage.removeItem(LS_KEY);return null;}
+    return d;
+  }catch(e){return (_memStore&&(Date.now()-_memStore.ts<86400000))?_memStore:null;}
+}
+function clearProgress(){
+  try{localStorage.removeItem(LS_KEY);}catch(e){}
+  _memStore=null;
+}
 
 /* ── 狀態 ── */
 const state={index:0,answers:Array(questions.length).fill(null),score:{Mood:0,Energy:0,Intimacy:0,Direct:0,Romance:0,Touch:0,Curious:0,Lust:0},sliding:false};
