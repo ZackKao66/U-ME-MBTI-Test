@@ -135,22 +135,6 @@
     @keyframes particleFly{0%{opacity:.9;transform:translate(0,0) scale(1)}100%{opacity:0;transform:translate(var(--dx),var(--dy)) scale(0)}}
     .result-layout{width:min(100%,940px);margin:0 auto;position:relative;z-index:3;padding-bottom:8px;}
     .result-card{width:100%;display:grid;grid-template-rows:auto auto auto auto;gap:clamp(7px,1.2vh,11px);text-align:left;border-radius:clamp(18px,3vw,28px);padding:clamp(14px,2.2vw,22px);background:linear-gradient(160deg,#111f3a,#0f1b34);position:relative;border:1px solid rgba(152,170,184,.15);box-shadow:0 28px 72px rgba(12,23,48,.65),inset 0 1px 0 rgba(215,219,226,.08);animation:resultRise 950ms cubic-bezier(.16,1,.3,1) both;}
-    #resultCharacterHost{
-      grid-column:1/-1;
-      margin-top:14px;
-      border-radius:22px;
-      overflow:hidden;
-      border:1px solid rgba(152,170,184,.15);
-      background:rgba(33,57,90,.22);
-      box-shadow:0 18px 42px rgba(12,23,48,.35);
-    }
-    #resultCharacterHost img{
-      width:100%;
-      display:block;
-      max-height:360px;
-      object-fit:cover;
-    }
-
     .result-card::after{content:'';position:absolute;top:0;left:18px;right:18px;height:1px;background:linear-gradient(90deg,transparent,rgba(152,170,184,.38),rgba(215,219,226,.22),rgba(152,170,184,.38),transparent);pointer-events:none;z-index:2}
     .result-card::before{content:"";position:absolute;inset:0;border-radius:inherit;background:radial-gradient(circle at top left,rgba(33,57,90,.32),transparent 40%),repeating-linear-gradient(135deg,transparent 0 22px,rgba(215,219,226,.022) 22px 23px);pointer-events:none;z-index:0}
     .result-hero,.result-section,.share-row,.result-cta{position:relative;z-index:1}
@@ -360,7 +344,6 @@ const root=document.documentElement,
   quizCard=document.getElementById('quizCard'),
   revealHint=document.getElementById('revealHint'),
   resultCodeEl=document.getElementById('resultCode'),
-  resultCard=document.getElementById('resultCard'),
   resultName=document.getElementById('resultName'),
   resultTag=document.getElementById('resultTag'),
   resultDesc=document.getElementById('resultDesc'),
@@ -482,34 +465,13 @@ function preloadLogo(){
 preloadLogo();
 
 /* ── 角色圖預載 ── */
-const characterFiles={
-  MIRC:'MIRC_柔光守護者_綿羊.png',
-  MIRL:'MIRL_微熱守護者_貓咪.png',
-  MITC:'MITC_觸感守護者_水獺.png',
-  MITL:'MITL_感受守護者_樹懶.png',
-  MDRC:'MDRC_溫柔引導者_鹿.png',
-  MDRL:'MDRL_曖昧引導者_狐狸.png',
-  MDTC:'MDTC_體感引導者_獵豹.png',
-  MDTL:'MDTL_直感引導者_狼.png',
-  EIRC:'EIRC_霧感感官者_兔子.png',
-  EIRL:'EIRL_熱感感官者_天鵝.png',
-  EITC:'EITC_細節感官者_貓頭鷹.png',
-  EITL:'EITL_強感感官者_黑豹.png',
-  EDRC:'EDRC_悄然探索者_浣熊.png',
-  EDRL:'EDRL_慾感探索者_獅子.png',
-  EDTC:'EDTC_直覺探索者_老鷹.png',
-  EDTL:'EDTL_烈感探索者_老虎.png',
-};
-
 let characterImg=null;
 function preloadCharacter(code){
   return new Promise(resolve=>{
-    const file=characterFiles[code];
-    if(!file){characterImg=null;resolve(null);return;}
     const img=new Image();
     img.onload=()=>{characterImg=img;resolve(img);};
     img.onerror=()=>{characterImg=null;resolve(null);};
-    img.src=`assets/characters/${file}`;
+    img.src=`assets/characters/${code}.png`;
   });
 }
 
@@ -695,7 +657,6 @@ const showResult=()=>{
   root.setAttribute('data-result-theme',isE?'E':'M');
   revealBurst.classList.remove('fire');void revealBurst.offsetWidth;revealBurst.classList.add('fire');
   setTimeout(()=>fireParticles(),200);
-
   resultName.textContent=r.name;resultName.classList.remove('show','revealed');
   resultTag.textContent=r.tag;resultTag.classList.remove('show');
   resultDesc.textContent=r.desc;
@@ -705,44 +666,14 @@ const showResult=()=>{
   resultMood.textContent=code[2]==='R'?'情感導向':'感官導向';
   resultPace.textContent=code.startsWith('M')?'節奏：氛圍':'節奏：直接';
   resultDrive.textContent=code[3]==='C'?'步調：探索':'步調：熱烈';
-
-  const mCode=r.match||'';
-  matchCode.textContent=mCode;
+  const mCode=r.match||'';matchCode.textContent=mCode;
   if(results[mCode])matchBadge.title=results[mCode].name;
-
   resultPills.innerHTML='';
-  r.pills.forEach(t=>{
-    const s=document.createElement('span');
-    s.className='pill';
-    s.textContent=t;
-    resultPills.appendChild(s);
-  });
-
-  shareData.code=code;
-  shareData.name=r.name;
-  shareData.tag=r.tag;
-  shareData.desc=r.desc;
-  shareData.pills=[...r.pills];
-  shareData.isE=isE;
-  shareData.match=mCode;
-
+  r.pills.forEach(t=>{const s=document.createElement('span');s.className='pill';s.textContent=t;resultPills.appendChild(s);});
+  shareData.code=code;shareData.name=r.name;shareData.tag=r.tag;
+  shareData.desc=r.desc;shareData.pills=[...r.pills];shareData.isE=isE;shareData.match=mCode;
   buildScoreBars(code,state.score);
   clearProgress();
-
-  const oldHost=document.getElementById('resultCharacterHost');
-  if(oldHost) oldHost.remove();
-
-  const file=characterFiles[code];
-  if(file){
-    const host=document.createElement('div');
-    host.id='resultCharacterHost';
-    const img=document.createElement('img');
-    img.src=`assets/characters/${file}`;
-    img.alt=`${r.name} 代表圖`;
-    host.appendChild(img);
-    resultCard.insertBefore(host,resultCard.firstChild);
-  }
-
   preloadCharacter(code);
   setScreen(resultScreen);
   setTimeout(()=>runSlotMachine(code),500);
