@@ -869,9 +869,11 @@ async function makeShareBlob(){
   ctx.save();
   ctx.shadowColor=isE?'rgba(140,165,185,.35)':'rgba(50,90,150,.35)';ctx.shadowBlur=55;
   const codeGrad=ctx.createLinearGradient(CX,0,CX+580,0);
-  codeGrad.addColorStop(0,'#ffffff');codeGrad.addColorStop(.25,'#e8edf2');
-  codeGrad.addColor
-    codeGrad.addColorStop(.6,'#98aab8');codeGrad.addColorStop(1,isE?'#7a9ab0':'#4a6580');
+  codeGrad.addColorStop(0,'#ffffff');
+  codeGrad.addColorStop(.25,'#e8edf2');
+  codeGrad.addColorStop(.5,'#b8c8d8');
+  codeGrad.addColorStop(.6,'#98aab8');
+  codeGrad.addColorStop(1,isE?'#7a9ab0':'#4a6580');
   ctx.font=`400 178px ${FD}`;ctx.fillStyle=codeGrad;
   ctx.textAlign='left';ctx.textBaseline='alphabetic';
   ctx.fillText(code,CX-6,CT+192);
