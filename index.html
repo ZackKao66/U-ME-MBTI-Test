@@ -238,11 +238,97 @@
     @keyframes resultRise{from{opacity:0;transform:translateY(22px) scale(.98)}to{opacity:1;transform:none}}
     @keyframes rip{from{width:0;height:0;opacity:.5}to{width:400px;height:400px;opacity:0}}
     @keyframes slotLock{0%{transform:translateY(0)}30%{transform:translateY(-5px)}65%{transform:translateY(2px)}100%{transform:translateY(0)}}
-    @media(max-width:600px){
-  .nav{flex-direction:column}
-  .ghost,.next{width:100%}
-  .share-row{grid-template-columns:1fr 1fr}
-  .share-hint{display:none}
+    /* 針對手機版進行精品化調整 */
+@media (max-width: 899px) {
+  /* 1. 將結果卡片改為垂直堆疊 */
+  .result-card {
+    display: flex;
+    flex-direction: column;
+    padding: 32px 20px 24px;
+    gap: 24px; /* 增加元件間的呼吸感 */
+    text-align: center; /* 手機版置中更具精品儀式感 */
+  }
+
+  /* 2. 讓狐狸角色成為頂部視覺焦點 */
+  #resultCharacterHost {
+    order: -1; /* 強制移到最上方 */
+    grid-column: auto;
+    grid-row: auto;
+    width: 100%;
+    height: 280px; /* 給予足夠的展示空間 */
+    background: radial-gradient(circle at center, var(--theme-glow), transparent 70%);
+    border: none;
+    box-shadow: none;
+    margin: 0 auto;
+    display: flex !important;
+    justify-content: center;
+    align-items: flex-end;
+  }
+
+  #resultCharacterHost img {
+    height: 100%;
+    width: auto;
+    object-fit: contain;
+    transform: scale(1.1); /* 稍微放大角色 */
+    filter: drop-shadow(0 15px 30px rgba(0,0,0,0.5));
+  }
+
+  /* 3. 調整標題區塊，解決文字擠壓問題 */
+  .result-hero {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    gap: 8px;
+    min-height: auto;
+  }
+
+  .result-code {
+    font-size: 48px; /* 手機版適中的大字體 */
+    letter-spacing: 0.15em;
+    justify-content: center;
+    margin: 4px 0;
+  }
+
+  .result-meta {
+    justify-content: center; /* 標籤置中 */
+    gap: 8px;
+  }
+
+  /* 4. 文字區塊恢復正常寬度 */
+  .result-section {
+    grid-column: auto;
+    text-align: left; /* 內容描述維持左對齊方便閱讀 */
+    padding-top: 20px;
+    border-top: 1px solid rgba(152,170,184,0.1);
+  }
+
+  /* 5. 修復按鈕擠壓：重點是禁止文字換行並平分寬度 */
+  .share-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* 平分左右 */
+    gap: 12px;
+    width: 100%;
+  }
+
+  .share-btn {
+    height: 48px;
+    font-size: 13px;
+    padding: 0 8px;
+    white-space: nowrap; /* 重要：防止「分享結果」斷行 */
+    justify-content: center;
+    border-radius: 12px;
+  }
+
+  /* 6. 其他導覽按鈕 */
+  .nav {
+    flex-direction: column;
+    gap: 12px;
+  }
+  .ghost, .next {
+    width: 100%;
+    height: 46px;
+  }
 }
    @media(min-width:900px){
   .result-card{
